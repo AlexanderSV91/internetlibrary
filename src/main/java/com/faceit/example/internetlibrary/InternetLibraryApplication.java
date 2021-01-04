@@ -23,9 +23,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         у пользователя войти/выйти.
         Потом можно перейти к реализации функционала.*/
 @SpringBootApplication
-public class InternetlibraryApplication {
+public class InternetLibraryApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(InternetlibraryApplication.class, args);
+        SpringApplication.run(InternetLibraryApplication.class, args);
     }
 }
