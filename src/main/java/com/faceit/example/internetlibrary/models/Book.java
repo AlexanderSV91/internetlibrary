@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.util.StringJoiner;
 
 @Entity(name = "book")
-public class Books {
+public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -15,10 +15,10 @@ public class Books {
     private String bookCondition;
     private String description;
 
-    public Books() {
+    public Book() {
     }
 
-    public Books(String name, String bookCondition, String description) {
+    public Book(String name, String bookCondition, String description) {
         this.name = name;
         this.bookCondition = bookCondition;
         this.description = description;
@@ -58,7 +58,7 @@ public class Books {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Books.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", Book.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
                 .add("name='" + name + "'")
                 .add("bookCondition='" + bookCondition + "'")

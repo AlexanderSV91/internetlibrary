@@ -1,8 +1,8 @@
 package com.faceit.example.internetlibrary.controller;
 
-import com.faceit.example.internetlibrary.models.Books;
+import com.faceit.example.internetlibrary.models.Book;
 import com.faceit.example.internetlibrary.models.OrderBook;
-import com.faceit.example.internetlibrary.models.Readers;
+import com.faceit.example.internetlibrary.models.Reader;
 import com.faceit.example.internetlibrary.repository.BookRepository;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
 import com.faceit.example.internetlibrary.repository.ReaderRepository;
@@ -11,8 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+//@Controller
 @RequestMapping(path = "/")
 public class LibraryController {
     final BookRepository bookRepository;
@@ -26,23 +29,34 @@ public class LibraryController {
         this.orderBookRepository = orderBookRepository;
     }
 
-    /*@GetMapping(path = "/all")
-    public @ResponseBody
-    Iterable<Books> getAllUsers() {
-        // This returns a JSON or XML with the users
-        return bookRepository.findAll();
-    }*/
-
     @GetMapping(path = "/book")
+    public @ResponseBody
+    Iterable<Book> getAllUsers() {
+        return bookRepository.findAll();
+    }
+
+    @GetMapping(path = "/reader")
+    public @ResponseBody
+    Iterable<Reader> getAllReader() {
+        return readerRepository.findAll();
+    }
+
+    @GetMapping(path = "/orderbook")
+    public @ResponseBody
+    Iterable<OrderBook> getAllOrderBook(Model model) {
+        return orderBookRepository.findAll();
+    }
+
+    /*@GetMapping(path = "/book")
     public String getAllBook(Model model) {
-        Iterable<Books> booksList = bookRepository.findAll();
+        Iterable<Book> booksList = bookRepository.findAll();
         model.addAttribute("booksList", booksList);
         return "boolAll";
     }
 
     @GetMapping(path = "/reader")
     public String getAllReader(Model model) {
-        Iterable<Readers> readersList = readerRepository.findAll();
+        Iterable<Reader> readersList = readerRepository.findAll();
         model.addAttribute("readersList", readersList);
         return "readerAll";
     }
@@ -55,5 +69,5 @@ public class LibraryController {
         }
         model.addAttribute("orderBookList", orderBookList);
         return "orderBook";
-    }
+    }*/
 }
