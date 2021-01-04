@@ -1,34 +1,53 @@
 USE library;
 
-CREATE TABLE READER
+CREATE TABLE reader
 (
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    FirstName VARCHAR(20) NOT NULL,
-    LastName VARCHAR(20) NOT NULL,
-    Age INT
+    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(20) NOT NULL,
+    last_name  VARCHAR(20) NOT NULL,
+    age        INT
 );
 
-CREATE TABLE STATUS
+CREATE TABLE book
 (
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    Name VARCHAR(20) NOT NULL
+    id             BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name           VARCHAR(20) NOT NULL,
+    book_condition VARCHAR(20) NOT NULL,
+    description    VARCHAR(100)
 );
 
-CREATE TABLE BOOK_CONDITION
+CREATE TABLE order_book
 (
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    Name VARCHAR(20) NOT NULL
+    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
+    status     VARCHAR(20),
+    reader     BIGINT,
+    book       BIGINT,
+    note       VARCHAR(100),
+    start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    end_date   DATETIME,
+    FOREIGN KEY (reader) REFERENCES reader (id) ON DELETE SET NULL,
+    FOREIGN KEY (book) REFERENCES book (id) ON DELETE SET NULL
 );
 
-CREATE TABLE BOOK
-(
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    Name VARCHAR(20),
-    Reader INT,
-    Status INT,
-    BookCondition INT,
-    ValidityDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (Reader) REFERENCES READER (Id) ON DELETE SET NULL,
-    FOREIGN KEY (Status) REFERENCES STATUS (Id) ON DELETE SET NULL,
-    FOREIGN KEY (BookCondition) REFERENCES BOOK_CONDITION (Id) ON DELETE SET NULL
-);
+INSERT reader(first_name, last_name, age)
+VALUES ('Alexander', 'Ivashenko', 26),
+       ('Igor', 'Kruk', 26),
+       ('Pasha', 'Nankovski', 26);
+
+INSERT book(name, book_condition, description)
+VALUES ('In Search of Lost', 'bad',
+        'Swann''s Way, the first part of A la recherche de temps perdu, Marcel Proust''s seven-part cycle'),
+       ('Ulysses by James', 'good',
+        'Ulysses chronicles the passage of Leopold Bloom through Dublin during an ordinary day, June 16'),
+       ('Don Quixote by', 'best',
+        'Alonso Quixano, a retired country gentleman in his fifties, lives in an unnamed section of La Mancha'),
+       ('One Hundred Ye', 'perfect',
+        'One of the 20th century''s enduring works, One Hundred Years of Solitude is a widely beloved'),
+       ('The Great Gat', 'destroyed',
+        'The novel chronicles an era that Fitzgerald himself dubbed the "Jazz Age".');
+
+INSERT order_book(status, reader, book, note, start_date, end_date)
+VALUES ('STOLEN', 1, 1, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
+       ('NEW', 2, 2, 'brand new', '2021-01-06 23:59:59', '2021-02-24 23:59:59'),
+       ('OLD', 3, 3, 'torn leaf', '2021-01-07 23:59:59', '2021-04-20 23:59:59');
+

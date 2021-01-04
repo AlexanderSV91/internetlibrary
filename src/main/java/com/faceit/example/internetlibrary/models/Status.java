@@ -1,4 +1,5 @@
 package com.faceit.example.internetlibrary.models;
 
-public class Status {
+public enum Status {
+    NEW, OLD, STOLEN,
 }
