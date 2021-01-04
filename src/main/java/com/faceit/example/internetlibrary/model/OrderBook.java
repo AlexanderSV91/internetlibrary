@@ -1,4 +1,4 @@
-package com.faceit.example.internetlibrary.models;
+package com.faceit.example.internetlibrary.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
