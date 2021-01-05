@@ -7,35 +7,28 @@ import com.faceit.example.internetlibrary.repository.BookRepository;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
 import com.faceit.example.internetlibrary.repository.ReaderRepository;
 import com.faceit.example.internetlibrary.sevice.BookService;
+import com.faceit.example.internetlibrary.sevice.OrderBookService;
+import com.faceit.example.internetlibrary.sevice.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-//@Controller
-//@RequestMapping(value = {"/api"}, produces = {"application/json"})
 @RequestMapping(value = {"/api"})
 public class LibraryControllerRest {
-    private final BookRepository bookRepository;
     private final BookService bookService;
-
-
-    private final ReaderRepository readerRepository;
-    private final OrderBookRepository orderBookRepository;
+    private final ReaderService readerService;
+    private final OrderBookService orderBookService;
 
     @Autowired
-    public LibraryControllerRest(BookService bookService, BookRepository bookRepository, ReaderRepository readerRepository, OrderBookRepository orderBookRepository) {
+    public LibraryControllerRest(BookService bookService, ReaderService readerService, OrderBookService orderBookService) {
         this.bookService = bookService;
-        this.bookRepository = bookRepository;
-
-
-        this.readerRepository = readerRepository;
-        this.orderBookRepository = orderBookRepository;
+        this.readerService = readerService;
+        this.orderBookService = orderBookService;
     }
 
     @GetMapping(path = "/book")
@@ -43,42 +36,13 @@ public class LibraryControllerRest {
         return bookService.getAllBook();
     }
 
-/*    @GetMapping(path = "/book")
-    public Iterable<Book> getAllUsers() {
-        return bookRepository.findAll();
-    }*/
-
     @GetMapping(path = "/reader")
-    public Iterable<Reader> getAllReader() {
-        return readerRepository.findAll();
+    public List<Reader> getAllReader() {
+        return readerService.getAllReader();
     }
 
     @GetMapping(path = "/orderbook")
-    public Iterable<OrderBook> getAllOrderBook(Model model) {
-        return orderBookRepository.findAll();
+    public List<OrderBook> getAllOrderBook() {
+        return orderBookService.getAllOrderBook();
     }
-
-/*    @GetMapping(path = "/book")
-    public String getAllBook(Model model) {
-        Iterable<Book> booksList = bookRepository.findAll();
-        model.addAttribute("booksList", booksList);
-        return "boolAll";
-    }
-
-    @GetMapping(path = "/reader")
-    public String getAllReader(Model model) {
-        Iterable<Reader> readersList = readerRepository.findAll();
-        model.addAttribute("readersList", readersList);
-        return "readerAll";
-    }
-
-    @GetMapping(path = "/orderbook")
-    public String getAllOrderBook(Model model) {
-        Iterable<OrderBook> orderBookList = orderBookRepository.findAll();
-        for (OrderBook order: orderBookList) {
-            System.out.println(order.toString());
-        }
-        model.addAttribute("orderBookList", orderBookList);
-        return "orderBook";
-    }*/
 }

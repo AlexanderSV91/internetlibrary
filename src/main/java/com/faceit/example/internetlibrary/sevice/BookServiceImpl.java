@@ -23,7 +23,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getBook(long id) {
+    public Book getBookById(long id) {
         Book book = null;
         Optional<Book> optionalBook = bookRepository.findById(id);
         if (optionalBook.isPresent()) {
