@@ -12,6 +12,7 @@ import com.faceit.example.internetlibrary.sevice.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,5 +45,20 @@ public class LibraryControllerRest {
     @GetMapping(path = "/orderbook")
     public List<OrderBook> getAllOrderBook() {
         return orderBookService.getAllOrderBook();
+    }
+
+    @GetMapping(path = "/book/{id}")
+    public Book getAllUsersById(@PathVariable long id) {
+        return bookService.getBookById(id);
+    }
+
+    @GetMapping(path = "/reader/{id}")
+    public Reader getAllReaderById(@PathVariable long id) {
+        return readerService.getReaderById(id);
+    }
+
+    @GetMapping(path = "/orderbook/{id}")
+    public OrderBook getAllOrderBookById(@PathVariable long id) {
+        return orderBookService.getOrderBookById(id);
     }
 }
