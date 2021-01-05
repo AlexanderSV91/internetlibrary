@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface OrderBookRepository extends JpaRepository<OrderBook, Long> {
-    List<OrderBook> getOrderBookByReader(long id);
+    List<OrderBook> getOrderBookByReader(long idReader);
 }

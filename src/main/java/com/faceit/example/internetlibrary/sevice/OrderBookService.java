@@ -11,7 +11,9 @@ public interface OrderBookService {
 
     OrderBook addOrderBook(OrderBook newOrderBook);
 
+    OrderBook updateOrderBookById(OrderBook updateOrderBook, long id);
+
     void deleteOrderBookById(long id);
 
-    OrderBook updateOrderBookById(OrderBook updateOrderBook, long id);
+    List<OrderBook> getOrderBookByReader (long idReader);
 }

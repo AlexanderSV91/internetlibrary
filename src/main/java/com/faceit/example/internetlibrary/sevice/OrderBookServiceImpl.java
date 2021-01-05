@@ -1,7 +1,6 @@
 package com.faceit.example.internetlibrary.sevice;
 
 import com.faceit.example.internetlibrary.model.OrderBook;
-import com.faceit.example.internetlibrary.model.Reader;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,5 +50,10 @@ public class OrderBookServiceImpl implements OrderBookService {
     @Override
     public void deleteOrderBookById(long id) {
         orderBookRepository.deleteById(id);
+    }
+
+    @Override
+    public List<OrderBook> getOrderBookByReader(long idReader) {
+        return orderBookRepository.getOrderBookByReader(idReader);
     }
 }

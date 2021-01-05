@@ -27,6 +27,11 @@ public class OrderBookControllerRest {
         return orderBookService.getOrderBookById(id);
     }
 
+    @GetMapping("orderbook/reader/{id}")
+    public List<OrderBook> getOrderBookByReader(@PathVariable long id) {
+        return orderBookService.getOrderBookByReader(id);
+    }
+
     @PostMapping("/orderbook")
     public OrderBook addOrderBook(@RequestBody OrderBook newOrderBook) {
         return orderBookService.addOrderBook(newOrderBook);
