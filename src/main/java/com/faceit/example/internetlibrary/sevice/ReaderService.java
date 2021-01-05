@@ -10,4 +10,6 @@ public interface ReaderService {
     Reader getReaderById(long id);
 
     Reader addReader(Reader newReader);
+
+    void deleteReaderById(long id);
 }

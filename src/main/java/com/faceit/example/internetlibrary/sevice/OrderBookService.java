@@ -10,4 +10,6 @@ public interface OrderBookService {
     OrderBook getOrderBookById(long id);
 
     OrderBook addOrderBook(OrderBook newOrderBook);
+
+    void deleteOrderBookById(long id);
 }

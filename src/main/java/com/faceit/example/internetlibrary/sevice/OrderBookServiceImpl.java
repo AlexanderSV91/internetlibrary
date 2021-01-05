@@ -36,4 +36,9 @@ public class OrderBookServiceImpl implements OrderBookService {
     public OrderBook addOrderBook(OrderBook newOrderBook) {
         return orderBookRepository.save(newOrderBook);
     }
+
+    @Override
+    public void deleteOrderBookById(long id) {
+        orderBookRepository.getOrderBookByReader(id);
+    }
 }

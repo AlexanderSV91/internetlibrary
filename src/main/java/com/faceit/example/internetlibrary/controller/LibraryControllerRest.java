@@ -70,4 +70,19 @@ public class LibraryControllerRest {
     public OrderBook addOrderBook(@RequestBody OrderBook newOrderBook) {
         return orderBookService.addOrderBook(newOrderBook);
     }
+
+    @DeleteMapping("/book/{id}")
+    public void deleteBookById(@PathVariable long id) {
+        bookService.deleteBookById(id);
+    }
+
+    @DeleteMapping("/reader/{id}")
+    public void deleteReaderById(@PathVariable long id) {
+        readerService.deleteReaderById(id);
+    }
+
+    @DeleteMapping("/orderbook/{id}")
+    public void deleteOrderBookById(@PathVariable long id) {
+        orderBookService.deleteOrderBookById(id);
+    }
 }

@@ -36,4 +36,9 @@ public class ReaderServiceImpl implements ReaderService {
     public Reader addReader(Reader newReader) {
         return readerRepository.save(newReader);
     }
+
+    @Override
+    public void deleteReaderById(long id) {
+        readerRepository.deleteById(id);
+    }
 }
