@@ -6,6 +6,7 @@ import com.faceit.example.internetlibrary.model.Reader;
 import com.faceit.example.internetlibrary.repository.BookRepository;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
 import com.faceit.example.internetlibrary.repository.ReaderRepository;
+import com.faceit.example.internetlibrary.sevice.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,25 +14,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 //@Controller
-@RequestMapping(value = {"/api"}, produces = {"application/json"})
+//@RequestMapping(value = {"/api"}, produces = {"application/json"})
+@RequestMapping(value = {"/api"})
 public class LibraryControllerRest {
     private final BookRepository bookRepository;
+    private final BookService bookService;
+
+
     private final ReaderRepository readerRepository;
     private final OrderBookRepository orderBookRepository;
 
     @Autowired
-    public LibraryControllerRest(BookRepository bookRepository, ReaderRepository readerRepository, OrderBookRepository orderBookRepository) {
+    public LibraryControllerRest(BookService bookService, BookRepository bookRepository, ReaderRepository readerRepository, OrderBookRepository orderBookRepository) {
+        this.bookService = bookService;
         this.bookRepository = bookRepository;
+
+
         this.readerRepository = readerRepository;
         this.orderBookRepository = orderBookRepository;
     }
 
     @GetMapping(path = "/book")
+    public List<Book> getAllUsers() {
+        return bookService.getAllBook();
+    }
+
+/*    @GetMapping(path = "/book")
     public Iterable<Book> getAllUsers() {
         return bookRepository.findAll();
-    }
+    }*/
 
     @GetMapping(path = "/reader")
     public Iterable<Reader> getAllReader() {
