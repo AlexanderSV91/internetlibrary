@@ -5,6 +5,7 @@ import com.faceit.example.internetlibrary.repository.OrderBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,18 @@ public class OrderBookServiceImpl implements OrderBookService {
 
     @Override
     public OrderBook addOrderBook(OrderBook newOrderBook) {
+        LocalDateTime now = LocalDateTime.now().withNano(0);
+        if (newOrderBook.getStartDate() == null) {
+            newOrderBook.setStartDate(now);
+        }
+        if (newOrderBook.getEndDate() == null) {
+            newOrderBook.setEndDate(now);
+        }
+        if (newOrderBook.getStartDate().isAfter(newOrderBook.getEndDate()) ||
+                newOrderBook.getStartDate().isEqual(newOrderBook.getEndDate())) {
+            newOrderBook.setEndDate(now.plusMonths(2L));
+            newOrderBook.setStartDate(now);
+        }
         return orderBookRepository.save(newOrderBook);
     }
 
