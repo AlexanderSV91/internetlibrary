@@ -10,11 +10,17 @@ public class OrderBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
+    @Column(name = "reader")
     private long reader;
+    @Column(name = "book")
     private long book;
+    @Column(name = "note")
     private String note;
+    @Column(name = "start_date")
     private LocalDateTime startDate;
+    @Column(name = "end_date")
     private LocalDateTime endDate;
 
     public OrderBook() {

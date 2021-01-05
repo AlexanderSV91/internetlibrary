@@ -8,4 +8,6 @@ public interface ReaderService {
     List<Reader> getAllReader();
 
     Reader getReaderById(long id);
+
+    Reader addReader(Reader newReader);
 }

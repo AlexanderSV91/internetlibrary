@@ -31,4 +31,9 @@ public class ReaderServiceImpl implements ReaderService {
         }
         return reader;
     }
+
+    @Override
+    public Reader addReader(Reader newReader) {
+        return readerRepository.save(newReader);
+    }
 }

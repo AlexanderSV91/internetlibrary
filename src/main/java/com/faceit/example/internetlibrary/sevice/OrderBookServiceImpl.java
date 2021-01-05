@@ -31,4 +31,9 @@ public class OrderBookServiceImpl implements OrderBookService {
         }
         return orderBook;
     }
+
+    @Override
+    public OrderBook addOrderBook(OrderBook newOrderBook) {
+        return orderBookRepository.save(newOrderBook);
+    }
 }

@@ -8,4 +8,6 @@ public interface OrderBookService {
     List<OrderBook> getAllOrderBook();
 
     OrderBook getOrderBookById(long id);
+
+    OrderBook addOrderBook(OrderBook newOrderBook);
 }
