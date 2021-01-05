@@ -39,6 +39,6 @@ public class OrderBookServiceImpl implements OrderBookService {
 
     @Override
     public void deleteOrderBookById(long id) {
-        orderBookRepository.getOrderBookByReader(id);
+        orderBookRepository.deleteById(id);
     }
 }

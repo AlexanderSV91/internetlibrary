@@ -25,14 +25,17 @@ CREATE TABLE order_book
     note       VARCHAR(100),
     start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     end_date   DATETIME,
-    FOREIGN KEY (reader) REFERENCES reader (id) ON DELETE SET NULL,
-    FOREIGN KEY (book) REFERENCES book (id) ON DELETE SET NULL
+    FOREIGN KEY (reader) REFERENCES reader (id),
+    FOREIGN KEY (book) REFERENCES book (id)
 );
 
 INSERT reader(first_name, last_name, age)
 VALUES ('Alexander', 'Ivashenko', 26),
        ('Igor', 'Kruk', 26),
        ('Pasha', 'Nankovski', 26);
+
+INSERT book(name, book_condition, description)
+VALUES ('Name', 'bad','description');
 
 INSERT book(name, book_condition, description)
 VALUES ('In Search of Lost', 'bad',
@@ -50,4 +53,3 @@ INSERT order_book(status, reader, book, note, start_date, end_date)
 VALUES ('STOLEN', 1, 1, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
        ('NEW', 2, 2, 'brand new', '2021-01-06 23:59:59', '2021-02-24 23:59:59'),
        ('OLD', 3, 3, 'torn leaf', '2021-01-07 23:59:59', '2021-04-20 23:59:59');
-
