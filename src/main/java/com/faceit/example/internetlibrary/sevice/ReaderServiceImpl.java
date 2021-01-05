@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.sevice;
 
+import com.faceit.example.internetlibrary.model.Book;
 import com.faceit.example.internetlibrary.model.Reader;
 import com.faceit.example.internetlibrary.repository.ReaderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,16 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public Reader addReader(Reader newReader) {
         return readerRepository.save(newReader);
+    }
+
+    @Override
+    public Reader updateReaderById(Reader updateReader, long id) {
+        Reader reader = getReaderById(id);
+        if (reader != null) {
+            updateReader.setId(id);
+        }
+        readerRepository.save(updateReader);
+        return updateReader;
     }
 
     @Override

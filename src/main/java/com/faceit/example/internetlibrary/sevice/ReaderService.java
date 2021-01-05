@@ -11,5 +11,7 @@ public interface ReaderService {
 
     Reader addReader(Reader newReader);
 
+    Reader updateReaderById(Reader updateReader, long id);
+
     void deleteReaderById(long id);
 }

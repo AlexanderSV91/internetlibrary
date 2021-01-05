@@ -1,7 +1,6 @@
 package com.faceit.example.internetlibrary.config;
 
-/*
-import org.springframework.context.annotation.Bean;
+/*import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -25,5 +24,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         return new InMemoryUserDetailsManager(user);
     }
-}
-*/
+}*/

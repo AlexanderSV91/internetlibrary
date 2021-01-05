@@ -38,6 +38,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Book updateBookById(Book updateBook, long id) {
+        Book book = getBookById(id);
+        if (book != null) {
+            updateBook.setId(id);
+        }
+        bookRepository.save(updateBook);
+        return updateBook;
+    }
+
+    @Override
     public void deleteBookById(long id) {
         bookRepository.deleteById(id);
     }
