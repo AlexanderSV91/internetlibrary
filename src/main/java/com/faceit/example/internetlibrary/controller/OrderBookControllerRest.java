@@ -30,12 +30,12 @@ public class OrderBookControllerRest {
 
     @GetMapping("orderbook/reader")
     public List<OrderBook> getOrderBookByReader(@RequestBody Reader reader) {
+        System.out.println(reader.toString());
         return orderBookService.getOrderBookByReader(reader);
     }
 
     @PostMapping("/orderbook")
     public OrderBook addOrderBook(@RequestBody OrderBook newOrderBook) {
-        System.out.println(newOrderBook.toString());
         return orderBookService.addOrderBook(newOrderBook);
     }
 

@@ -1,246 +1,166 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Address Book</title>
-    <link rel="stylesheet"
-          href="webjars/bootstrap/4.5.3/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/main.css"/>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
 </head>
 <body>
-<nav class="navbar bg-custom navbar-expand-sm bg-dark navbar-dark py-1">
-    <a class="navbar-brand" href="/">My Address Book</a>
-    <button type="button" class="navbar-toggler" data-toggle="collapse"
-            data-target="#nav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-between" id="nav">
 
-        <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link" href="/">Link 1</a></li>
-            <li class="nav-item"><a class="nav-link" href="/list">Link 2</a></li>
-            <li class="nav-item"><a class="nav-link" href="/list3">Link 3</a></li>
-            <li class="nav-item dropdown"><a
-                    class="nav-link dropdown-toggle" href="/" id="navbardrop"
-                    data-toggle="dropdown"> Dropdown link </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="/">Link 1</a> <a
-                        class="dropdown-item" href="/">Link 2</a> <a
-                        class="dropdown-item" href="/">Link 3</a>
-                </div>
-            </li>
-        </ul>
-    </div>
-</nav>
-<div class="container">
-    <div style="text-align: center">
-        <h4>
-            <b>Manage AddressBook</b>
-        </h4>
-    </div>
+<h2>OrderBook</h2>
 
-    <div class="col text-center">
-        <button class="btn btn-sm btn-success newAddBookBtn btn-space">Add
-            New Contact
-        </button>
-    </div>
-    <br>
-    <div id="stylized" class="myForm">
-        <form th:action="@{/save}" method="post" id="addressBookForm"
-              name="addressBookForm">
-            <div class="form-group" hidden="true">
-                <label for="id" class="col-form-label">ID:</label> <input
-                    type="text" class="form-control form-control-sm btn-space" id="id"
-                    name="id"/>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="jumbotron jumbo">
-                        <div class="row">
-                            <label class="col-md-4 control-label boldlabel text-right"
-                                   for="firstname">Firstname:</label>
-                            <div class="col-md-7 pull-left">
-                                <input type="text"
-                                       class="form-control form-control-sm btn-space" id="firstname"
-                                       name="firstname"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col-md-4 control-label boldlabel text-right"
-                                   for="lastname">Lastname:</label>
-                            <div class="col-md-7 pull-left">
-                                <input type="text"
-                                       class="form-control form-control-sm btn-space" id="lastname"
-                                       name="lastname"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col-md-4 control-label boldlabel text-right"
-                                   for="phonenumber">Phonenumber:</label>
-                            <div class="col-md-7 pull-left">
-                                <input type="text"
-                                       class="form-control form-control-sm btn-space"
-                                       id="phonenumber" name="phonenumber"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="jumbotron jumbo">
-                        <div class="row">
-                            <label class="col-md-4 control-label boldlabel text-right"
-                                   for="email">Email:</label>
-                            <div class="col-md-7 pull-left">
-                                <input type="text"
-                                       class="form-control form-control-sm btn-space" id="email"
-                                       name="email"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col-md-4 control-label boldlabel text-right"
-                                   for="address">Address:</label>
-                            <div class="col-md-7 pull-left">
-                                <input type="text"
-                                       class="form-control form-control-sm btn-space" id="address"
-                                       name="address"/>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <label class="col-md-4 control-label boldlabel text-right"
-                                   for="address"></label> <input type="submit"
-                                                                 class="btn btn-sm btn-primary btn-space"
-                                                                 id="saveeditbutton" value="Save"/>
-                            <button id="resetButton" type="button"
-                                    class="btn btn-sm btn-secondary btn-space">Reset
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<table id="orderBookList">
 
-        </form>
-    </div>
-    <br/>
-    <div class="card-block">
-        <table class="table table-hover table_morecondensed" id="myTable">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Phonenumber</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!--<tr th:each="addressbook :${data.content}">
-                <td th:text="${addressbook.id}"></td>
-                <td th:text="${addressbook.firstname}"></td>
-                <td th:text="${addressbook.lastname}"></td>
-                <td th:text="${addressbook.phonenumber}"></td>
-                <td th:text="${addressbook.email}"></td>
-                <td th:text="${addressbook.address}"></td>
-                <td><a th:href="@{delete/(id=${addressbook.id})}"
-                       class="btn-sm btn-danger btn-space delBtn">Delete</a><a
-                        th:href="@{findOne/(id=${addressbook.id})}"
-                        class="btn-sm btn-warning btn-space editBtn">Edit</a></td>
-            </tr>-->
-            </tbody>
-        </table>
-     <!--   <div th:if="${!data.empty}">
-            <ul class="nav nav-pills justify-content-end ml-auto">
-                <li class="nav-item"
-                    th:each="i : ${#numbers.sequence(0,data.totalPages-1)}"><a
-                        th:href="@{/(page=${i})}" th:text="${i+1}" class="nav-link"
-                        th:classappend="${currentPage}==${i}?'active':''"> </a></li>
-            </ul>
-        </div>-->
+</table>
 
-    </div>
-</div>
+<form action="#">
+    <select id="status">
+        <option>NEW</option>
+        <option>OLD</option>
+        <option>STOLEN</option>
+        <option>TAKEN</option>
+        <option>IN_LIBRARY</option>
+    </select>
+    <input id="readerId" placeholder="ReaderId">
+    <input id="readerFirstName" placeholder="ReaderFirstName">
+    <input id="readerLastName" placeholder="ReaderLastName">
+    <input id="readerAge" placeholder="ReaderAge">
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Delete Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete it?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary"
-                        data-dismiss="modal">Close
-                </button>
-                <a href="" class="btn btn-sm btn-danger" id="delRef">Delete</a>
-            </div>
-        </div>
-    </div>
-</div>
-<script type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript"
-        src="webjars/jquery-validation/1.19.0/jquery.validate.min.js"></script>
-<script type="text/javascript"
-        src="webjars/bootstrap/4.5.3/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
-<script type="text/javascript">
-    $(function () {
-        $("form[name='addressBookForm']").validate({
-            rules: {
-                // The key name on the left side is the name attribute
-                // of an input field. Validation rules are defined
-                // on the right side
-                firstname: "required",
-                lastname: "required",
-                email: {
-                    required: true,
-                    // Specify that email should be validated
-                    // by the built-in "email" rule
-                    email: true
-                },
-                address: {
-                    required: true,
-                    minlength: 1,
-                    maxlength: 40,
-                },
-                phonenumber: {
-                    required: true,
-                    minlength: 10,
-                    maxlength: 10,
-                    digits: true
-                }
-            },
-            // Specify validation error messages
-            messages: {
-                firstname: "Please enter your firstname",
-                lastname: "Please enter your lastname",
-                phonenumber: "Please provide valid 10-digit phone number",
-                email: "Email-id is required for all future communications",
-                address: "Please enter a valid address"
-            },
-            // Make sure the form is submitted to the destination defined
-            // in the "action" attribute of the form when valid
-            submitHandler: function (form) {
-                form.submit();
-            }
-        });
-    });
-</script>
+    <input id="bookId" placeholder="BookId">
+    <input id="bookName" placeholder="BookName">
+    <input id="bookCondition" placeholder="BookCondition">
+    <input id="bookDescription" placeholder="bookDescription">
+    <input id="note" placeholder="Note">
+    <input id="startDate" placeholder="StartDate">
+    <input id="endDate" placeholder="EndDate">
+    <button onclick="createUser()">Create user</button>
+</form>
+
 <script>
-    $(document).ready(function () {
-        $("#resetButton").click(function () {
-            $("label.error").hide();
-            $(".error").removeClass("error");
-            $("#addressBookForm").trigger("reset");
-        });
-    });
-</script>
+    function deleteOrderBook(orderBookId) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("DELETE", "http://localhost:8080/api/orderbook/" + orderBookId, true);
+        xhttp.send();
+    }
 
+    function searchOrderBookByReader(id) {
+        var xmlhttpp = new XMLHttpRequest();
+        xmlhttpp.open("GET", "http://localhost:8080/api/orderbook/reader/", true);
+        xmlhttpp.setRequestHeader("Content-Type", "application/json");
+
+        var orderBooks = JSON.parse(this.responseText);
+        for (var i = 0; i < orderBooks.length; i++) {
+            var orderBook = orderBooks[i];
+            var reader = orderBook.reader;
+            if (id === reader.id) {
+                xmlhttpp.send(JSON.stringify({
+                    id: reader.id,
+                    firstName: reader.firstName,
+                    lastName: reader.lastName,
+                    age: reader.age
+                }));
+            }
+        }
+    }
+
+    function createUser() {
+        var select = document.getElementById("status");
+        var status = select.options[select.selectedIndex].value;
+        var readerId = document.getElementById("readerId").value;
+        var readerFirstName = document.getElementById("readerFirstName").value;
+        var readerLastName = document.getElementById("readerLastName").value;
+        var readerAge = document.getElementById("readerAge").value;
+        var bookId = document.getElementById("bookId").value;
+        var bookName = document.getElementById("bookName").value;
+        var bookCondition = document.getElementById("bookCondition").value;
+        var bookDescription = document.getElementById("bookDescription").value;
+        var note = document.getElementById("note").value;
+        var startDate = document.getElementById("startDate").value;
+        var endDate = document.getElementById("endDate").value;
+
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "http://localhost:8080/api/orderbook");
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+
+        var orderBook = JSON.stringify({
+            status: status,
+            reader: {
+                id: readerId,
+                firstName: readerFirstName,
+                lastName: readerLastName,
+                age: readerAge
+            },
+            book: {
+                id: bookId,
+                name: bookName,
+                bookCondition: bookCondition,
+                description: bookDescription
+            },
+            note: note,
+            startDate: startDate,
+            endDate: endDate
+        })
+        xmlhttp.send(orderBook);
+
+        loadOrderBook();
+    }
+
+    function loadOrderBook() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var orderBooks = JSON.parse(this.responseText);
+                var html = '<tr>\n' +
+                    '        <th>Full name</th>\n' +
+                    '        <th>Age</th>\n' +
+                    '        <th>Book name</th>\n' +
+                    '        <th>Description</th>\n' +
+                    '        <th>Book condition</th>\n' +
+                    '        <th>Note</th>\n' +
+                    '        <th>Start date</th>\n' +
+                    '        <th>Start date</th>\n' +
+                    '        <th>Search</th>\n' +
+                    '        <th>Delete</th>\n' +
+                    '    </tr>';
+
+                for (var i = 0; i < orderBooks.length; i++) {
+                    var orderBook = orderBooks[i];
+                    var reader = orderBook.reader;
+                    var book = orderBook.book;
+
+                    html = html + '<tr><td>' + reader.firstName + ' ' + reader.lastName + '</td>\n' +
+                        '        <td>' + reader.age + '</td>\n' +
+                        '        <td>' + book.name + '</td>\n' +
+                        '        <td>' + book.description + '</td>' +
+                        '        <td>' + book.bookCondition + '</td>' +
+                        '        <td>' + orderBook.note + '</td>' +
+                        '        <td>' + orderBook.startDate + '</td>' +
+                        '        <td>' + orderBook.endDate + '</td>' +
+                        '        <td><button onclick="searchOrderBookByReader(' + reader.id + ')">Search</button></td></tr>' +
+                        '        <td><button onclick="deleteOrderBook(' + orderBook.id + ')">Delete</button></td></tr>';
+                }
+                document.getElementById("orderBookList").innerHTML = html;
+            }
+        };
+        xhttp.open("GET", "http://localhost:8080/api/orderbook", true);
+        xhttp.send();
+    }
+
+    loadOrderBook();
+</script>
 </body>
 </html>
