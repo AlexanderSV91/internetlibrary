@@ -12,10 +12,10 @@ public class OrderBook {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "reader")
     private Reader reader;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "book")
     private Book book;
     @Column(name = "note")

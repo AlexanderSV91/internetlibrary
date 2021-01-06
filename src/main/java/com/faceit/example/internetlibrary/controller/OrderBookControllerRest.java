@@ -35,6 +35,7 @@ public class OrderBookControllerRest {
 
     @PostMapping("/orderbook")
     public OrderBook addOrderBook(@RequestBody OrderBook newOrderBook) {
+        System.out.println(newOrderBook.toString());
         return orderBookService.addOrderBook(newOrderBook);
     }
 
