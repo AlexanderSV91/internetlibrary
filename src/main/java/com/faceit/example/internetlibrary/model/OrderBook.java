@@ -12,8 +12,9 @@ public class OrderBook {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
-    @Column(name = "reader")
-    private long reader;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "reader")
+    private Reader reader;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "book")
     private Book book;
@@ -27,9 +28,8 @@ public class OrderBook {
     public OrderBook() {
     }
 
-    public OrderBook(Status status, long reader, String note, LocalDateTime startDate, LocalDateTime endDate) {
+    public OrderBook(Status status, String note, LocalDateTime startDate, LocalDateTime endDate) {
         this.status = status;
-        this.reader = reader;
         this.note = note;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -51,11 +51,11 @@ public class OrderBook {
         this.status = status;
     }
 
-    public long getReader() {
+    public Reader getReader() {
         return reader;
     }
 
-    public void setReader(long reader) {
+    public void setReader(Reader reader) {
         this.reader = reader;
     }
 

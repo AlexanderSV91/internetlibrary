@@ -16,8 +16,6 @@ public class Book {
     private String bookCondition;
     @Column(name = "description")
     private String description;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book")
-    private List<OrderBook> orderBookList;
 
     public Book() {
     }
@@ -26,14 +24,6 @@ public class Book {
         this.name = name;
         this.bookCondition = bookCondition;
         this.description = description;
-    }
-
-    public void addOrderBookToBook(OrderBook orderBook) {
-        if (orderBookList == null) {
-            orderBookList = new ArrayList<>();
-        }
-        orderBookList.add(orderBook);
-        orderBook.setBook(this);
     }
 
     public long getId() {
@@ -66,14 +56,6 @@ public class Book {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<OrderBook> getOrderBookList() {
-        return orderBookList;
-    }
-
-    public void setOrderBookList(List<OrderBook> orderBookList) {
-        this.orderBookList = orderBookList;
     }
 
     @Override

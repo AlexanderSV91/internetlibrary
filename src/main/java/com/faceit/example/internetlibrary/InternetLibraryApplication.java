@@ -4,9 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /*
-sudo apt install ubuntu-mate-desktop
-sudo reboot
-
 Стек технологий:
 1. Java 8 или выше
 2. Сборка проекта: Maven

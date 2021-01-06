@@ -30,15 +30,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .withUser(userBuilder.username("alex").password("alex").roles("IT"));*/
     }
 
-/*    @Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/api", "/api/book/**").hasAnyRole("EMPLOYEE", "HR", "IT")
-                .antMatchers("/api/reader/**").hasAnyRole("EMPLOYEE", "HR", "IT")
-                .antMatchers("/api/orderbook/**").hasRole("EMPLOYEE")
+                .antMatchers("/", "/api", "/api/book").hasAnyRole("EMPLOYEE", "HR", "IT")
+                .antMatchers("/api/reader").hasAnyRole("EMPLOYEE", "HR", "IT")
+                .antMatchers("/api/orderbook").hasRole("EMPLOYEE")
                 .and().formLogin();
         //.and().formLogin().permitAll();
-    }*/
+    }
 
 /*    @Bean
     public PasswordEncoder passwordEncoder() {
