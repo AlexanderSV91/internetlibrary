@@ -19,6 +19,7 @@ public class BookControllerRest {
 
     @GetMapping("/book")
     public List<Book> getAllUsers() {
+        System.out.println("getAllUsers");
         return bookService.getAllBook();
     }
 

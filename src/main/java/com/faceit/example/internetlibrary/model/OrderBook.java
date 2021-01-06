@@ -14,8 +14,9 @@ public class OrderBook {
     private Status status;
     @Column(name = "reader")
     private long reader;
-    @Column(name = "book")
-    private long book;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "book")
+    private Book book;
     @Column(name = "note")
     private String note;
     @Column(name = "start_date")
@@ -26,10 +27,9 @@ public class OrderBook {
     public OrderBook() {
     }
 
-    public OrderBook(Status status, long reader, long book, String note, LocalDateTime startDate, LocalDateTime endDate) {
+    public OrderBook(Status status, long reader, String note, LocalDateTime startDate, LocalDateTime endDate) {
         this.status = status;
         this.reader = reader;
-        this.book = book;
         this.note = note;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -59,11 +59,11 @@ public class OrderBook {
         this.reader = reader;
     }
 
-    public long getBook() {
+    public Book getBook() {
         return book;
     }
 
-    public void setBook(long book) {
+    public void setBook(Book book) {
         this.book = book;
     }
 

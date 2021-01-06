@@ -29,13 +29,38 @@ CREATE TABLE order_book
     FOREIGN KEY (book) REFERENCES book (id)
 );
 
+CREATE TABLE users
+(
+    username varchar(15),
+    password varchar(100),
+    enabled  tinyint(1),
+    PRIMARY KEY (username)
+);
+
+CREATE TABLE authorities
+(
+    username  varchar(15),
+    authority varchar(25),
+    FOREIGN KEY (username) references users (username)
+);
+
+INSERT INTO users (username, password, enabled)
+VALUES ('1', '{noop}1', 1),
+       ('elena', '{noop}elena', 1),
+       ('alex', '{noop}alex', 1);
+
+INSERT INTO authorities (username, authority)
+VALUES ('1', 'EMPLOYEE'),
+       ('elena', 'HR'),
+       ('alex', 'IT');
+
 INSERT reader(first_name, last_name, age)
 VALUES ('Alexander', 'Ivashenko', 26),
        ('Igor', 'Kruk', 26),
        ('Pasha', 'Nankovski', 26);
 
 INSERT book(name, book_condition, description)
-VALUES ('Name', 'bad','description');
+VALUES ('Name', 'bad', 'description');
 
 INSERT book(name, book_condition, description)
 VALUES ('In Search of Lost', 'bad',
