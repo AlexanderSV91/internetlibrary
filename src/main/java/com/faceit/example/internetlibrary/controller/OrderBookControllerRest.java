@@ -1,6 +1,7 @@
 package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.model.OrderBook;
+import com.faceit.example.internetlibrary.model.Reader;
 import com.faceit.example.internetlibrary.sevice.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +28,9 @@ public class OrderBookControllerRest {
         return orderBookService.getOrderBookById(id);
     }
 
-    @GetMapping("orderbook/reader/{id}")
-    public List<OrderBook> getOrderBookByReader(@PathVariable long id) {
-        return orderBookService.getOrderBookByReader(id);
+    @GetMapping("orderbook/reader")
+    public List<OrderBook> getOrderBookByReader(@RequestBody Reader reader) {
+        return orderBookService.getOrderBookByReader(reader);
     }
 
     @PostMapping("/orderbook")
