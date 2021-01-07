@@ -16,5 +16,5 @@ public interface OrderBookService {
 
     void deleteOrderBookById(long id);
 
-    List<OrderBook> getOrderBookByReader(Reader reader);
+    List<OrderBook> getOrderBookByReaderId(long idReader);
 }

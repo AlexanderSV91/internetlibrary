@@ -67,7 +67,7 @@ public class OrderBookServiceImpl implements OrderBookService {
     }
 
     @Override
-    public List<OrderBook> getOrderBookByReader(Reader reader) {
-        return orderBookRepository.getOrderBookByReader(reader);
+    public List<OrderBook> getOrderBookByReaderId(long idReader) {
+        return orderBookRepository.getOrderBookByReaderId(idReader);
     }
 }

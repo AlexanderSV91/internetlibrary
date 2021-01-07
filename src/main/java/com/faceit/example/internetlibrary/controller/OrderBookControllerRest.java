@@ -28,10 +28,12 @@ public class OrderBookControllerRest {
         return orderBookService.getOrderBookById(id);
     }
 
-    @GetMapping("orderbook/reader")
-    public List<OrderBook> getOrderBookByReader(@RequestBody Reader reader) {
-        System.out.println(reader.toString());
-        return orderBookService.getOrderBookByReader(reader);
+    @GetMapping("orderbook/reader/{id}")
+    public List<OrderBook> getOrderBookByReader(@PathVariable long id) {
+        System.out.println(id);
+        List<OrderBook> orderBookList = orderBookService.getOrderBookByReaderId(id);
+        System.out.println(orderBookList);
+        return orderBookList;
     }
 
     @PostMapping("/orderbook")
