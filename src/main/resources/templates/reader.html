@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Читатели</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
+</head>
+
+<script type="text/javascript">
+    var app = angular.module("readerApp", []);
+    app.controller("readerCtrl", function ($scope, $http) {
+
+        $scope.titleModal = "";
+        $scope.readers = [];
+        $scope.editFields = {
+            id: 0,
+            firstName: "",
+            lastName: "",
+            age: 0
+        };
+
+        $scope.changeTitleModal = function (titleName) {
+            $scope.titleModal = titleName;
+            if (titleName === "Add Reader") {
+                $scope.editFields.id = 0;
+                $scope.editFields.firstName = "";
+                $scope.editFields.lastName = "";
+                $scope.editFields.age = "";
+            }
+        }
+
+        $scope.fillFieldsModal = function (reader) {
+            $scope.editFields.id = reader.id;
+            $scope.editFields.firstName = reader.firstName;
+            $scope.editFields.lastName = reader.lastName;
+            $scope.editFields.age = reader.age;
+        }
+
+        $scope.getAllReader = function () {
+            $http({
+                url: 'http://localhost:8080/api/reader',
+                method: 'GET'
+            }).then(function (response) {
+                $scope.readers = response.data;
+            })
+        }
+        $scope.getAllReader();
+
+        $scope.deleteReaderByIdRequest = function (readerId) {
+            $http({
+                url: 'http://localhost:8080/api/reader/' + readerId,
+                method: 'DELETE'
+            }).then(function () {
+                $scope.getAllReader();
+            })
+        }
+
+        $scope.saveReader = function () {
+            let data = '';
+            let request = '';
+            let method = '';
+            if ($scope.editFields.id === 0) {
+                request = 'http://localhost:8080/api/reader/';
+                method = 'POST';
+                data = {
+                    firstName: $scope.editFields.firstName,
+                    lastName: $scope.editFields.lastName,
+                    age: $scope.editFields.age
+                };
+            } else {
+                request = 'http://localhost:8080/api/reader/' + $scope.editFields.id;
+                method = 'PUT';
+                data = {
+                    id: $scope.editFields.id,
+                    firstName: $scope.editFields.firstName,
+                    lastName: $scope.editFields.lastName,
+                    age: $scope.editFields.age
+                };
+            }
+            $http({
+                method: method,
+                url: request,
+                data: data
+            }).then(function successCallback() {
+                $scope.getAllReader();
+            }, function errorCallback() {
+                alert("Error!");
+            });
+        }
+    });
+</script>
+
+<body ng-app="readerApp" ng-controller="readerCtrl">
+<nav class="nav nav-pills nav-fill">
+    <a class="nav-item nav-link" href="http://localhost:8080/">Order Book</a>
+    <a class="nav-item nav-link" href="http://localhost:8080/book">Book</a>
+    <a class="nav-item nav-link active disabled" href="http://localhost:8080/reader">Reader</a>
+</nav>
+
+<div class="row">
+    <div class="col-12">
+        <table class="table table-striped table-bordered table-hover">
+            <tr>
+                <th>ID</th>
+                <th>FIRST NAME</th>
+                <th>LAST NAME</th>
+                <th>AGE</th>
+                <th>
+                    <button class="btn btn-success" data-toggle="modal" data-target="#modal"
+                            ng-click="changeTitleModal('Add Reader')">
+                        Add Reader
+                    </button>
+                </th>
+            </tr>
+            <tr ng-repeat="reader in readers">
+                <td>{{reader.id}}</td>
+                <td>{{reader.firstName}}</td>
+                <td>{{reader.lastName}}</td>
+                <td>{{reader.age}}</td>
+                <td>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#modal"
+                            ng-click="fillFieldsModal(reader); changeTitleModal('Edit Reader')">
+                        Edit
+                    </button>
+                    <button class="btn btn-danger" ng-click="deleteReaderByIdRequest(reader.id)">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">{{titleModal}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control" placeholder="first name"
+                               ng-model="editFields.firstName">
+                    </div>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" placeholder="last name"
+                               ng-model="editFields.lastName">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="age"
+                               ng-model="editFields.age">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        ng-click="saveReader()">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

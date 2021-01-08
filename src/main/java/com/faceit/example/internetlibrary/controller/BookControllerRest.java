@@ -18,12 +18,12 @@ public class BookControllerRest {
     }
 
     @GetMapping("/book")
-    public List<Book> getAllUsers() {
+    public List<Book> getAllBook() {
         return bookService.getAllBook();
     }
 
     @GetMapping("/book/{id}")
-    public Book getAllUsersById(@PathVariable long id) {
+    public Book getBookById(@PathVariable long id) {
         return bookService.getBookById(id);
     }
 

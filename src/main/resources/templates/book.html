@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Книги</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
+</head>
+
+<script type="text/javascript">
+    var app = angular.module("bookApp", []);
+    app.controller("bookCtrl", function ($scope, $http) {
+
+        $scope.titleModal = "";
+        $scope.books = [];
+        $scope.editFields = {
+            id: 0,
+            name: "",
+            bookCondition: "",
+            description: ""
+        };
+
+        $scope.changeTitleModal = function (titleName) {
+            $scope.titleModal = titleName;
+            if (titleName === "Add Book") {
+                $scope.editFields.id = 0;
+                $scope.editFields.name = "";
+                $scope.editFields.bookCondition = "";
+                $scope.editFields.description = "";
+            }
+        }
+
+        $scope.fillFieldsModal = function (book) {
+            $scope.editFields.id = book.id;
+            $scope.editFields.name = book.name;
+            $scope.editFields.bookCondition = book.bookCondition;
+            $scope.editFields.description = book.description;
+        }
+
+        $scope.getAllBook = function () {
+            $http({
+                url: 'http://localhost:8080/api/book',
+                method: 'GET'
+            }).then(function (response) {
+                $scope.books = response.data;
+            })
+        }
+        $scope.getAllBook();
+
+        $scope.deleteBookByIdRequest = function (bookId) {
+            $http({
+                url: 'http://localhost:8080/api/book/' + bookId,
+                method: 'DELETE'
+            }).then(function () {
+                $scope.getAllBook();
+            })
+        }
+
+        $scope.saveBook = function () {
+            let data = '';
+            let request = '';
+            let method = '';
+            if ($scope.editFields.id === 0) {
+                request = 'http://localhost:8080/api/book/';
+                method = 'POST';
+                data = {
+                    name: $scope.editFields.name,
+                    bookCondition: $scope.editFields.bookCondition,
+                    description: $scope.editFields.description
+                };
+            } else {
+                request = 'http://localhost:8080/api/book/' + $scope.editFields.id;
+                method = 'PUT';
+                data = {
+                    id: $scope.editFields.id,
+                    name: $scope.editFields.name,
+                    bookCondition: $scope.editFields.bookCondition,
+                    description: $scope.editFields.description
+                };
+            }
+            $http({
+                method: method,
+                url: request,
+                data: data
+            }).then(function successCallback() {
+                $scope.getAllBook();
+            }, function errorCallback() {
+                alert("Error!");
+            });
+        }
+    });
+</script>
+
+<body ng-app="bookApp" ng-controller="bookCtrl">
+<nav class="nav nav-pills nav-fill">
+    <a class="nav-item nav-link" href="http://localhost:8080/">Order Book</a>
+    <a class="nav-item nav-link active disabled" href="http://localhost:8080/book">Book</a>
+    <a class="nav-item nav-link" href="http://localhost:8080/reader">Reader</a>
+</nav>
+
+<div class="row">
+    <div class="col-12">
+        <table class="table table-striped table-bordered table-hover">
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>BOOK CONDITION</th>
+                <th>DESCRIPTION</th>
+                <th>
+                    <button class="btn btn-success" data-toggle="modal" data-target="#modal"
+                            ng-click="changeTitleModal('Add Book')">
+                        Add Book
+                    </button>
+                </th>
+            </tr>
+            <tr ng-repeat="book in books">
+                <td>{{book.id}}</td>
+                <td>{{book.name}}</td>
+                <td>{{book.bookCondition}}</td>
+                <td>{{book.description}}</td>
+                <td>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#modal"
+                            ng-click="fillFieldsModal(book); changeTitleModal('Edit Book')">
+                        Edit
+                    </button>
+                    <button class="btn btn-danger" ng-click="deleteBookByIdRequest(book.id)">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">{{titleModal}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control" placeholder="name"
+                               ng-model="editFields.name">
+                    </div>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" placeholder="book condition"
+                               ng-model="editFields.bookCondition">
+                    </div>
+                    <div class="input-group mb-3">
+                        <textarea class="form-control" aria-label="With textarea"
+                                  placeholder="description"
+                                  ng-model="editFields.description"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        ng-click="saveBook()">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

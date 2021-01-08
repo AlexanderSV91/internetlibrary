@@ -1,152 +1,270 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <style>
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <title>Книги</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
 </head>
-<body>
 
-<h2>OrderBook</h2>
+<script type="text/javascript">
+    var app = angular.module("orderBookApp", []);
+    app.controller("orderBookCtrl", function ($scope, $http) {
 
-<table id="orderBookList">
-
-</table>
-
-<form action="#">
-    <select id="status">
-        <option>NEW</option>
-        <option>OLD</option>
-        <option>STOLEN</option>
-        <option>TAKEN</option>
-        <option>IN_LIBRARY</option>
-    </select>
-    <input id="readerId" placeholder="ReaderId">
-    <input id="readerFirstName" placeholder="ReaderFirstName">
-    <input id="readerLastName" placeholder="ReaderLastName">
-    <input id="readerAge" placeholder="ReaderAge">
-
-    <input id="bookId" placeholder="BookId">
-    <input id="bookName" placeholder="BookName">
-    <input id="bookCondition" placeholder="BookCondition">
-    <input id="bookDescription" placeholder="bookDescription">
-    <input id="note" placeholder="Note">
-    <input id="startDate" placeholder="StartDate">
-    <input id="endDate" placeholder="EndDate">
-    <button onclick="createUser()">Create user</button>
-</form>
-
-<script>
-    function deleteOrderBook(orderBookId) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("DELETE", "http://localhost:8080/api/orderbook/" + orderBookId, true);
-        xhttp.send();
-    }
-
-    function searchOrderBookByReader(id) {
-        var xmlhttpp = new XMLHttpRequest();
-        xmlhttpp.open("POST", "http://localhost:8080/api/orderbook/reader/" + id, true);
-        xmlhttpp.send();
-    }
-
-    function createUser() {
-        var select = document.getElementById("status");
-        var status = select.options[select.selectedIndex].value;
-        var readerId = document.getElementById("readerId").value;
-        var readerFirstName = document.getElementById("readerFirstName").value;
-        var readerLastName = document.getElementById("readerLastName").value;
-        var readerAge = document.getElementById("readerAge").value;
-        var bookId = document.getElementById("bookId").value;
-        var bookName = document.getElementById("bookName").value;
-        var bookCondition = document.getElementById("bookCondition").value;
-        var bookDescription = document.getElementById("bookDescription").value;
-        var note = document.getElementById("note").value;
-        var startDate = document.getElementById("startDate").value;
-        var endDate = document.getElementById("endDate").value;
-
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", "http://localhost:8080/api/orderbook");
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-
-        var orderBook = JSON.stringify({
-            status: status,
-            reader: {
-                id: readerId,
-                firstName: readerFirstName,
-                lastName: readerLastName,
-                age: readerAge
-            },
-            book: {
-                id: bookId,
-                name: bookName,
-                bookCondition: bookCondition,
-                description: bookDescription
-            },
-            note: note,
-            startDate: startDate,
-            endDate: endDate
-        });
-        xmlhttp.send(orderBook);
-
-        loadOrderBook();
-    }
-
-    function loadOrderBook() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                var orderBooks = JSON.parse(this.responseText);
-                var html = '<tr>\n' +
-                    '        <th>Full name</th>\n' +
-                    '        <th>Age</th>\n' +
-                    '        <th>Book name</th>\n' +
-                    '        <th>Description</th>\n' +
-                    '        <th>Book condition</th>\n' +
-                    '        <th>Note</th>\n' +
-                    '        <th>Start date</th>\n' +
-                    '        <th>Start date</th>\n' +
-                    '        <th>Search</th>\n' +
-                    '        <th>Delete</th>\n' +
-                    '    </tr>';
-
-                for (var i = 0; i < orderBooks.length; i++) {
-                    var orderBook = orderBooks[i];
-                    var reader = orderBook.reader;
-                    var book = orderBook.book;
-
-                    html = html + '<tr><td>' + reader.firstName + ' ' + reader.lastName + '</td>\n' +
-                        '        <td>' + reader.age + '</td>\n' +
-                        '        <td>' + book.name + '</td>\n' +
-                        '        <td>' + book.description + '</td>' +
-                        '        <td>' + book.bookCondition + '</td>' +
-                        '        <td>' + orderBook.note + '</td>' +
-                        '        <td>' + orderBook.startDate + '</td>' +
-                        '        <td>' + orderBook.endDate + '</td>' +
-                        '        <td><button onclick="searchOrderBookByReader(' + reader.id + ')">Search</button></td></tr>' +
-                        '        <td><button onclick="deleteOrderBook(' + orderBook.id + ')">Delete</button></td></tr>';
-                }
-                document.getElementById("orderBookList").innerHTML = html;
-            }
+        $scope.titleModal = "";
+        $scope.orderBooks = [];
+        $scope.readers = [];
+        $scope.books = [];
+        $scope.editFields = {
+            id: 0,
+            status: "",
+            readerId: "",
+            readerFirstName: "",
+            readerLastName: "",
+            readerAge: "",
+            bookId: "",
+            bookName: "",
+            bookCondition: "",
+            bookDescription: "",
+            note: "",
+            startDate: "",
+            endDate: ""
         };
-        xhttp.open("GET", "http://localhost:8080/api/orderbook", true);
-        xhttp.send();
-    }
 
-    loadOrderBook();
+        $scope.changeTitleModal = function (titleName) {
+            $scope.titleModal = titleName;
+            if (titleName === "Add Order Book") {
+                $scope.editFields.id = 0;
+                $scope.editFields.status = "";
+                $scope.editFields.readerId = 0;
+                $scope.editFields.readerFirstName = "";
+                $scope.editFields.readerLastName = "";
+                $scope.editFields.readerAge = 0;
+                $scope.editFields.bookId = 0;
+                $scope.editFields.bookName = "";
+                $scope.editFields.bookCondition = "";
+                $scope.editFields.bookDescription = "";
+                $scope.editFields.note = "";
+                $scope.editFields.startDate = "";
+                $scope.editFields.endDate = "";
+            }
+        }
+
+        $scope.fillFieldsModal = function (readerBook) {
+            $scope.editFields.id = readerBook.id;
+            $scope.editFields.status = readerBook.status;
+            $scope.editFields.readerId = readerBook.reader.id;
+            $scope.editFields.readerFirstName = readerBook.reader.firstName;
+            $scope.editFields.readerLastName = readerBook.reader.lastName;
+            $scope.editFields.readerAge = readerBook.reader.age;
+            $scope.editFields.bookId = readerBook.book.id;
+            $scope.editFields.bookName = readerBook.book.name;
+            $scope.editFields.bookCondition = readerBook.book.bookCondition;
+            $scope.editFields.bookDescription = readerBook.book.description;
+            $scope.editFields.note = readerBook.note;
+            $scope.editFields.startDate = readerBook.startDate;
+            $scope.editFields.endDate = readerBook.endDate;
+        }
+
+        $scope.getAllOrderBook = function () {
+            $http({
+                url: 'http://localhost:8080/api/orderbook',
+                method: 'GET'
+            }).then(function (response) {
+                $scope.orderBooks = response.data;
+            })
+        }
+        $scope.getAllOrderBook();
+
+        $scope.getAllBook = function () {
+            $http({
+                url: 'http://localhost:8080/api/book',
+                method: 'GET'
+            }).then(function (response) {
+                $scope.books = response.data;
+            })
+        }
+        $scope.getAllBook();
+
+        $scope.getAllReader = function () {
+            $http({
+                url: 'http://localhost:8080/api/reader',
+                method: 'GET'
+            }).then(function (response) {
+                $scope.readers = response.data;
+            })
+        }
+        $scope.getAllReader();
+
+        $scope.deleteOrderBookByIdRequest = function (bookId) {
+            $http({
+                url: 'http://localhost:8080/api/orderbook/' + bookId,
+                method: 'DELETE'
+            }).then(function () {
+                $scope.getAllOrderBook();
+            })
+        }
+
+        $scope.saveOrderBook = function () {
+            let data = '';
+            let request = '';
+            let method = '';
+            if ($scope.editFields.id === 0) {
+                request = 'http://localhost:8080/api/orderbook/';
+                method = 'POST';
+                data = {
+                    status: $scope.editFields.status,
+                    reader: {
+                        id: $scope.editFields.readerId,
+                        firstName: $scope.editFields.readerFirstName,
+                        lastName: $scope.editFields.readerLastName,
+                        age: $scope.editFields.readerAge
+                    },
+                    book: {
+                        id: $scope.editFields.bookId,
+                        name: $scope.editFields.bookName,
+                        bookCondition: $scope.editFields.bookCondition,
+                        description: $scope.editFields.bookDescription
+                    },
+                    note: $scope.editFields.note,
+                    startDate: $scope.editFields.startDate,
+                    endDate: $scope.editFields.endDate
+                };
+            } else {
+                request = 'http://localhost:8080/api/orderbook/' + $scope.editFields.id;
+                method = 'PUT';
+                data = {
+                    id: $scope.editFields.id,
+                    status: $scope.editFields.status,
+                    reader: {
+                        id: $scope.editFields.readerId,
+                        firstName: $scope.editFields.readerFirstName,
+                        lastName: $scope.editFields.readerLastName,
+                        age: $scope.editFields.readerAge
+                    },
+                    book: {
+                        id: $scope.editFields.bookId,
+                        name: $scope.editFields.bookName,
+                        bookCondition: $scope.editFields.bookCondition,
+                        description: $scope.editFields.bookDescription
+                    },
+                    note: $scope.editFields.note,
+                    startDate: $scope.editFields.startDate,
+                    endDate: $scope.editFields.endDate
+                };
+            }
+            $http({
+                method: method,
+                url: request,
+                data: data
+            }).then(function successCallback() {
+                $scope.getAllOrderBook();
+            }, function errorCallback() {
+                alert("Error!");
+            });
+        }
+    });
 </script>
+
+<body ng-app="orderBookApp" ng-controller="orderBookCtrl">
+<nav class="nav nav-pills nav-fill">
+    <a class="nav-item nav-link active disabled" href="http://localhost:8080/">Order Book</a>
+    <a class="nav-item nav-link" href="http://localhost:8080/book">Book</a>
+    <a class="nav-item nav-link" href="http://localhost:8080/reader">Reader</a>
+</nav>
+
+<div class="row">
+    <div class="col-12">
+        <table class="table table-striped table-bordered table-hover">
+            <tr>
+                <th>ID</th>
+                <th>STATUS</th>
+                <th>READER ID</th>
+                <th>READER FIRST NAME</th>
+                <th>READER LAST NAME</th>
+                <th>READER AGE</th>
+                <th>BOOK ID</th>
+                <th>BOOK NAME</th>
+                <th>BOOK CONDITION</th>
+                <th>BOOK DESCRIPTION</th>
+                <th>NOTE</th>
+                <th>START DATE</th>
+                <th>END DATE</th>
+                <th>
+                    <button class="btn btn-success" data-toggle="modal" data-target="#modal"
+                            ng-click="changeTitleModal('Add Order Book')">
+                        Add Order Book
+                    </button>
+                </th>
+            </tr>
+            <tr ng-repeat="orderBook in orderBooks">
+                <td>{{orderBook.id}}</td>
+                <td>{{orderBook.status}}</td>
+                <td>{{orderBook.reader.id}}</td>
+                <td>{{orderBook.reader.firstName}}</td>
+                <td>{{orderBook.reader.lastName}}</td>
+                <td>{{orderBook.reader.age}}</td>
+                <td>{{orderBook.book.id}}</td>
+                <td>{{orderBook.book.name}}</td>
+                <td>{{orderBook.book.bookCondition}}</td>
+                <td>{{orderBook.book.description}}</td>
+                <td>{{orderBook.note}}</td>
+                <td>{{orderBook.startDate}}</td>
+                <td>{{orderBook.endDate}}</td>
+                <td>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#modal"
+                            ng-click="fillFieldsModal(orderBook); changeTitleModal('Edit Order Book')">
+                        Edit
+                    </button>
+                    <button class="btn btn-danger" ng-click="deleteOrderBookByIdRequest(orderBook.id)">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog"
+     aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">{{titleModal}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <div class="input-group mb-1">
+                        <input type="text" class="form-control" placeholder="name"
+                               ng-model="editFields.name">
+                    </div>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" placeholder="book condition"
+                               ng-model="editFields.bookCondition">
+                    </div>
+                    <div class="input-group mb-3">
+                        <textarea class="form-control" aria-label="With textarea"
+                                  placeholder="description"
+                                  ng-model="editFields.description"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        ng-click="saveOrderBook()">Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

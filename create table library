@@ -57,10 +57,16 @@ VALUES ('1', 'ROLE_EMPLOYEE'),
 INSERT reader(first_name, last_name, age)
 VALUES ('Alexander', 'Ivashenko', 26),
        ('Igor', 'Kruk', 26),
-       ('Pasha', 'Nankovski', 26);
-
-INSERT book(name, book_condition, description)
-VALUES ('Name', 'bad', 'description');
+       ('Pasha', 'Nankovski', 26),
+       ('firstName1', 'lastName1', 21),
+       ('firstName2', 'lastName2', 22),
+       ('firstName3', 'lastName3', 23),
+       ('firstName4', 'lastName4', 24),
+       ('firstName5', 'lastName5', 25),
+       ('firstName6', 'lastName6', 26),
+       ('firstName7', 'lastName7', 27),
+       ('firstName8', 'lastName8', 28),
+       ('firstName9', 'lastName9', 29);
 
 INSERT book(name, book_condition, description)
 VALUES ('In Search of Lost', 'bad',
@@ -72,15 +78,25 @@ VALUES ('In Search of Lost', 'bad',
        ('One Hundred Ye', 'perfect',
         'One of the 20th century''s enduring works, One Hundred Years of Solitude is a widely beloved'),
        ('The Great Gat', 'destroyed',
-        'The novel chronicles an era that Fitzgerald himself dubbed the "Jazz Age".');
+        'The novel chronicles an era that Fitzgerald himself dubbed the "Jazz Age".'),
+       ('name1', 'bookCondition1', 'description1'),
+       ('name2', 'bookCondition2', 'description2'),
+       ('name3', 'bookCondition3', 'description3'),
+       ('name4', 'bookCondition4', 'description4'),
+       ('name5', 'bookCondition5', 'description5'),
+       ('name6', 'bookCondition6', 'description6'),
+       ('name7', 'bookCondition7', 'description7'),
+       ('name8', 'bookCondition8', 'description8'),
+       ('name9', 'bookCondition9', 'description9');
 
 INSERT order_book(status, reader, book, note, start_date, end_date)
-VALUES ('STOLEN', 1, 1, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
-       ('NEW', 2, 2, 'brand new', '2021-01-06 23:59:59', '2021-02-24 23:59:59'),
-       ('OLD', 3, 3, 'torn leaf', '2021-01-07 23:59:59', '2021-04-20 23:59:59'),
-       ('STOLEN', 1, 2, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59');
-
-SELECT *
-FROM authorities;
-/*
-DELETE from order_book where id = 4;*/
+VALUES ('NEW', 1, 1, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
+       ('OLD', 2, 2, 'brand new', '2021-01-06 23:59:59', '2021-02-24 23:59:59'),
+       ('STOLEN', 3, 3, 'torn leaf', '2021-01-07 23:59:59', '2021-04-20 23:59:59'),
+       ('TAKEN', 4, 4, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
+       ('IN_LIBRARY', 5, 5, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
+       ('IN_LIBRARY', 6, 6, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
+       ('OLD', 7, 7, 'brand new', '2021-01-06 23:59:59', '2021-02-24 23:59:59'),
+       ('STOLEN', 8, 8, 'torn leaf', '2021-01-07 23:59:59', '2021-04-20 23:59:59'),
+       ('TAKEN', 9, 9, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
+       ('IN_LIBRARY', 10, 10, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59');
