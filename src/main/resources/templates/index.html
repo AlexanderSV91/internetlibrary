@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:margin="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Книги</title>
@@ -11,6 +11,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
 </head>
+<style>
+    body {
+        margin: 5px;
+    }
+</style>
 
 <script type="text/javascript">
     var app = angular.module("orderBookApp", []);
@@ -19,7 +24,9 @@
         $scope.titleModal = "";
         $scope.orderBooks = [];
         $scope.readers = [];
+        $scope.readerStr = "";
         $scope.books = [];
+        $scope.bookStr = "";
         $scope.editFields = {
             id: 0,
             status: "",
@@ -52,6 +59,29 @@
                 $scope.editFields.note = "";
                 $scope.editFields.startDate = "";
                 $scope.editFields.endDate = "";
+                $scope.bookStr = "";
+                $scope.readerStr = "";
+            }
+        }
+
+        $scope.fillFieldsModalThanReader = function () {
+            let string = $scope.readerStr.split(" ");
+            $scope.editFields.readerId = Number.parseInt(string[0]);
+            $scope.editFields.readerFirstName = string[1];
+            $scope.editFields.readerLastName = string[2];
+            $scope.editFields.readerAge = Number.parseInt(string[3]);
+        }
+
+        $scope.fillFieldsModalThanBook = function () {
+            let string = $scope.bookStr.split(" ");
+            for (let i = 0; i < $scope.books.length; i++) {
+                if (string[0].toString() === $scope.books[i].id.toString()) {
+                    $scope.editFields.bookId = $scope.books[i].id;
+                    $scope.editFields.bookName = $scope.books[i].name;
+                    $scope.editFields.bookCondition = $scope.books[i].bookCondition;
+                    $scope.editFields.bookDescription = $scope.books[i].description;
+                    break;
+                }
             }
         }
 
@@ -62,10 +92,12 @@
             $scope.editFields.readerFirstName = readerBook.reader.firstName;
             $scope.editFields.readerLastName = readerBook.reader.lastName;
             $scope.editFields.readerAge = readerBook.reader.age;
+            $scope.readerStr = readerBook.reader.id + ' ' + readerBook.reader.firstName + ' ' + readerBook.reader.lastName + ' ' + readerBook.reader.age;
             $scope.editFields.bookId = readerBook.book.id;
             $scope.editFields.bookName = readerBook.book.name;
             $scope.editFields.bookCondition = readerBook.book.bookCondition;
             $scope.editFields.bookDescription = readerBook.book.description;
+            $scope.bookStr = readerBook.book.id + ' ' + readerBook.book.name;
             $scope.editFields.note = readerBook.note;
             $scope.editFields.startDate = readerBook.startDate;
             $scope.editFields.endDate = readerBook.endDate;
@@ -221,7 +253,8 @@
                             ng-click="fillFieldsModal(orderBook); changeTitleModal('Edit Order Book')">
                         Edit
                     </button>
-                    <button class="btn btn-danger" ng-click="deleteOrderBookByIdRequest(orderBook.id)">
+                    <button class="btn btn-danger"
+                            ng-click="deleteOrderBookByIdRequest(orderBook.id)">
                         Delete
                     </button>
                 </td>
@@ -242,18 +275,47 @@
             </div>
             <div class="modal-body">
                 <div class="input-group">
+                    <label for="statusS"
+                           style="margin-right: 20px; line-height:25px;">Status</label>
                     <div class="input-group mb-1">
-                        <input type="text" class="form-control" placeholder="name"
-                               ng-model="editFields.name">
+                        <select label="Status" id="statusS" ng-model="editFields.status">
+                            <option>NEW</option>
+                            <option>OLD</option>
+                            <option>STOLEN</option>
+                            <option>TAKEN</option>
+                            <option>IN_LIBRARY</option>
+                        </select>
                     </div>
+                    <label for="readerId">Reader</label>
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control" placeholder="book condition"
-                               ng-model="editFields.bookCondition">
+                        <select label="Reader" id="readerId" ng-model="readerStr"
+                                ng-click="fillFieldsModalThanReader()">
+                            <option>{{readerStr}}</option>
+                            <option ng-repeat="reader in readers">{{reader.id}} {{reader.firstName}} {{reader.lastName}} {{reader.age}}
+                            </option>
+                        </select>
                     </div>
-                    <div class="input-group mb-3">
+                    <label for="bookId">Book</label>
+                    <div class="input-group mb-3" style="width: 450px; /*overflow: hidden;*/">
+                        <select label="Book" id="bookId" style="width: inherit;" ng-model="bookStr"
+                                ng-click="fillFieldsModalThanBook()">
+                            <option>{{bookStr}}</option>
+                            <option ng-repeat="book in books">{{book.id}} {{book.name}} {{book.condition}} {{book.description}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-4">
                         <textarea class="form-control" aria-label="With textarea"
-                                  placeholder="description"
-                                  ng-model="editFields.description"></textarea>
+                                  placeholder="note"
+                                  ng-model="editFields.note"></textarea>
+                    </div>
+                    <div class="input-group mb-5">
+                        <input type="text" class="form-control" placeholder="startDate"
+                               ng-model="editFields.startDate">
+                    </div>
+                    <div class="input-group mb-6">
+                        <input type="text" class="form-control" placeholder="startDate"
+                               ng-model="editFields.endDate">
                     </div>
                 </div>
             </div>

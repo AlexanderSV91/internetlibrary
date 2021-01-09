@@ -30,10 +30,7 @@ public class OrderBookControllerRest {
 
     @GetMapping("orderbook/reader/{id}")
     public List<OrderBook> getOrderBookByReader(@PathVariable long id) {
-        System.out.println(id);
-        List<OrderBook> orderBookList = orderBookService.getOrderBookByReaderId(id);
-        System.out.println(orderBookList);
-        return orderBookList;
+        return orderBookService.getOrderBookByReaderId(id);
     }
 
     @PostMapping("/orderbook")

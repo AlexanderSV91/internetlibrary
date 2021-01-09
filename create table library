@@ -45,9 +45,9 @@ CREATE TABLE authorities
 );
 
 INSERT INTO users (username, password, enabled)
-VALUES ('1', '{noop}1', 1),
-       ('elena', '{noop}elena', 1),
-       ('alex', '{noop}alex', 1);
+VALUES ('1', '{bcrypt}$2a$10$VNVO9c3jM3PvDP6RQgqM1.Q2EyZj.YvSWTb3Xp9JitB6ZL26/EJfK', 1),
+       ('elena', '{bcrypt}$2a$10$V9qSbKbSegor2qSIhTsZlOeoWfu0mzlAs1qus3tSwPRxAhnshJvt.', 1),
+       ('alex', '{bcrypt}$2a$10$Yo6sPzqrsq1kJ7RzVIABHu7qqIVN86hk1Li1BDohM1noCZtVwOzdG', 1);
 
 INSERT INTO authorities (username, authority)
 VALUES ('1', 'ROLE_EMPLOYEE'),

@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-
 import javax.sql.DataSource;
 
 @Configuration
@@ -21,8 +20,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.dataSource = dataSource;
     }
 
-
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication().dataSource(dataSource);
@@ -30,20 +27,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // временно отключаем безопаcность, чтобы не требовал ввода логина и пароля на страницах
-        http.authorizeRequests()
+        /*http.authorizeRequests()
                 .antMatchers("/**").permitAll()
                 .and()
-                .csrf().disable();
+                .csrf().disable();*/
 
-/*        http.csrf().disable().cors().and().authorizeRequests()
+        http.csrf().disable().cors().and().authorizeRequests()
+                .antMatchers("/").hasAnyRole("EMPLOYEE", "HR", "IT")
                 .antMatchers("/api/book/**").hasAnyRole("EMPLOYEE", "HR", "IT")
-*//*                .antMatchers(HttpMethod.DELETE, "/api/book/**").hasAnyRole("EMPLOYEE", "HR", "IT")
-                .antMatchers(HttpMethod.POST, "/api/book/**").hasAnyRole("EMPLOYEE", "HR", "IT")*//*
                 .antMatchers("/api/reader/**").hasAnyRole("EMPLOYEE", "HR", "IT")
                 .antMatchers("/api/orderbook").hasRole("EMPLOYEE")
                 //.antMatchers("/api/orderbook/reader/**").hasRole("EMPLOYEE")
-                .and().formLogin().permitAll();*/
+                .and().formLogin().permitAll();
     }
 
     /*
