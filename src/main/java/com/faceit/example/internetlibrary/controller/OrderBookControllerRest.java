@@ -1,10 +1,15 @@
 package com.faceit.example.internetlibrary.controller;
 
+import com.faceit.example.internetlibrary.config.MyUserDetails;
 import com.faceit.example.internetlibrary.model.OrderBook;
+import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enam.Status;
 import com.faceit.example.internetlibrary.sevice.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -20,14 +25,29 @@ public class OrderBookControllerRest {
 
     @GetMapping("/orderbook")
     public List<OrderBook> getAllOrderBook() {
+        /*Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        System.out.println(authorities.toString());*/
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(auth.getName());
+       /* List<OrderBook> orderBookList = orderBookService.getOrderBookByReaderId(auth.getName())*/
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username = null;
+        User user = null;
+        if (principal instanceof MyUserDetails) {
+            username = ((MyUserDetails)principal).getUsername();
+            user = ((MyUserDetails)principal).getUser();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println(username);
+        System.out.println(user);
         return orderBookService.getAllOrderBook();
     }
 
     @GetMapping("/orderbook/status")
     public Status[] getAllStatus() {
-        Status[] statuses = orderBookService.getAllStatus();
-        System.out.println();
-        return statuses;
+        return orderBookService.getAllStatus();
     }
 
     @GetMapping("/orderbook/{id}")

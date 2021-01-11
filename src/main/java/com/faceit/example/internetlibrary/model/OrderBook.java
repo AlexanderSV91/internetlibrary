@@ -6,7 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity(name = "order_book")
+@Entity(name = "order_books")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -18,10 +18,10 @@ public class OrderBook {
     @Column(name = "status")
     private Status status;
     @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "reader")
-    private Reader reader;
+    @JoinColumn(name = "user_id")
+    private User user;
     @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "book")
+    @JoinColumn(name = "book_id")
     private Book book;
     @Column(name = "note")
     private String note;

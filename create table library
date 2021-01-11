@@ -1,74 +1,47 @@
 USE library;
 
-CREATE TABLE reader
-(
-    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    first_name VARCHAR(20) NOT NULL,
-    last_name  VARCHAR(20) NOT NULL,
-    age        INT
-);
-
-CREATE TABLE book
-(
-    id             BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name           VARCHAR(20) NOT NULL,
-    book_condition VARCHAR(20) NOT NULL,
-    description    VARCHAR(100)
-);
-
-CREATE TABLE order_book
-(
-    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    status     VARCHAR(20),
-    reader     BIGINT,
-    book       BIGINT,
-    note       VARCHAR(100),
-    start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    end_date   DATETIME,
-    FOREIGN KEY (reader) REFERENCES reader (id),
-    FOREIGN KEY (book) REFERENCES book (id)
-);
-
 CREATE TABLE users
 (
-    username varchar(15),
-    password varchar(100),
-    enabled  tinyint(1),
-    PRIMARY KEY (username)
+    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username   varchar(25),
+    password   varchar(100),
+    first_name VARCHAR(50) NOT NULL,
+    last_name  VARCHAR(50) NOT NULL,
+    age        INT,
+    role       varchar(25),
+    enabled    tinyint(1)
 );
 
-CREATE TABLE authorities
+CREATE TABLE books
 (
-    username  varchar(15),
-    authority varchar(25),
-    FOREIGN KEY (username) references users (username)
+    id             BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name           VARCHAR(100) NOT NULL,
+    book_condition VARCHAR(100) NOT NULL,
+    description    VARCHAR(500)
 );
 
-INSERT INTO users (username, password, enabled)
-VALUES ('1', '{bcrypt}$2a$10$VNVO9c3jM3PvDP6RQgqM1.Q2EyZj.YvSWTb3Xp9JitB6ZL26/EJfK', 1),
-       ('elena', '{bcrypt}$2a$10$QJytUJ5XfzZRlTFdRUK9P.kyF1MF7SvGAduftYqT.PB.oyXqX258C', 1),
-       ('alex', '{bcrypt}$2a$10$YNxwUHuWSdnx3DRzW.if0.iCRnwqAwYEnkkqODQJcf3ldaZu/5hCG', 1);
+CREATE TABLE order_books
+(
+    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
+    status     VARCHAR(50),
+    user_id    BIGINT,
+    book_id    BIGINT,
+    note       VARCHAR(500),
+    start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    end_date   DATETIME,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (book_id) REFERENCES books (id)
+);
 
-INSERT INTO authorities (username, authority)
-VALUES ('1', 'ROLE_EMPLOYEE'),
-       ('elena', 'ROLE_HR'),
-       ('alex', 'ROLE_IT');
+INSERT INTO users (username, password, first_name, last_name, age, role, enabled)
+VALUES ('1', '$2a$10$VNVO9c3jM3PvDP6RQgqM1.Q2EyZj.YvSWTb3Xp9JitB6ZL26/EJfK', 'Alexander',
+        'Ivashenko', 26, 'ROLE_EMPLOYEE', 1),
+       ('elena', '$2a$10$QJytUJ5XfzZRlTFdRUK9P.kyF1MF7SvGAduftYqT.PB.oyXqX258C', 'Igor',
+        'Kruk', 26, 'ROLE_USER', 1),
+       ('alex', '$2a$10$YNxwUHuWSdnx3DRzW.if0.iCRnwqAwYEnkkqODQJcf3ldaZu/5hCG', 'Pasha',
+        'Nankovski', 26, 'ROLE_USER', 1);
 
-INSERT reader(first_name, last_name, age)
-VALUES ('Alexander', 'Ivashenko', 26),
-       ('Igor', 'Kruk', 26),
-       ('Pasha', 'Nankovski', 26),
-       ('firstName1', 'lastName1', 21),
-       ('firstName2', 'lastName2', 22),
-       ('firstName3', 'lastName3', 23),
-       ('firstName4', 'lastName4', 24),
-       ('firstName5', 'lastName5', 25),
-       ('firstName6', 'lastName6', 26),
-       ('firstName7', 'lastName7', 27),
-       ('firstName8', 'lastName8', 28),
-       ('firstName9', 'lastName9', 29);
-
-INSERT book(name, book_condition, description)
+INSERT books(name, book_condition, description)
 VALUES ('In Search of Lost', 'bad',
         'Swann''s Way, the first part of A la recherche de temps perdu, Marcel Proust''s seven-part cycle'),
        ('Ulysses by James', 'good',
@@ -89,17 +62,11 @@ VALUES ('In Search of Lost', 'bad',
        ('name8', 'bookCondition8', 'description8'),
        ('name9', 'bookCondition9', 'description9');
 
-INSERT order_book(status, reader, book, note, start_date, end_date)
+INSERT order_books(status, user_id, book_id, note, start_date, end_date)
 VALUES ('NEW', 1, 1, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
        ('OLD', 2, 2, 'brand new', '2021-01-06 23:59:59', '2021-02-24 23:59:59'),
        ('STOLEN', 3, 3, 'torn leaf', '2021-01-07 23:59:59', '2021-04-20 23:59:59'),
-       ('TAKEN', 4, 4, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
-       ('IN_LIBRARY', 5, 5, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
-       ('IN_LIBRARY', 6, 6, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
-       ('OLD', 7, 7, 'brand new', '2021-01-06 23:59:59', '2021-02-24 23:59:59'),
-       ('STOLEN', 8, 8, 'torn leaf', '2021-01-07 23:59:59', '2021-04-20 23:59:59'),
-       ('TAKEN', 9, 9, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
-       ('IN_LIBRARY', 10, 10, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59');
+       ('TAKEN', 1, 4, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
+       ('IN_LIBRARY', 2, 5, 'brand new', '2021-01-06 23:59:59', '2021-02-24 23:59:59'),
+       ('STOLEN', 3, 6, 'torn leaf', '2021-01-07 23:59:59', '2021-04-20 23:59:59');
 
-Select * FROM authorities;
-SELECT * FROM users;

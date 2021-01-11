@@ -11,9 +11,9 @@ public class WebController {
         return "index";
     }
 
-    @GetMapping("/reader")
+    @GetMapping("/user")
     public String reader() {
-        return "reader";
+        return "user";
     }
 
     @GetMapping("/book")

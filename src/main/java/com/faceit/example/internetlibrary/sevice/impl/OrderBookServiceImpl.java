@@ -1,22 +1,21 @@
 package com.faceit.example.internetlibrary.sevice.impl;
 
+import com.faceit.example.internetlibrary.config.MyUserDetails;
 import com.faceit.example.internetlibrary.model.OrderBook;
 import com.faceit.example.internetlibrary.model.enam.Status;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
 import com.faceit.example.internetlibrary.sevice.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class OrderBookServiceImpl implements OrderBookService {
     private final OrderBookRepository orderBookRepository;
+    private MyUserDetails myUserDetails;
 
     @Autowired
     public OrderBookServiceImpl(OrderBookRepository orderBookRepository) {
@@ -25,8 +24,6 @@ public class OrderBookServiceImpl implements OrderBookService {
 
     @Override
     public List<OrderBook> getAllOrderBook() {
-/*        Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        System.out.println(authorities.toString());*/
         return orderBookRepository.findAll();
     }
 
@@ -74,7 +71,7 @@ public class OrderBookServiceImpl implements OrderBookService {
 
     @Override
     public List<OrderBook> getOrderBookByReaderId(long idReader) {
-        return orderBookRepository.getOrderBookByReaderId(idReader);
+        return orderBookRepository.getOrderBookByUserId(idReader);
     }
 
     @Override
