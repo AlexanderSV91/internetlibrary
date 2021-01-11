@@ -1,8 +1,8 @@
-package com.faceit.example.internetlibrary.sevice.impl;
+package com.faceit.example.internetlibrary.service.impl;
 
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.repository.UserRepository;
-import com.faceit.example.internetlibrary.sevice.UserService;
+import com.faceit.example.internetlibrary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUserById(User updateUser, long id) {
-        User reader = getUserById(id);
-        if (reader != null) {
+        User user = getUserById(id);
+        if (user != null) {
             updateUser.setId(id);
         }
         userRepository.save(updateUser);
@@ -51,5 +51,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public User findUserByUserName(String username) {
+        return userRepository.findUserByUserName(username);
     }
 }

@@ -1,6 +1,6 @@
 package com.faceit.example.internetlibrary.model;
 
-import com.faceit.example.internetlibrary.model.enam.Status;
+import com.faceit.example.internetlibrary.model.enums.Status;
 import lombok.*;
 
 import javax.persistence.*;

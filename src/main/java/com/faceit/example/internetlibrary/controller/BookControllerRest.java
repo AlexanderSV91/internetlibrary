@@ -1,7 +1,7 @@
 package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.model.Book;
-import com.faceit.example.internetlibrary.sevice.BookService;
+import com.faceit.example.internetlibrary.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

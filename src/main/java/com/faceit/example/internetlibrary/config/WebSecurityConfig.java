@@ -1,7 +1,6 @@
 package com.faceit.example.internetlibrary.config;
 
-import com.faceit.example.internetlibrary.sevice.impl.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.faceit.example.internetlibrary.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,18 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final DataSource dataSource;
-
-    @Autowired
-    public WebSecurityConfig(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -32,7 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(10);
     }
 
     @Bean
@@ -45,9 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authenticationProvider());
-        //auth.jdbcAuthentication().dataSource(dataSource);
     }
 
     @Override

@@ -1,11 +1,13 @@
-package com.faceit.example.internetlibrary.sevice.impl;
+package com.faceit.example.internetlibrary.service.impl;
 
 import com.faceit.example.internetlibrary.config.MyUserDetails;
 import com.faceit.example.internetlibrary.model.OrderBook;
-import com.faceit.example.internetlibrary.model.enam.Status;
+import com.faceit.example.internetlibrary.model.User;
+import com.faceit.example.internetlibrary.model.enums.Status;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
-import com.faceit.example.internetlibrary.sevice.OrderBookService;
+import com.faceit.example.internetlibrary.service.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,7 +17,6 @@ import java.util.Optional;
 @Service
 public class OrderBookServiceImpl implements OrderBookService {
     private final OrderBookRepository orderBookRepository;
-    private MyUserDetails myUserDetails;
 
     @Autowired
     public OrderBookServiceImpl(OrderBookRepository orderBookRepository) {
@@ -72,6 +73,37 @@ public class OrderBookServiceImpl implements OrderBookService {
     @Override
     public List<OrderBook> getOrderBookByReaderId(long idReader) {
         return orderBookRepository.getOrderBookByUserId(idReader);
+    }
+
+    @Override
+    public List<OrderBook> findOrderBooksByUser_UserName(String username) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username1;
+        User user = null;
+        if (principal instanceof MyUserDetails) {
+            username1 = ((MyUserDetails) principal).getUsername();
+            user = ((MyUserDetails) principal).getUser();
+        } else {
+            username1 = principal.toString();
+        }
+        assert user != null;
+        System.out.println(user.toString());
+        System.out.println(user.getRoles());
+
+
+        List<OrderBook> orderBookList = orderBookRepository.findOrderBooksByUser_UserName(username);
+        System.out.println(orderBookList.toString());
+        Optional<OrderBook> orderBook = orderBookList.stream().findFirst();
+        if (orderBook.isPresent()) {
+            OrderBook orderBook1 = orderBook.get();
+            String role = orderBook1.getUser().getRoles().stream().findFirst().get().getName();
+            if (role.equals("ROLE_EMPLOYEE")) {
+                orderBookList = getAllOrderBook();
+            }
+            System.out.println(role);
+        }
+        return orderBookList;
     }
 
     @Override

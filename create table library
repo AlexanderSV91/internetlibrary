@@ -8,8 +8,22 @@ CREATE TABLE users
     first_name VARCHAR(50) NOT NULL,
     last_name  VARCHAR(50) NOT NULL,
     age        INT,
-    role       varchar(25),
     enabled    tinyint(1)
+);
+
+CREATE TABLE roles
+(
+    id   BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(25)
+);
+
+CREATE TABLE user_role
+(
+    user_id BIGINT,
+    role_id BIGINT,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
 CREATE TABLE books
@@ -33,13 +47,22 @@ CREATE TABLE order_books
     FOREIGN KEY (book_id) REFERENCES books (id)
 );
 
-INSERT INTO users (username, password, first_name, last_name, age, role, enabled)
+INSERT INTO users (username, password, first_name, last_name, age, enabled)
 VALUES ('1', '$2a$10$VNVO9c3jM3PvDP6RQgqM1.Q2EyZj.YvSWTb3Xp9JitB6ZL26/EJfK', 'Alexander',
-        'Ivashenko', 26, 'ROLE_EMPLOYEE', 1),
+        'Ivashenko', 26, 1),
        ('elena', '$2a$10$QJytUJ5XfzZRlTFdRUK9P.kyF1MF7SvGAduftYqT.PB.oyXqX258C', 'Igor',
-        'Kruk', 26, 'ROLE_USER', 1),
+        'Kruk', 26, 1),
        ('alex', '$2a$10$YNxwUHuWSdnx3DRzW.if0.iCRnwqAwYEnkkqODQJcf3ldaZu/5hCG', 'Pasha',
-        'Nankovski', 26, 'ROLE_USER', 1);
+        'Nankovski', 26, 1);
+
+INSERT INTO roles (name)
+VALUES ('ROLE_EMPLOYEE'),
+       ('ROLE_USER');
+
+INSERT INTO user_role (user_role.user_id, user_role.role_id)
+VALUES (1, 1),
+       (2, 2),
+       (3, 2);
 
 INSERT books(name, book_condition, description)
 VALUES ('In Search of Lost', 'bad',

@@ -1,4 +1,4 @@
-package com.faceit.example.internetlibrary.sevice;
+package com.faceit.example.internetlibrary.service;
 
 import com.faceit.example.internetlibrary.model.User;
 
@@ -9,9 +9,11 @@ public interface UserService {
 
     User getUserById(long id);
 
-    User addUser(User newReader);
+    User addUser(User newUser);
 
-    User updateUserById(User updateReader, long id);
+    User updateUserById(User updateUser, long id);
 
     void deleteUserById(long id);
+
+    User findUserByUserName(String username);
 }
