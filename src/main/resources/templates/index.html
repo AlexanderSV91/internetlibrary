@@ -14,6 +14,7 @@
 <style>
     body {
         margin: 5px;
+        font-size: 12px;
     }
 </style>
 
@@ -23,6 +24,7 @@
 
         $scope.titleModal = "";
         $scope.orderBooks = [];
+        $scope.orderBookStatuses = [];
         $scope.readers = [];
         $scope.readerStr = "";
         $scope.books = [];
@@ -113,6 +115,17 @@
         }
         $scope.getAllOrderBook();
 
+        $scope.getAllOrderBookStatuses = function () {
+            $http({
+                url: 'http://localhost:8080/api/orderbook/status',
+                method: 'GET'
+            }).then(function (response) {
+                $scope.orderBookStatuses = response.data;
+            })
+        }
+        $scope.getAllOrderBookStatuses();
+
+
         $scope.getAllBook = function () {
             $http({
                 url: 'http://localhost:8080/api/book',
@@ -122,6 +135,15 @@
             })
         }
         $scope.getAllBook();
+
+        $scope.getAllBookByReaderId = function (readerId) {
+            $http({
+                url: 'http://localhost:8080/api/orderbook/reader/' + readerId,
+                method: 'GET'
+            }).then(function (response) {
+                $scope.orderBooks = response.data;
+            })
+        }
 
         $scope.getAllReader = function () {
             $http({
@@ -204,11 +226,22 @@
 </script>
 
 <body ng-app="orderBookApp" ng-controller="orderBookCtrl">
-<nav class="nav nav-pills nav-fill">
-    <a class="nav-item nav-link active disabled" href="http://localhost:8080/">Order Book</a>
-    <a class="nav-item nav-link" href="http://localhost:8080/book">Book</a>
-    <a class="nav-item nav-link" href="http://localhost:8080/reader">Reader</a>
-</nav>
+<div class="row">
+    <div class="col-11">
+        <nav class="nav nav-pills nav-fill">
+            <a class="nav-item nav-link active disabled" href="http://localhost:8080/">Order
+                Book</a>
+            <a class="nav-item nav-link" href="http://localhost:8080/book">Book</a>
+            <a class="nav-item nav-link" href="http://localhost:8080/reader">Reader</a>
+        </nav>
+    </div>
+    <div class="col-1">
+        <a class="btn btn-danger" href="http://localhost:8080/logout" role="button">
+            <img
+                    src="https://cdn1.iconfinder.com/data/icons/essentials-pack/96/logout_close_sign_out_exit_access-512.png"
+                    width="20"></a>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-12">
@@ -228,9 +261,16 @@
                 <th>START DATE</th>
                 <th>END DATE</th>
                 <th>
+                    <button class="btn btn-primary" ng-click="getAllOrderBook()">
+                        <img
+                                src="http://simpleicon.com/wp-content/uploads/refresh.png"
+                                width="20">
+                    </button>
                     <button class="btn btn-success" data-toggle="modal" data-target="#modal"
                             ng-click="changeTitleModal('Add Order Book')">
-                        Add Order Book
+                        <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/0/06/OOjs_UI_icon_add.svg"
+                                width="20">
                     </button>
                 </th>
             </tr>
@@ -249,13 +289,23 @@
                 <td>{{orderBook.startDate}}</td>
                 <td>{{orderBook.endDate}}</td>
                 <td>
+                    <button class="btn btn-primary"
+                            ng-click="getAllBookByReaderId(orderBook.reader.id)">
+                        <img
+                                src="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/search-512.png"
+                                width="20"></button>
+
                     <button class="btn btn-primary" data-toggle="modal" data-target="#modal"
                             ng-click="fillFieldsModal(orderBook); changeTitleModal('Edit Order Book')">
-                        Edit
+                        <img
+                                src="https://image.flaticon.com/icons/png/512/84/84380.png"
+                                width="20">
                     </button>
                     <button class="btn btn-danger"
                             ng-click="deleteOrderBookByIdRequest(orderBook.id)">
-                        Delete
+                        <img
+                                src="https://image.flaticon.com/icons/png/512/61/61848.png"
+                                width="20">
                     </button>
                 </td>
             </tr>
@@ -279,11 +329,7 @@
                            style="margin-right: 20px; line-height:25px;">Status</label>
                     <div class="input-group mb-1">
                         <select label="Status" id="statusS" ng-model="editFields.status">
-                            <option>NEW</option>
-                            <option>OLD</option>
-                            <option>STOLEN</option>
-                            <option>TAKEN</option>
-                            <option>IN_LIBRARY</option>
+                            <option ng-repeat="status in orderBookStatuses">{{status}}</option>
                         </select>
                     </div>
                     <label for="readerId">Reader</label>
@@ -291,7 +337,8 @@
                         <select label="Reader" id="readerId" ng-model="readerStr"
                                 ng-click="fillFieldsModalThanReader()">
                             <option>{{readerStr}}</option>
-                            <option ng-repeat="reader in readers">{{reader.id}} {{reader.firstName}} {{reader.lastName}} {{reader.age}}
+                            <option ng-repeat="reader in readers">{{reader.id}} {{reader.firstName}}
+                                {{reader.lastName}} {{reader.age}}
                             </option>
                         </select>
                     </div>
@@ -300,7 +347,8 @@
                         <select label="Book" id="bookId" style="width: inherit;" ng-model="bookStr"
                                 ng-click="fillFieldsModalThanBook()">
                             <option>{{bookStr}}</option>
-                            <option ng-repeat="book in books">{{book.id}} {{book.name}} {{book.condition}} {{book.description}}
+                            <option ng-repeat="book in books">{{book.id}} {{book.name}}
+                                {{book.condition}} {{book.description}}
                             </option>
                         </select>
                     </div>

@@ -1,7 +1,7 @@
 package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.model.OrderBook;
-import com.faceit.example.internetlibrary.model.Reader;
+import com.faceit.example.internetlibrary.model.enam.Status;
 import com.faceit.example.internetlibrary.sevice.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +21,13 @@ public class OrderBookControllerRest {
     @GetMapping("/orderbook")
     public List<OrderBook> getAllOrderBook() {
         return orderBookService.getAllOrderBook();
+    }
+
+    @GetMapping("/orderbook/status")
+    public Status[] getAllStatus() {
+        Status[] statuses = orderBookService.getAllStatus();
+        System.out.println();
+        return statuses;
     }
 
     @GetMapping("/orderbook/{id}")

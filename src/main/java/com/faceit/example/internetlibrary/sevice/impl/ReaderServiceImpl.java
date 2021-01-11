@@ -1,8 +1,9 @@
-package com.faceit.example.internetlibrary.sevice;
+package com.faceit.example.internetlibrary.sevice.impl;
 
 import com.faceit.example.internetlibrary.model.Book;
 import com.faceit.example.internetlibrary.model.Reader;
 import com.faceit.example.internetlibrary.repository.ReaderRepository;
+import com.faceit.example.internetlibrary.sevice.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

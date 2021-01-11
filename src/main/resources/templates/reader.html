@@ -11,6 +11,12 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
 </head>
+<style>
+    body {
+        margin: 5px;
+        font-size: 12px;
+    }
+</style>
 
 <script type="text/javascript">
     var app = angular.module("readerApp", []);
@@ -97,11 +103,22 @@
 </script>
 
 <body ng-app="readerApp" ng-controller="readerCtrl">
-<nav class="nav nav-pills nav-fill">
-    <a class="nav-item nav-link" href="http://localhost:8080/">Order Book</a>
-    <a class="nav-item nav-link" href="http://localhost:8080/book">Book</a>
-    <a class="nav-item nav-link active disabled" href="http://localhost:8080/reader">Reader</a>
-</nav>
+<div class="row">
+    <div class="col-11">
+        <nav class="nav nav-pills nav-fill">
+            <a class="nav-item nav-link" href="http://localhost:8080/">Order Book</a>
+            <a class="nav-item nav-link" href="http://localhost:8080/book">Book</a>
+            <a class="nav-item nav-link active disabled"
+               href="http://localhost:8080/reader">Reader</a>
+        </nav>
+    </div>
+    <div class="col-1">
+        <a class="btn btn-danger" href="http://localhost:8080/logout" role="button">
+            <img
+                    src="https://cdn1.iconfinder.com/data/icons/essentials-pack/96/logout_close_sign_out_exit_access-512.png"
+                    width="20"></a>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-12">
@@ -114,7 +131,9 @@
                 <th>
                     <button class="btn btn-success" data-toggle="modal" data-target="#modal"
                             ng-click="changeTitleModal('Add Reader')">
-                        Add Reader
+                        <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/0/06/OOjs_UI_icon_add.svg"
+                                width="20">
                     </button>
                 </th>
             </tr>
@@ -126,10 +145,14 @@
                 <td>
                     <button class="btn btn-primary" data-toggle="modal" data-target="#modal"
                             ng-click="fillFieldsModal(reader); changeTitleModal('Edit Reader')">
-                        Edit
+                        <img
+                                src="https://image.flaticon.com/icons/png/512/84/84380.png"
+                                width="20">
                     </button>
                     <button class="btn btn-danger" ng-click="deleteReaderByIdRequest(reader.id)">
-                        Delete
+                        <img
+                                src="https://image.flaticon.com/icons/png/512/61/61848.png"
+                                width="20">
                     </button>
                 </td>
             </tr>

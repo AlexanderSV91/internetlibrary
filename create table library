@@ -46,8 +46,8 @@ CREATE TABLE authorities
 
 INSERT INTO users (username, password, enabled)
 VALUES ('1', '{bcrypt}$2a$10$VNVO9c3jM3PvDP6RQgqM1.Q2EyZj.YvSWTb3Xp9JitB6ZL26/EJfK', 1),
-       ('elena', '{bcrypt}$2a$10$V9qSbKbSegor2qSIhTsZlOeoWfu0mzlAs1qus3tSwPRxAhnshJvt.', 1),
-       ('alex', '{bcrypt}$2a$10$Yo6sPzqrsq1kJ7RzVIABHu7qqIVN86hk1Li1BDohM1noCZtVwOzdG', 1);
+       ('elena', '{bcrypt}$2a$10$QJytUJ5XfzZRlTFdRUK9P.kyF1MF7SvGAduftYqT.PB.oyXqX258C', 1),
+       ('alex', '{bcrypt}$2a$10$YNxwUHuWSdnx3DRzW.if0.iCRnwqAwYEnkkqODQJcf3ldaZu/5hCG', 1);
 
 INSERT INTO authorities (username, authority)
 VALUES ('1', 'ROLE_EMPLOYEE'),
@@ -100,3 +100,6 @@ VALUES ('NEW', 1, 1, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
        ('STOLEN', 8, 8, 'torn leaf', '2021-01-07 23:59:59', '2021-04-20 23:59:59'),
        ('TAKEN', 9, 9, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59'),
        ('IN_LIBRARY', 10, 10, 'escaped', '2021-01-04 23:59:59', '2021-02-14 23:59:59');
+
+Select * FROM authorities;
+SELECT * FROM users;

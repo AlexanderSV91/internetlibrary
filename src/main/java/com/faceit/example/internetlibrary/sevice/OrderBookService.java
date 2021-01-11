@@ -1,7 +1,7 @@
 package com.faceit.example.internetlibrary.sevice;
 
 import com.faceit.example.internetlibrary.model.OrderBook;
-import com.faceit.example.internetlibrary.model.Reader;
+import com.faceit.example.internetlibrary.model.enam.Status;
 
 import java.util.List;
 
@@ -17,4 +17,6 @@ public interface OrderBookService {
     void deleteOrderBookById(long id);
 
     List<OrderBook> getOrderBookByReaderId(long idReader);
+
+    Status[] getAllStatus();
 }

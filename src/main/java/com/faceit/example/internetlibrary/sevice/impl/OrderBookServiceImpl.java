@@ -1,8 +1,9 @@
-package com.faceit.example.internetlibrary.sevice;
+package com.faceit.example.internetlibrary.sevice.impl;
 
 import com.faceit.example.internetlibrary.model.OrderBook;
-import com.faceit.example.internetlibrary.model.Reader;
+import com.faceit.example.internetlibrary.model.enam.Status;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
+import com.faceit.example.internetlibrary.sevice.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,5 +70,10 @@ public class OrderBookServiceImpl implements OrderBookService {
     @Override
     public List<OrderBook> getOrderBookByReaderId(long idReader) {
         return orderBookRepository.getOrderBookByReaderId(idReader);
+    }
+
+    @Override
+    public Status[] getAllStatus() {
+        return Status.values();
     }
 }
