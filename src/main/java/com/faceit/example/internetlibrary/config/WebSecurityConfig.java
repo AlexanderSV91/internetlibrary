@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable().cors().and().authorizeRequests()
                 .antMatchers("/").hasAnyRole("EMPLOYEE", "HR", "IT")
-                .antMatchers("/book").hasRole("EMPLOYEE")
+                .antMatchers("/book").hasAnyRole("EMPLOYEE", "IT")
                 .antMatchers("/reader").hasAnyRole("EMPLOYEE", "IT")
                 .antMatchers("/api/book/**").hasAnyRole("EMPLOYEE", "HR", "IT")
                 .antMatchers("/api/reader/**").hasAnyRole("EMPLOYEE", "HR", "IT")
@@ -42,4 +42,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/");
     }
+
+
 }

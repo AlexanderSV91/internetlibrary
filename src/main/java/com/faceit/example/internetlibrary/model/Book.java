@@ -7,9 +7,7 @@ import javax.persistence.*;
 @Entity(name = "book")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

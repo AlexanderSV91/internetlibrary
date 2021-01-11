@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 @Entity(name = "order_book")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 public class OrderBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

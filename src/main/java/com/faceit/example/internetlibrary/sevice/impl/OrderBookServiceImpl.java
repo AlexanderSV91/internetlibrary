@@ -5,9 +5,12 @@ import com.faceit.example.internetlibrary.model.enam.Status;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
 import com.faceit.example.internetlibrary.sevice.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +25,8 @@ public class OrderBookServiceImpl implements OrderBookService {
 
     @Override
     public List<OrderBook> getAllOrderBook() {
+/*        Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>)SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        System.out.println(authorities.toString());*/
         return orderBookRepository.findAll();
     }
 
