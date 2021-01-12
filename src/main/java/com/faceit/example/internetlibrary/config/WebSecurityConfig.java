@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -45,13 +47,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**").permitAll()
                 .and()
                 .csrf().disable();*/
-
-        http.csrf().disable().cors().and().authorizeRequests()
+/*        http.csrf().disable().cors().and().authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll()
                 .and()
-                .logout().permitAll();
+                .logout().permitAll();*/
+
+        http.csrf().disable().cors().and().authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .permitAll().and()
+                .logout()
+                .permitAll();
+        //.logoutSuccessHandler(logoutSuccessHandler());
 
         /*http.csrf().disable().cors().and().authorizeRequests()
                 .antMatchers("/").hasAnyRole("EMPLOYEE", "HR", "IT")

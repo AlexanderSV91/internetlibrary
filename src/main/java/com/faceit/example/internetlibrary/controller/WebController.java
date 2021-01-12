@@ -20,4 +20,14 @@ public class WebController {
     public String book() {
         return "book";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/registration")
+    public String registration() {
+        return "registration";
+    }
 }
