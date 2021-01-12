@@ -5,7 +5,7 @@ import com.faceit.example.internetlibrary.model.User;
 import java.util.List;
 
 public interface UserService {
-    List<User> getAllUser();
+    List<User> getAllUserByUsername(String username);
 
     User getUserById(long id);
 

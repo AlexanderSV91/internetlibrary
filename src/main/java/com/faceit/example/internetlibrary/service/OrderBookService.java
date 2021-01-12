@@ -18,7 +18,7 @@ public interface OrderBookService {
 
     List<OrderBook> getOrderBookByReaderId(long idReader);
 
-    List<OrderBook> findOrderBooksByUser_UserName(String username);
+    List<OrderBook> findOrderBooksByUserUserName(String username);
 
     Status[] getAllStatus();
 }

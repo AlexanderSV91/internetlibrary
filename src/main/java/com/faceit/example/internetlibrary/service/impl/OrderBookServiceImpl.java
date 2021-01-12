@@ -1,13 +1,10 @@
 package com.faceit.example.internetlibrary.service.impl;
 
-import com.faceit.example.internetlibrary.config.MyUserDetails;
 import com.faceit.example.internetlibrary.model.OrderBook;
-import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enums.Status;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
 import com.faceit.example.internetlibrary.service.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -76,32 +73,11 @@ public class OrderBookServiceImpl implements OrderBookService {
     }
 
     @Override
-    public List<OrderBook> findOrderBooksByUser_UserName(String username) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String username1;
-        User user = null;
-        if (principal instanceof MyUserDetails) {
-            username1 = ((MyUserDetails) principal).getUsername();
-            user = ((MyUserDetails) principal).getUser();
-        } else {
-            username1 = principal.toString();
-        }
-        assert user != null;
-        System.out.println(user.toString());
-        System.out.println(user.getRoles());
-
-
-        List<OrderBook> orderBookList = orderBookRepository.findOrderBooksByUser_UserName(username);
-        System.out.println(orderBookList.toString());
-        Optional<OrderBook> orderBook = orderBookList.stream().findFirst();
-        if (orderBook.isPresent()) {
-            OrderBook orderBook1 = orderBook.get();
-            String role = orderBook1.getUser().getRoles().stream().findFirst().get().getName();
-            if (role.equals("ROLE_EMPLOYEE")) {
-                orderBookList = getAllOrderBook();
-            }
-            System.out.println(role);
+    public List<OrderBook> findOrderBooksByUserUserName(String username) {
+        List<OrderBook> orderBookList = orderBookRepository.findOrderBooksByUserUserName(username);
+        boolean isEmployee = usernameIsEmployee(orderBookList);
+        if (isEmployee) {
+            orderBookList = getAllOrderBook();
         }
         return orderBookList;
     }
@@ -109,5 +85,20 @@ public class OrderBookServiceImpl implements OrderBookService {
     @Override
     public Status[] getAllStatus() {
         return Status.values();
+    }
+
+    private boolean usernameIsEmployee(List<OrderBook> optionalOrderBook) {
+        boolean isEmployee = false;
+        Optional<OrderBook> orderBookOptional = optionalOrderBook.stream().findFirst();
+        if (orderBookOptional.isPresent()) {
+            OrderBook orderBook = orderBookOptional.get();
+            isEmployee = orderBook.getUser()
+                    .getRoles()
+                    .stream()
+                    .findFirst()
+                    .filter(role -> role.getName().equals("ROLE_EMPLOYEE"))
+                    .isPresent();
+        }
+        return isEmployee;
     }
 }

@@ -50,9 +50,9 @@ CREATE TABLE order_books
 INSERT INTO users (username, password, first_name, last_name, age, enabled)
 VALUES ('1', '$2a$10$VNVO9c3jM3PvDP6RQgqM1.Q2EyZj.YvSWTb3Xp9JitB6ZL26/EJfK', 'Alexander',
         'Ivashenko', 26, 1),
-       ('elena', '$2a$10$QJytUJ5XfzZRlTFdRUK9P.kyF1MF7SvGAduftYqT.PB.oyXqX258C', 'Igor',
+       ('igor', '$2a$10$DQffgL2UDyxNHVWTi5FhjexHSC45.l9ZeWBaMNJyx.4e6iqfEMBCS', 'Igor',
         'Kruk', 26, 1),
-       ('alex', '$2a$10$YNxwUHuWSdnx3DRzW.if0.iCRnwqAwYEnkkqODQJcf3ldaZu/5hCG', 'Pasha',
+       ('pasha', '$2a$10$5hSIulRFp4i3fjSmO3I1aO5RNQnUqzZF20/qVsdSflCcKGEle0tSG', 'Pasha',
         'Nankovski', 26, 1);
 
 INSERT INTO roles (name)

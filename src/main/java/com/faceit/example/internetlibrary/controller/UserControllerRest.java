@@ -5,6 +5,7 @@ import com.faceit.example.internetlibrary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -18,8 +19,13 @@ public class UserControllerRest {
     }
 
     @GetMapping("/user")
-    public List<User> getAllUser() {
-        return userService.getAllUser();
+    public List<User> getAllUserByUsername(Principal principal) {
+        return userService.getAllUserByUsername(principal.getName());
+    }
+
+    @GetMapping("/current-user")
+    public User findUserByUserName(Principal principal) {
+        return userService.findUserByUserName(principal.getName());
     }
 
     @GetMapping("/user/{id}")

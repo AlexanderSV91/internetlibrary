@@ -1,12 +1,9 @@
 package com.faceit.example.internetlibrary.controller;
 
-import com.faceit.example.internetlibrary.config.MyUserDetails;
 import com.faceit.example.internetlibrary.model.OrderBook;
-import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enums.Status;
 import com.faceit.example.internetlibrary.service.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -23,8 +20,8 @@ public class OrderBookControllerRest {
     }
 
     @GetMapping("/orderbook")
-    public List<OrderBook> getAllOrderBook(Principal principal) {
-        return orderBookService.findOrderBooksByUser_UserName(principal.getName());
+    public List<OrderBook> getOrderBooksByUserUserName(Principal principal) {
+        return orderBookService.findOrderBooksByUserUserName(principal.getName());
     }
 
     @GetMapping("/orderbook/status")
@@ -37,7 +34,7 @@ public class OrderBookControllerRest {
         return orderBookService.getOrderBookById(id);
     }
 
-    @GetMapping("orderbook/reader/{id}")
+    @GetMapping("orderbook/user/{id}")
     public List<OrderBook> getOrderBookByReader(@PathVariable long id) {
         return orderBookService.getOrderBookByReaderId(id);
     }

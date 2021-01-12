@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:margin="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Книги</title>
@@ -11,220 +11,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
 </head>
-<style>
-    body {
-        margin: 5px;
-        font-size: 12px;
-    }
-</style>
-
-<script type="text/javascript">
-    var app = angular.module("orderBookApp", []);
-    app.controller("orderBookCtrl", function ($scope, $http) {
-
-        $scope.titleModal = "";
-        $scope.orderBooks = [];
-        $scope.orderBookStatuses = [];
-        $scope.readers = [];
-        $scope.readerStr = "";
-        $scope.books = [];
-        $scope.bookStr = "";
-        $scope.editFields = {
-            id: 0,
-            status: "",
-            readerId: "",
-            readerFirstName: "",
-            readerLastName: "",
-            readerAge: "",
-            bookId: "",
-            bookName: "",
-            bookCondition: "",
-            bookDescription: "",
-            note: "",
-            startDate: "",
-            endDate: ""
-        };
-
-        $scope.changeTitleModal = function (titleName) {
-            $scope.titleModal = titleName;
-            if (titleName === "Add Order Book") {
-                $scope.editFields.id = 0;
-                $scope.editFields.status = "";
-                $scope.editFields.readerId = 0;
-                $scope.editFields.readerFirstName = "";
-                $scope.editFields.readerLastName = "";
-                $scope.editFields.readerAge = 0;
-                $scope.editFields.bookId = 0;
-                $scope.editFields.bookName = "";
-                $scope.editFields.bookCondition = "";
-                $scope.editFields.bookDescription = "";
-                $scope.editFields.note = "";
-                $scope.editFields.startDate = "";
-                $scope.editFields.endDate = "";
-                $scope.bookStr = "";
-                $scope.readerStr = "";
-            }
-        }
-
-        $scope.fillFieldsModalThanReader = function () {
-            let string = $scope.readerStr.split(" ");
-            $scope.editFields.readerId = Number.parseInt(string[0]);
-            $scope.editFields.readerFirstName = string[1];
-            $scope.editFields.readerLastName = string[2];
-            $scope.editFields.readerAge = Number.parseInt(string[3]);
-        }
-
-        $scope.fillFieldsModalThanBook = function () {
-            let string = $scope.bookStr.split(" ");
-            for (let i = 0; i < $scope.books.length; i++) {
-                if (string[0].toString() === $scope.books[i].id.toString()) {
-                    $scope.editFields.bookId = $scope.books[i].id;
-                    $scope.editFields.bookName = $scope.books[i].name;
-                    $scope.editFields.bookCondition = $scope.books[i].bookCondition;
-                    $scope.editFields.bookDescription = $scope.books[i].description;
-                    break;
-                }
-            }
-        }
-
-        $scope.fillFieldsModal = function (readerBook) {
-            $scope.editFields.id = readerBook.id;
-            $scope.editFields.status = readerBook.status;
-            $scope.editFields.readerId = readerBook.reader.id;
-            $scope.editFields.readerFirstName = readerBook.reader.firstName;
-            $scope.editFields.readerLastName = readerBook.reader.lastName;
-            $scope.editFields.readerAge = readerBook.reader.age;
-            $scope.readerStr = readerBook.reader.id + ' ' + readerBook.reader.firstName + ' ' + readerBook.reader.lastName + ' ' + readerBook.reader.age;
-            $scope.editFields.bookId = readerBook.book.id;
-            $scope.editFields.bookName = readerBook.book.name;
-            $scope.editFields.bookCondition = readerBook.book.bookCondition;
-            $scope.editFields.bookDescription = readerBook.book.description;
-            $scope.bookStr = readerBook.book.id + ' ' + readerBook.book.name;
-            $scope.editFields.note = readerBook.note;
-            $scope.editFields.startDate = readerBook.startDate;
-            $scope.editFields.endDate = readerBook.endDate;
-        }
-
-        $scope.getAllOrderBook = function () {
-            $http({
-                url: 'http://localhost:8080/api/orderbook',
-                method: 'GET'
-            }).then(function (response) {
-                $scope.orderBooks = response.data;
-            })
-        }
-        $scope.getAllOrderBook();
-
-        $scope.getAllOrderBookStatuses = function () {
-            $http({
-                url: 'http://localhost:8080/api/orderbook/status',
-                method: 'GET'
-            }).then(function (response) {
-                $scope.orderBookStatuses = response.data;
-            })
-        }
-        $scope.getAllOrderBookStatuses();
-
-
-        $scope.getAllBook = function () {
-            $http({
-                url: 'http://localhost:8080/api/book',
-                method: 'GET'
-            }).then(function (response) {
-                $scope.books = response.data;
-            })
-        }
-        $scope.getAllBook();
-
-        $scope.getAllBookByReaderId = function (readerId) {
-            $http({
-                url: 'http://localhost:8080/api/orderbook/reader/' + readerId,
-                method: 'GET'
-            }).then(function (response) {
-                $scope.orderBooks = response.data;
-            })
-        }
-
-        $scope.getAllReader = function () {
-            $http({
-                url: 'http://localhost:8080/api/reader',
-                method: 'GET'
-            }).then(function (response) {
-                $scope.readers = response.data;
-            })
-        }
-        $scope.getAllReader();
-
-        $scope.deleteOrderBookByIdRequest = function (bookId) {
-            $http({
-                url: 'http://localhost:8080/api/orderbook/' + bookId,
-                method: 'DELETE'
-            }).then(function () {
-                $scope.getAllOrderBook();
-            })
-        }
-
-        $scope.saveOrderBook = function () {
-            let data = '';
-            let request = '';
-            let method = '';
-            if ($scope.editFields.id === 0) {
-                request = 'http://localhost:8080/api/orderbook/';
-                method = 'POST';
-                data = {
-                    status: $scope.editFields.status,
-                    reader: {
-                        id: $scope.editFields.readerId,
-                        firstName: $scope.editFields.readerFirstName,
-                        lastName: $scope.editFields.readerLastName,
-                        age: $scope.editFields.readerAge
-                    },
-                    book: {
-                        id: $scope.editFields.bookId,
-                        name: $scope.editFields.bookName,
-                        bookCondition: $scope.editFields.bookCondition,
-                        description: $scope.editFields.bookDescription
-                    },
-                    note: $scope.editFields.note,
-                    startDate: $scope.editFields.startDate,
-                    endDate: $scope.editFields.endDate
-                };
-            } else {
-                request = 'http://localhost:8080/api/orderbook/' + $scope.editFields.id;
-                method = 'PUT';
-                data = {
-                    id: $scope.editFields.id,
-                    status: $scope.editFields.status,
-                    reader: {
-                        id: $scope.editFields.readerId,
-                        firstName: $scope.editFields.readerFirstName,
-                        lastName: $scope.editFields.readerLastName,
-                        age: $scope.editFields.readerAge
-                    },
-                    book: {
-                        id: $scope.editFields.bookId,
-                        name: $scope.editFields.bookName,
-                        bookCondition: $scope.editFields.bookCondition,
-                        description: $scope.editFields.bookDescription
-                    },
-                    note: $scope.editFields.note,
-                    startDate: $scope.editFields.startDate,
-                    endDate: $scope.editFields.endDate
-                };
-            }
-            $http({
-                method: method,
-                url: request,
-                data: data
-            }).then(function successCallback() {
-                $scope.getAllOrderBook();
-            }, function errorCallback() {
-                alert("Error!");
-            });
-        }
-    });
-</script>
-
+<style>@import url("../css/style.css");</style>
+<script src="../js/index.js"></script>
 <body ng-app="orderBookApp" ng-controller="orderBookCtrl">
 <div class="row">
     <div class="col-11">
@@ -232,7 +20,7 @@
             <a class="nav-item nav-link active disabled" href="http://localhost:8080/">Order
                 Book</a>
             <a class="nav-item nav-link" href="http://localhost:8080/book">Book</a>
-            <a class="nav-item nav-link" href="http://localhost:8080/reader">Reader</a>
+            <a class="nav-item nav-link" href="http://localhost:8080/user">User</a>
         </nav>
     </div>
     <div class="col-1">
@@ -247,13 +35,11 @@
     <div class="col-12">
         <table class="table table-striped table-bordered table-hover">
             <tr>
-                <th>ID</th>
                 <th>STATUS</th>
-                <th>READER ID</th>
-                <th>READER FIRST NAME</th>
-                <th>READER LAST NAME</th>
-                <th>READER AGE</th>
-                <th>BOOK ID</th>
+                <th>USERNAME</th>
+                <th>USER FIRST NAME</th>
+                <th>USER LAST NAME</th>
+                <th>USER AGE</th>
                 <th>BOOK NAME</th>
                 <th>BOOK CONDITION</th>
                 <th>BOOK DESCRIPTION</th>
@@ -275,13 +61,11 @@
                 </th>
             </tr>
             <tr ng-repeat="orderBook in orderBooks">
-                <td>{{orderBook.id}}</td>
                 <td>{{orderBook.status}}</td>
-                <td>{{orderBook.reader.id}}</td>
-                <td>{{orderBook.reader.firstName}}</td>
-                <td>{{orderBook.reader.lastName}}</td>
-                <td>{{orderBook.reader.age}}</td>
-                <td>{{orderBook.book.id}}</td>
+                <td>{{orderBook.user.userName}}</td>
+                <td>{{orderBook.user.firstName}}</td>
+                <td>{{orderBook.user.lastName}}</td>
+                <td>{{orderBook.user.age}}</td>
                 <td>{{orderBook.book.name}}</td>
                 <td>{{orderBook.book.bookCondition}}</td>
                 <td>{{orderBook.book.description}}</td>
@@ -290,7 +74,7 @@
                 <td>{{orderBook.endDate}}</td>
                 <td>
                     <button class="btn btn-primary"
-                            ng-click="getAllBookByReaderId(orderBook.reader.id)">
+                            ng-click="getAllBookByUserId(orderBook.user.id)">
                         <img
                                 src="https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/search-512.png"
                                 width="20"></button>
@@ -332,24 +116,20 @@
                             <option ng-repeat="status in orderBookStatuses">{{status}}</option>
                         </select>
                     </div>
-                    <label for="readerId">Reader</label>
+                    <label for="userId">User</label>
                     <div class="input-group mb-2">
-                        <select label="Reader" id="readerId" ng-model="readerStr"
-                                ng-click="fillFieldsModalThanReader()">
-                            <option>{{readerStr}}</option>
-                            <option ng-repeat="reader in readers">{{reader.id}} {{reader.firstName}}
-                                {{reader.lastName}} {{reader.age}}
-                            </option>
+                        <select label="User" id="userId" ng-model="userStr"
+                                ng-click="fillFieldsModalThanUser()">
+                            <option ng-repeat="user in users"
+                            >{{user.id}} {{user.userName}} {{user.firstName}} {{user.lastName}} {{user.age}}</option>
                         </select>
                     </div>
                     <label for="bookId">Book</label>
                     <div class="input-group mb-3" style="width: 450px; /*overflow: hidden;*/">
                         <select label="Book" id="bookId" style="width: inherit;" ng-model="bookStr"
                                 ng-click="fillFieldsModalThanBook()">
-                            <option>{{bookStr}}</option>
-                            <option ng-repeat="book in books">{{book.id}} {{book.name}}
-                                {{book.condition}} {{book.description}}
-                            </option>
+                            <option ng-repeat="book in books"
+                            >{{book.id}} {{book.name}} {{book.bookCondition}} {{book.description}}</option>
                         </select>
                     </div>
                     <div class="input-group mb-4">
