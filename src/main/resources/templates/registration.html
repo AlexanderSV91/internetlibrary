@@ -2,9 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
 </head>
-<body>
+<script type="text/javascript" src="../js/registration.js"></script>
+<body ng-app="registrationApp" ng-controller="registrationCtrl">
+<div class="row">
+    <form style="max-width: 350px; margin: 0 auto;">
 
+        <div class="border border-secondary p-3 rounded">
+            <p>Registration</p>
+<!--            <p>
+                <input type="text" name="username" class="form-control" placeholder="Username" required autofocus/>
+            </p>
+            <p>
+                <input type="password" name="password" class="form-control" placeholder="Password" required/>
+            </p>
+            <p>
+                <input type="submit" value="Login" class="btn btn-primary"/>
+            </p>-->
+            <div class="input-group">
+                <div class="input-group mb-1">
+                    <input type="text" class="form-control" placeholder="username"
+                           ng-model="editFields.userName">
+                </div>
+                <div class="input-group mb-2">
+                    <input type="password" class="form-control" placeholder="password"
+                           ng-model="editFields.password">
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="confirmPassword"
+                           ng-model="editFields.confirmPassword">
+                </div>
+                <div class="input-group mb-4">
+                    <input type="text" class="form-control" placeholder="first name"
+                           ng-model="editFields.firstName">
+                </div>
+                <div class="input-group mb-5">
+                    <input type="text" class="form-control" placeholder="last name"
+                           ng-model="editFields.lastName">
+                </div>
+                <div class="input-group mb-6">
+                    <input type="text" class="form-control" placeholder="age"
+                           ng-model="editFields.age">
+                </div>
+                <div>
+                    <p>
+                        <input type="submit" value="Login" class="btn btn-primary"/>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 </body>
 </html>

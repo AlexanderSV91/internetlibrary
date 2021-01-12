@@ -1,21 +1,33 @@
-<html>
-<head></head>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
 <body>
-<h1>Login</h1>
-<form name='f' action="login" method='POST'>
-    <table>
-        <tr>
-            <td>User:</td>
-            <td><input type='text' name='username' value=''></td>
-        </tr>
-        <tr>
-            <td>Password:</td>
-            <td><input type='password' name='password' /></td>
-        </tr>
-        <tr>
-            <td><input name="submit" type="submit" value="submit" /></td>
-        </tr>
-    </table>
-</form>
+<div class="container-fluid text-center">
+    <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto;">
+
+        <div th:if="${param.logout}">
+            <p class="text-warning">You have been logged out.</p>
+        </div>
+        <div class="border border-secondary p-3 rounded">
+            <p>Login</p>
+            <p>
+                <input type="text" name="username" class="form-control" placeholder="Username" required autofocus/>
+            </p>
+            <p>
+                <input type="password" name="password" class="form-control" placeholder="Password" required/>
+            </p>
+            <p>
+                <input type="submit" value="Login" class="btn btn-primary" ng-click="saveUser()"/>
+            </p>
+            <p><a href="http://localhost:8080/registration">Redirect</a></p>
+        </div>
+    </form>
+</div>
 </body>
 </html>
