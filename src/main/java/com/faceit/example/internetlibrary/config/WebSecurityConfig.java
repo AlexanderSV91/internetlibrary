@@ -5,13 +5,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 @EnableWebSecurity
@@ -41,12 +45,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider());
     }
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-/*        http.authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .and()
-                .csrf().disable();*/
 /*        http.csrf().disable().cors().and().authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
@@ -54,28 +56,46 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().permitAll();*/
 
-        http.csrf().disable().cors().and().authorizeRequests()
-                .antMatchers("/registration").permitAll()
-                .antMatchers("/api/registration").permitAll()
+/*        http.csrf().disable().cors().and().authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                //.failureUrl("/regist")
+                .defaultSuccessUrl("/index")
+                //.failureUrl("/registration")
                 .permitAll().and()
                 .logout()
-                .permitAll();
-        //.logoutSuccessHandler(logoutSuccessHandler());
+                .permitAll();*/
 
-        /*http.csrf().disable().cors().and().authorizeRequests()
-                .antMatchers("/").hasAnyRole("EMPLOYEE", "HR", "IT")
-                .antMatchers("/book").hasAnyRole("EMPLOYEE", "IT")
-                .antMatchers("/reader").hasAnyRole("EMPLOYEE", "IT")
-                .antMatchers("/api/book/**").hasAnyRole("EMPLOYEE", "HR", "IT")
-                .antMatchers("/api/reader/**").hasAnyRole("EMPLOYEE", "HR", "IT")
-                .antMatchers("/api/orderbook/**").hasAnyRole("EMPLOYEE", "HR", "IT")
-                .and().formLogin().permitAll()
+        http
+                //.antMatcher("/registration").antMatcher("/api/registration")
+                .authorizeRequests()
+                .antMatchers("/", "/login", "/registration/**", "/api/registration/**").permitAll()
+                .antMatchers("/book/**", "/user/**", "/orderbook/**").hasAnyRole("EMPLOYEE", "USER")
+                .antMatchers("/api/**").hasAnyRole("EMPLOYEE", "USER")
+                .anyRequest()
+                .authenticated()
                 .and()
-                .logout().logoutUrl("/logout").logoutSuccessUrl("/");*/
+                .csrf().disable().cors()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .failureUrl("/login?error=true")
+                .defaultSuccessUrl("/orderbook")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login").and().exceptionHandling()
+                .accessDeniedPage("/access-denied");
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web
+                .ignoring()
+                //.antMatchers("/js/registration.js");
+                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
     }
 }

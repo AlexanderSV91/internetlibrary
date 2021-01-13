@@ -1,12 +1,15 @@
 package com.faceit.example.internetlibrary.config;
 
+import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MyUserDetails implements UserDetails {
 
@@ -18,8 +21,11 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRoles().toString());
-        return Collections.singletonList(authority);
+        Set<GrantedAuthority> roles = new HashSet<>();
+        for (Role role : user.getRoles()) {
+            roles.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return new ArrayList<>(roles);
     }
 
     @Override
@@ -49,7 +55,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isEnabled();
     }
 
     public User getUser() {

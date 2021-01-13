@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WebController {
 
-    @GetMapping("/")
+    @GetMapping("/orderbook")
     public String index() {
-        return "index";
+        return "orderbook";
     }
 
     @GetMapping("/user")
@@ -21,7 +21,12 @@ public class WebController {
         return "book";
     }
 
-    @GetMapping("/login")
+/*    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }*/
+
+    @GetMapping(value = {"/", "/login"})
     public String login() {
         return "login";
     }

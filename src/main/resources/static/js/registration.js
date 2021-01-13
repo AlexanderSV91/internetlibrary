@@ -1,5 +1,6 @@
 var app = angular.module("registrationApp", []);
 app.controller("registrationCtrl", function ($scope, $http) {
+    $scope.roles = [];
     $scope.editFields = {
         userName: "",
         password: "",
@@ -8,6 +9,17 @@ app.controller("registrationCtrl", function ($scope, $http) {
         lastName: "",
         age: 0
     };
+
+    $scope.getAllRoles = function () {
+        $http({
+            url: 'http://localhost:8080/api/registration-role',
+            method: 'GET'
+        }).then(function (response) {
+            $scope.roles = response.data;
+            console.log($scope.roles);
+        })
+    }
+    $scope.getAllRoles();
 
     $scope.saveUser = function () {
         console.log($scope.editFields);
@@ -26,7 +38,8 @@ app.controller("registrationCtrl", function ($scope, $http) {
                 url: request,
                 data: data
             }).then(function successCallback() {
-                $window.location.href = '/';
+                /*$window.location.href = '/';*/
+                alert("Add user")
             }, function errorCallback() {
                 alert("Error!");
             });
