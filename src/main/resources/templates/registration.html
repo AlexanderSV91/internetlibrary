@@ -15,36 +15,40 @@
 <body ng-app="registrationApp" ng-controller="registrationCtrl">
 
 <div class="row">
-    <form style="max-width: 350px; margin: 0 auto;">
+    <form style="max-width: 600px; width: 400px; margin: 0 auto;">
         <div class="border border-secondary p-3 rounded">
             <p>Registration</p>
-            <div class="input-group">
-                <div class="input-group mb-1">
-                    <input type="text" class="form-control" placeholder="username"
-                           ng-model="editFields.userName" />
-                </div>
-                <div class="input-group mb-2">
-                    <input type="password" class="form-control" placeholder="password"
-                           ng-model="editFields.password" />
-                </div>
-                <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="confirmPassword"
-                           ng-model="editFields.confirmPassword" />
-                </div>
-                <div class="input-group mb-4">
-                    <input type="text" class="form-control" placeholder="firstName"
-                           ng-model="editFields.firstName" />
-                </div>
-                <div class="input-group mb-5">
-                    <input type="text" class="form-control" placeholder="lastName"
-                           ng-model="editFields.lastName" />
-                </div>
-                <div>
-                    <p>
-                        <input type="submit" value="Registration" class="btn btn-primary" ng-click="saveUser()"/>
-                    </p>
-                </div>
-            </div>
+            <p>
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Username" ng-model="editFields.userName" required autofocus/>
+            </p>
+            <p>
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Password" ng-model="editFields.password" required />
+            </p>
+            <p>
+                <label>Confirm password</label>
+                <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm password" ng-model="editFields.confirmPassword" required />
+            </p>
+            <p>
+                <label>First name</label>
+                <input type="text" name="username" class="form-control" placeholder="First name" ng-model="editFields.firstName" required />
+            </p>
+            <p>
+                <label>Last name</label>
+                <input type="text" name="username" class="form-control" placeholder="Last name" ng-model="editFields.lastName" required />
+            </p>
+            <p>
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" placeholder="E-mail" ng-model="editFields.email" required />
+            </p>
+            <p>
+                <label>Age</label>
+                <input type="text" name="age" class="form-control" placeholder="Age" ng-model="editFields.age" required/>
+            </p>
+            <p>
+                <input type="submit" value="Registration" class="btn btn-primary" ng-click="saveUser()"/>
+            </p>
         </div>
     </form>
 </div>

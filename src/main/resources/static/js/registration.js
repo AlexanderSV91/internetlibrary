@@ -6,6 +6,7 @@ app.controller("registrationCtrl", function ($scope, $http) {
         confirmPassword: "",
         firstName: "",
         lastName: "",
+        email: "",
         age: 0
     };
 
@@ -19,6 +20,7 @@ app.controller("registrationCtrl", function ($scope, $http) {
                 password: $scope.editFields.password,
                 firstName: $scope.editFields.firstName,
                 lastName: $scope.editFields.lastName,
+                email: $scope.editFields.email,
                 age: $scope.editFields.age
             };
             $http({

@@ -3,12 +3,13 @@ USE library;
 CREATE TABLE users
 (
     id         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    username   varchar(25),
-    password   varchar(100),
+    username   VARCHAR(25),
+    password   VARCHAR(100),
     first_name VARCHAR(50) NOT NULL,
     last_name  VARCHAR(50) NOT NULL,
+    email      VARCHAR(50),
     age        INT,
-    enabled    tinyint(1)
+    enabled    TINYINT(1)
 );
 
 CREATE TABLE roles
@@ -47,13 +48,13 @@ CREATE TABLE order_books
     FOREIGN KEY (book_id) REFERENCES books (id)
 );
 
-INSERT INTO users (username, password, first_name, last_name, age, enabled)
+INSERT INTO users (username, password, first_name, last_name, email , age, enabled)
 VALUES ('1', '$2a$10$VNVO9c3jM3PvDP6RQgqM1.Q2EyZj.YvSWTb3Xp9JitB6ZL26/EJfK', 'Alexander',
-        'Ivashenko', 26, 1),
+        'Ivashenko', '1@gmail.com', 26, 1),
        ('igor', '$2a$10$DQffgL2UDyxNHVWTi5FhjexHSC45.l9ZeWBaMNJyx.4e6iqfEMBCS', 'Igor',
-        'Kruk', 26, 1),
+        'Kruk', 'igor@gmail.com', 26, 1),
        ('pasha', '$2a$10$5hSIulRFp4i3fjSmO3I1aO5RNQnUqzZF20/qVsdSflCcKGEle0tSG', 'Pasha',
-        'Nankovski', 26, 1);
+        'Nankovski', 'pasha@gmail.com', 26, 1);
 
 INSERT INTO roles (name)
 VALUES ('ROLE_EMPLOYEE'),

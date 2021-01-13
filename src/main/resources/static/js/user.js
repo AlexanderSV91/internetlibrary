@@ -8,6 +8,7 @@ app.controller("userCtrl", function ($scope, $http) {
         userName: "",
         firstName: "",
         lastName: "",
+        email: "",
         age: 0,
         roleId: 0,
         roleName: ""
@@ -21,6 +22,7 @@ app.controller("userCtrl", function ($scope, $http) {
             $scope.editFields.password = "";
             $scope.editFields.firstName = "";
             $scope.editFields.lastName = "";
+            $scope.editFields.email = "";
             $scope.editFields.age = "";
             $scope.editFields.roleId = 0;
             $scope.editFields.roleName = "";
@@ -32,6 +34,7 @@ app.controller("userCtrl", function ($scope, $http) {
         $scope.editFields.userName = user.userName;
         $scope.editFields.firstName = user.firstName;
         $scope.editFields.lastName = user.lastName;
+        $scope.editFields.email = user.email;
         $scope.editFields.age = user.age;
         $scope.editFields.roleId = user.role.id;
         $scope.editFields.roleName = user.role.name;
@@ -68,6 +71,7 @@ app.controller("userCtrl", function ($scope, $http) {
                 password: $scope.editFields.password,
                 firstName: $scope.editFields.firstName,
                 lastName: $scope.editFields.lastName,
+                email: $scope.editFields.email,
                 age: $scope.editFields.age,
                 role: [
                     {
@@ -85,6 +89,7 @@ app.controller("userCtrl", function ($scope, $http) {
                 password: $scope.editFields.password,
                 firstName: $scope.editFields.firstName,
                 lastName: $scope.editFields.lastName,
+                email: $scope.editFields.email,
                 age: $scope.editFields.age,
                 role: [
                     {
