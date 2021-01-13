@@ -56,11 +56,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable().cors().and().authorizeRequests()
                 .antMatchers("/registration").permitAll()
+                .antMatchers("/api/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .failureUrl("/registration")
+                //.failureUrl("/regist")
                 .permitAll().and()
                 .logout()
                 .permitAll();
