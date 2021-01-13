@@ -1,6 +1,7 @@
 package com.faceit.example.internetlibrary.service.impl;
 
 import com.faceit.example.internetlibrary.model.OrderBook;
+import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enums.Status;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
 import com.faceit.example.internetlibrary.service.OrderBookService;
@@ -73,11 +74,13 @@ public class OrderBookServiceImpl implements OrderBookService {
     }
 
     @Override
-    public List<OrderBook> findOrderBooksByUserUserName(String username) {
-        List<OrderBook> orderBookList = orderBookRepository.findOrderBooksByUserUserName(username);
-        boolean isEmployee = usernameIsEmployee(orderBookList);
+    public List<OrderBook> findOrderBooksByUserUserName(User user) {
+        boolean isEmployee = user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"));
+        List<OrderBook> orderBookList;
         if (isEmployee) {
             orderBookList = getAllOrderBook();
+        } else {
+            orderBookList = orderBookRepository.findOrderBooksByUserUserName(user.getUserName());
         }
         return orderBookList;
     }
@@ -85,20 +88,5 @@ public class OrderBookServiceImpl implements OrderBookService {
     @Override
     public Status[] getAllStatus() {
         return Status.values();
-    }
-
-    private boolean usernameIsEmployee(List<OrderBook> optionalOrderBook) {
-        boolean isEmployee = false;
-        Optional<OrderBook> orderBookOptional = optionalOrderBook.stream().findFirst();
-        if (orderBookOptional.isPresent()) {
-            OrderBook orderBook = orderBookOptional.get();
-            isEmployee = orderBook.getUser()
-                    .getRoles()
-                    .stream()
-                    .findFirst()
-                    .filter(role -> role.getName().equals("ROLE_EMPLOYEE"))
-                    .isPresent();
-        }
-        return isEmployee;
     }
 }

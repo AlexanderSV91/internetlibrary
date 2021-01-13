@@ -1,12 +1,13 @@
 package com.faceit.example.internetlibrary.controller;
 
+import com.faceit.example.internetlibrary.config.MyUserDetails;
 import com.faceit.example.internetlibrary.model.OrderBook;
 import com.faceit.example.internetlibrary.model.enums.Status;
 import com.faceit.example.internetlibrary.service.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -20,8 +21,8 @@ public class OrderBookControllerRest {
     }
 
     @GetMapping("/orderbook")
-    public List<OrderBook> getOrderBooksByUserUserName(Principal principal) {
-        return orderBookService.findOrderBooksByUserUserName(principal.getName());
+    public List<OrderBook> getOrderBooksByUserUserName(@AuthenticationPrincipal MyUserDetails userDetails) {
+        return orderBookService.findOrderBooksByUserUserName(userDetails.getUser());
     }
 
     @GetMapping("/orderbook/status")

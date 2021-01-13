@@ -21,11 +21,6 @@ public class WebController {
         return "book";
     }
 
-/*    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }*/
-
     @GetMapping(value = {"/", "/login"})
     public String login() {
         return "login";

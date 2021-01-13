@@ -2,6 +2,7 @@ package com.faceit.example.internetlibrary.service.impl;
 
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.model.User;
+import com.faceit.example.internetlibrary.repository.RoleRepository;
 import com.faceit.example.internetlibrary.repository.UserRepository;
 import com.faceit.example.internetlibrary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,23 +14,26 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
-    public List<User> getAllUserByUsername(String username) {
+    public List<User> getAllUserByUsername(User user) {
+        boolean isEmployee = user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"));
         List<User> users;
-        User user = userRepository.findUserByUserName(username);
-        boolean isEmployee = usernameIsEmployee(user);
         if (isEmployee) {
             users = userRepository.findAll();
         } else {
-            users = Collections.singletonList(user);
+            users = Collections.singletonList(userRepository.findUserByUserName(user.getUserName()));
         }
         return users;
     }
@@ -53,6 +57,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User addUser(User newUser, Set<Role> roles) {
+        boolean isEmployee = roles.stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"));
+        if (isEmployee) {
+            newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+            newUser.setEnabled(true);
+            Role userRole = roleRepository.findByName("ROLE_USER");
+            newUser.setRoles(new HashSet<>(Collections.singletonList(userRole)));
+            return userRepository.save(newUser);
+        } else {
+            throw new RuntimeException("user not add");
+        }
+    }
+
+    @Override
     public User updateUserById(User updateUser, long id) {
         User user = getUserById(id);
         if (user != null) {
@@ -70,26 +88,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(long id) {
-        userRepository.deleteById(id);
+    public void deleteUserById(long id, Set<Role> roleSet) {
+        boolean isEmployee = roleSet.stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"));
+        if (isEmployee) {
+            userRepository.deleteById(id);
+        }
     }
 
     @Override
     public User findUserByUserName(String username) {
         return userRepository.findUserByUserName(username);
     }
-
-    private boolean usernameIsEmployee(User user) {
-        boolean isEmployee = false;
-        if (user != null) {
-            isEmployee = user.getRoles()
-                    .stream()
-                    .findFirst()
-                    .filter(role -> role.getName().equals("ROLE_EMPLOYEE"))
-                    .isPresent();
-        }
-        return isEmployee;
-    }
-
-
 }

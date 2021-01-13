@@ -1,6 +1,7 @@
 package com.faceit.example.internetlibrary.service.impl;
 
 import com.faceit.example.internetlibrary.model.Book;
+import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.repository.BookRepository;
 import com.faceit.example.internetlibrary.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -34,22 +36,35 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book addBook(Book newBook) {
-        return bookRepository.save(newBook);
+    public Book addBook(Book newBook, Set<Role> roleSet) {
+        boolean isEmployee = roleSet.stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"));
+        if (isEmployee) {
+            return bookRepository.save(newBook);
+        } else {
+            throw  new RuntimeException("book not add");
+        }
     }
 
     @Override
-    public Book updateBookById(Book updateBook, long id) {
-        Book book = getBookById(id);
-        if (book != null) {
-            updateBook.setId(id);
+    public Book updateBookById(Book updateBook, long id, Set<Role> roleSet) {
+        boolean isEmployee = roleSet.stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"));
+        if (isEmployee) {
+            Book book = getBookById(id);
+            if (book != null) {
+                updateBook.setId(id);
+            }
+            bookRepository.save(updateBook);
+        } else {
+            throw new RuntimeException("book not updated");
         }
-        bookRepository.save(updateBook);
         return updateBook;
     }
 
     @Override
-    public void deleteBookById(long id) {
-        bookRepository.deleteById(id);
+    public void deleteBookById(long id, Set<Role> roleSet) {
+        boolean isEmployee = roleSet.stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"));
+        if (isEmployee) {
+            bookRepository.deleteById(id);
+        }
     }
 }

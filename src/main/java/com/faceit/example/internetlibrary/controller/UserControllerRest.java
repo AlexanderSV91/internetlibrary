@@ -1,11 +1,12 @@
 package com.faceit.example.internetlibrary.controller;
 
+import com.faceit.example.internetlibrary.config.MyUserDetails;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -19,13 +20,13 @@ public class UserControllerRest {
     }
 
     @GetMapping("/user")
-    public List<User> getAllUserByUsername(Principal principal) {
-        return userService.getAllUserByUsername(principal.getName());
+    public List<User> getAllUserByUsername(@AuthenticationPrincipal MyUserDetails userDetails) {
+        return userService.getAllUserByUsername(userDetails.getUser());
     }
 
     @GetMapping("/current-user")
-    public User findUserByUserName(Principal principal) {
-        return userService.findUserByUserName(principal.getName());
+    public User findUserByUserName(@AuthenticationPrincipal MyUserDetails userDetails) {
+        return userService.findUserByUserName(userDetails.getUsername());
     }
 
     @GetMapping("/user/{id}")
@@ -34,13 +35,13 @@ public class UserControllerRest {
     }
 
     @PostMapping("/user")
-    public User addUser(@RequestBody User newUser) {
-        return userService.addUser(newUser);
+    public User addUser(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody User newUser) {
+        return userService.addUser(newUser, userDetails.getUser().getRoles());
     }
 
     @DeleteMapping("/user/{id}")
-    public void deleteUserById(@PathVariable long id) {
-        userService.deleteUserById(id);
+    public void deleteUserById(@AuthenticationPrincipal MyUserDetails userDetails, @PathVariable long id) {
+        userService.deleteUserById(id, userDetails.getUser().getRoles());
     }
 
     @PutMapping("/user/{id}")
