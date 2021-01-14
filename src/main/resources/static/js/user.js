@@ -103,10 +103,10 @@ app.controller("userCtrl", function ($scope, $http) {
             method: method,
             url: request,
             data: data
-        }).then(function successCallback() {
+        }).then(function successCallback(response) {
             $scope.getAllUser();
-        }, function errorCallback() {
-            alert("Error!");
+        }, function errorCallback(response) {
+            console.log('post', response.data);
         });
     }
 });

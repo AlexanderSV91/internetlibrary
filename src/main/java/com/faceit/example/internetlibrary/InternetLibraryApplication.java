@@ -4,13 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /*
-sudo apt update
-sudo apt full-upgrade
-sudo apt install tasksel
-
-cat /etc/X11/default-display-manager
-sudo dpkg-reconfigure lightdm
-
 Стек технологий:
 1. Java 8 или выше
 2. Сборка проекта: Maven

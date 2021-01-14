@@ -1,6 +1,7 @@
 package com.faceit.example.internetlibrary.model;
 
 import com.faceit.example.internetlibrary.model.enums.Status;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,7 +27,9 @@ public class OrderBook {
     @Column(name = "note")
     private String note;
     @Column(name = "start_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startDate;
     @Column(name = "end_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endDate;
 }

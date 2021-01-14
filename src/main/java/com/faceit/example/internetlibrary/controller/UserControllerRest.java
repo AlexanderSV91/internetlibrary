@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,7 +36,8 @@ public class UserControllerRest {
     }
 
     @PostMapping("/user")
-    public User addUser(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody User newUser) {
+    public User addUser(@Valid @AuthenticationPrincipal MyUserDetails userDetails, @RequestBody User newUser) {
+        System.out.println(newUser);
         return userService.addUser(newUser, userDetails.getUser().getRoles());
     }
 
@@ -45,7 +47,7 @@ public class UserControllerRest {
     }
 
     @PutMapping("/user/{id}")
-    public User updateUserById(@RequestBody User updateUser, @PathVariable Long id) {
+    public User updateUserById(@Valid @RequestBody User updateUser, @PathVariable Long id) {
         return userService.updateUserById(updateUser, id);
     }
 }
