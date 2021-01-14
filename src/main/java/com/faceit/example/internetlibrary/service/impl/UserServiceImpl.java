@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.repository.RoleRepository;
@@ -66,7 +67,8 @@ public class UserServiceImpl implements UserService {
             newUser.setRoles(new HashSet<>(Collections.singletonList(userRole)));
             return userRepository.save(newUser);
         } else {
-            throw new RuntimeException("user not add");
+            throw new ApiRequestException("user not add");
+            //throw new RuntimeException("user not add");
         }
     }
 
