@@ -27,9 +27,10 @@ app.controller("registrationCtrl", function ($scope, $http) {
                 method: method,
                 url: request,
                 data: data
-            }).then(function successCallback() {
+            }).then(function successCallback(response) {
                 document.location.href='/';
-            }, function errorCallback() {
+            }, function errorCallback(response) {
+                console.log('post', response.data);
                 alert("Error!");
             });
         } else {

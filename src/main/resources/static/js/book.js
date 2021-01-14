@@ -72,9 +72,10 @@ app.controller("bookCtrl", function ($scope, $http) {
             method: method,
             url: request,
             data: data
-        }).then(function successCallback() {
+        }).then(function successCallback(response) {
             $scope.getAllBook();
-        }, function errorCallback() {
+        }, function errorCallback(response) {
+            console.log('post', response.data);
             alert("Error!");
         });
     }

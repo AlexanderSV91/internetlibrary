@@ -1,8 +1,8 @@
 package com.faceit.example.internetlibrary.controller;
 
-import com.faceit.example.internetlibrary.config.MyUserDetails;
+import com.faceit.example.internetlibrary.configuration.MyUserDetails;
 import com.faceit.example.internetlibrary.model.OrderBook;
-import com.faceit.example.internetlibrary.model.enums.Status;
+import com.faceit.example.internetlibrary.model.enumeration.Status;
 import com.faceit.example.internetlibrary.service.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

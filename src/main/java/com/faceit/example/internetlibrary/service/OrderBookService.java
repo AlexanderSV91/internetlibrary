@@ -2,7 +2,7 @@ package com.faceit.example.internetlibrary.service;
 
 import com.faceit.example.internetlibrary.model.OrderBook;
 import com.faceit.example.internetlibrary.model.User;
-import com.faceit.example.internetlibrary.model.enums.Status;
+import com.faceit.example.internetlibrary.model.enumeration.Status;
 
 import java.util.List;
 

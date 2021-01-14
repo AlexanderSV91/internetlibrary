@@ -1,6 +1,6 @@
 package com.faceit.example.internetlibrary.model;
 
-import com.faceit.example.internetlibrary.model.enums.Status;
+import com.faceit.example.internetlibrary.model.enumeration.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 

@@ -188,9 +188,10 @@ app.controller("orderBookCtrl", function ($scope, $http) {
             method: method,
             url: request,
             data: data
-        }).then(function successCallback() {
+        }).then(function successCallback(response) {
             $scope.getAllOrderBook();
-        }, function errorCallback() {
+        }, function errorCallback(response) {
+            console.log('post', response.data);
             alert("Error!");
         });
     }

@@ -1,4 +1,4 @@
-package com.faceit.example.internetlibrary.config;
+package com.faceit.example.internetlibrary.configuration;
 
 import com.faceit.example.internetlibrary.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;

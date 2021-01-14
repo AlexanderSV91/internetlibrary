@@ -1,4 +1,4 @@
-package com.faceit.example.internetlibrary.controller;
+package com.faceit.example.internetlibrary.handler;
 
 import com.faceit.example.internetlibrary.exception.ApiException;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
@@ -6,6 +6,7 @@ import com.faceit.example.internetlibrary.exception.ResourceAlreadyExists;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ConstraintViolationException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,9 +59,38 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiException, httpStatus);
     }
 
+    @ExceptionHandler(value = {HttpMessageNotReadableException.class})
+    public ResponseEntity<Object> handlerHttpMessageNotReadableException(
+            HttpMessageNotReadableException e) {
+        HttpStatus httpStatus = HttpStatus.NOT_ACCEPTABLE;
+        Map<String, String> message = buildMap(e.getMessage(), e.getLocalizedMessage());
+
+        ApiException apiException = buildApiException(
+                e.getClass().getSimpleName(),
+                message,
+                httpStatus,
+                LocalDateTime.now());
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
+
+    @ExceptionHandler(value = {SQLIntegrityConstraintViolationException.class})
+    public ResponseEntity<Object> handlerSQLIntegrityConstraintViolationException(
+            SQLIntegrityConstraintViolationException e) {
+        HttpStatus httpStatus = HttpStatus.FORBIDDEN;
+        Map<String, String> message = buildMap(e.getMessage(), e.getSQLState());
+
+        ApiException apiException = buildApiException(
+                e.getClass().getSimpleName(),
+                message,
+                httpStatus,
+                LocalDateTime.now());
+        return new ResponseEntity<>(apiException, httpStatus);
+    }
+
+
     @ExceptionHandler(value = {ConstraintViolationException.class})
-    public ResponseEntity<Object> handleValidationExceptions(ConstraintViolationException e) {
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+    public ResponseEntity<Object> handleViolationExceptions(ConstraintViolationException e) {
+        HttpStatus httpStatus = HttpStatus.LENGTH_REQUIRED;
         Map<String, String> message = new HashMap<>();
         e.getConstraintViolations().forEach(constraintViolation -> {
             String fieldName = constraintViolation.getPropertyPath().toString();
@@ -78,7 +109,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException e) {
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        HttpStatus httpStatus = HttpStatus.NOT_ACCEPTABLE;
         Map<String, String> message = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();

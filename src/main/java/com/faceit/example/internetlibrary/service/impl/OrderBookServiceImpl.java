@@ -2,7 +2,7 @@ package com.faceit.example.internetlibrary.service.impl;
 
 import com.faceit.example.internetlibrary.model.OrderBook;
 import com.faceit.example.internetlibrary.model.User;
-import com.faceit.example.internetlibrary.model.enums.Status;
+import com.faceit.example.internetlibrary.model.enumeration.Status;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
 import com.faceit.example.internetlibrary.service.OrderBookService;
 import org.springframework.beans.factory.annotation.Autowired;
