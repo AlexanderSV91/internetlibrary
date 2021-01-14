@@ -18,19 +18,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "username")
-    @NotBlank(message = "username")
+    @NotBlank(message = "Please provide a username")
     private String userName;
     @Column(name = "password")
     private String password;
     @Column(name = "first_name")
-    @NotBlank(message = "first_name")
+    @NotBlank(message = "Please provide your first name")
     private String firstName;
     @Column(name = "last_name")
-    @NotBlank(message = "last_name")
+    @NotBlank(message = "Please provide your last name")
     private String lastName;
     @Column(name = "email")
-    @Email(message = "email")
-    @NotBlank(message = "email")
+    @Email(message = "Please provide a valid Email")
+    @NotBlank(message = "Please provide an email")
     private String email;
     @Column(name = "age")
     private int age;

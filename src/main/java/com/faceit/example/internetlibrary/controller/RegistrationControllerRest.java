@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = {"/api-public"})
 public class RegistrationControllerRest {
@@ -19,7 +21,7 @@ public class RegistrationControllerRest {
     }
 
     @PostMapping("/registration")
-    public User addUser(@RequestBody User newUser) {
+    public User addUser(@Valid @RequestBody User newUser) {
         return userService.addUser(newUser);
     }
 }

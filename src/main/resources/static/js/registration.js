@@ -1,5 +1,6 @@
 var app = angular.module("registrationApp", []);
 app.controller("registrationCtrl", function ($scope, $http) {
+    $scope.errors = []
     $scope.editFields = {
         userName: "",
         password: "",
@@ -7,7 +8,7 @@ app.controller("registrationCtrl", function ($scope, $http) {
         firstName: "",
         lastName: "",
         email: "",
-        age: 0
+        age: ""
     };
 
     $scope.saveUser = function () {
@@ -28,10 +29,22 @@ app.controller("registrationCtrl", function ($scope, $http) {
                 url: request,
                 data: data
             }).then(function successCallback(response) {
-                document.location.href='/';
+                document.location.href = '/';
             }, function errorCallback(response) {
                 console.log('post', response.data);
-                alert("Error!");
+                if (response.data.message.userName != null) {
+                    console.log(response.data.message.userName)
+                    $scope.editFields.userName = response.data.message.userName;
+                }
+                if (response.data.message.firstName != null) {
+                    $scope.editFields.firstName = response.data.message.firstName;
+                }
+                if (response.data.message.lastName != null) {
+                    $scope.editFields.lastName = response.data.message.lastName;
+                }
+                if (response.data.message.email != null) {
+                    $scope.editFields.email = response.data.message.email;
+                }
             });
         } else {
             alert("password does not match!");
