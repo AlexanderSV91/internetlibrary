@@ -185,3 +185,16 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: books
+  - changeSet:
+      id: 7
+      author: AlexanderSV91
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: activation_code
+                  type: varchar(255)
+              - column:
+                  name: registration_date
+                  type: datetime
