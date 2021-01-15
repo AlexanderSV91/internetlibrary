@@ -1,4 +1,4 @@
-package com.faceit.example.internetlibrary;
+package com.faceit.example.internetlibrary.utils;
 
 import com.faceit.example.internetlibrary.exception.ApiException;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;

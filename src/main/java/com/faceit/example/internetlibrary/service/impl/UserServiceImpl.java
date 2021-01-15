@@ -1,6 +1,6 @@
 package com.faceit.example.internetlibrary.service.impl;
 
-import com.faceit.example.internetlibrary.Utils;
+import com.faceit.example.internetlibrary.utils.Utils;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.exception.ResourceAlreadyExists;
 import com.faceit.example.internetlibrary.model.Role;

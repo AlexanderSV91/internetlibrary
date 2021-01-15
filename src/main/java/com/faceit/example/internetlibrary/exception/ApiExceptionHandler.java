@@ -1,10 +1,6 @@
-package com.faceit.example.internetlibrary.handler;
+package com.faceit.example.internetlibrary.exception;
 
-import com.faceit.example.internetlibrary.Utils;
-import com.faceit.example.internetlibrary.exception.ApiException;
-import com.faceit.example.internetlibrary.exception.ApiRequestException;
-import com.faceit.example.internetlibrary.exception.ResourceAlreadyExists;
-import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
+import com.faceit.example.internetlibrary.utils.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -12,7 +8,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ConstraintViolationException;
 import java.sql.SQLIntegrityConstraintViolationException;
