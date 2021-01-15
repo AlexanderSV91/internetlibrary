@@ -13,7 +13,12 @@ app.controller("registrationCtrl", function ($scope, $http) {
 
     $scope.saveUser = function () {
         console.log($scope.editFields);
-        if ($scope.editFields.password === $scope.editFields.confirmPassword) {
+        if ($scope.editFields.userName !== 'username exists' &&
+            $scope.editFields.email !== 'Please provide an email' &&
+            $scope.editFields.lastName !== 'Please provide your last name' &&
+            $scope.editFields.firstName !== 'Please provide your first name' &&
+            $scope.editFields.password === $scope.editFields.confirmPassword) {
+
             let request = 'http://localhost:8080/api-public/registration';
             let method = 'POST';
             let data = {
@@ -47,7 +52,7 @@ app.controller("registrationCtrl", function ($scope, $http) {
                 }
             });
         } else {
-            alert("password does not match!");
+            alert("fields are incorrectly filled");
         }
     }
 });

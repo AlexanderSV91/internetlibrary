@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.Utils;
 import com.faceit.example.internetlibrary.model.OrderBook;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
@@ -28,12 +29,8 @@ public class OrderBookServiceImpl implements OrderBookService {
 
     @Override
     public OrderBook getOrderBookById(long id) {
-        OrderBook orderBook = null;
         Optional<OrderBook> optionalOrderBook = orderBookRepository.findById(id);
-        if (optionalOrderBook.isPresent()) {
-            orderBook = optionalOrderBook.get();
-        }
-        return orderBook;
+        return Utils.getDataFromTypeOptional(optionalOrderBook);
     }
 
     @Override
@@ -75,7 +72,7 @@ public class OrderBookServiceImpl implements OrderBookService {
 
     @Override
     public List<OrderBook> findOrderBooksByUserUserName(User user) {
-        boolean isEmployee = user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"));
+        boolean isEmployee = Utils.isEmployee(user.getRoles());
         List<OrderBook> orderBookList;
         if (isEmployee) {
             orderBookList = getAllOrderBook();

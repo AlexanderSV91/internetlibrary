@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.handler;
 
+import com.faceit.example.internetlibrary.Utils;
 import com.faceit.example.internetlibrary.exception.ApiException;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.exception.ResourceAlreadyExists;
@@ -25,8 +26,9 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {ApiRequestException.class})
     public ResponseEntity<Object> handlerApiRequestException(ApiRequestException e) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        Map<String, String> message = buildMap(e.getMessage(), e.getMessage());
-        ApiException apiException = buildApiException(
+        Map<String, String> message = Utils.buildMap(e.getMessage(), e.getMessage());
+
+        ApiException apiException = Utils.buildApiException(
                 e.getClass().getSimpleName(),
                 message,
                 httpStatus,
@@ -37,8 +39,9 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {ResourceAlreadyExists.class})
     public ResponseEntity<Object> handlerResourceAlreadyExistException(ResourceAlreadyExists e) {
         HttpStatus httpStatus = HttpStatus.CONFLICT;
-        Map<String, String> message = buildMap(e.getMessage(), e.getNameResource());
-        ApiException apiException = buildApiException(
+        Map<String, String> message = Utils.buildMap(e.getMessage(), e.getNameResource());
+
+        ApiException apiException = Utils.buildApiException(
                 e.getClass().getSimpleName(),
                 message,
                 httpStatus,
@@ -49,9 +52,9 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {ResourceNotFoundException.class})
     public ResponseEntity<Object> handlerResourceNotFoundException(ResourceNotFoundException e) {
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
-        Map<String, String> message = buildMap(e.getMessage(), ResourceNotFoundException.NOT_FOUND);
+        Map<String, String> message = Utils.buildMap(e.getMessage(), ResourceNotFoundException.NOT_FOUND);
 
-        ApiException apiException = buildApiException(
+        ApiException apiException = Utils.buildApiException(
                 e.getClass().getSimpleName(),
                 message,
                 httpStatus,
@@ -63,9 +66,9 @@ public class ApiExceptionHandler {
     public ResponseEntity<Object> handlerHttpMessageNotReadableException(
             HttpMessageNotReadableException e) {
         HttpStatus httpStatus = HttpStatus.NOT_ACCEPTABLE;
-        Map<String, String> message = buildMap(e.getMessage(), e.getLocalizedMessage());
+        Map<String, String> message = Utils.buildMap(e.getMessage(), e.getLocalizedMessage());
 
-        ApiException apiException = buildApiException(
+        ApiException apiException = Utils.buildApiException(
                 e.getClass().getSimpleName(),
                 message,
                 httpStatus,
@@ -77,16 +80,15 @@ public class ApiExceptionHandler {
     public ResponseEntity<Object> handlerSQLIntegrityConstraintViolationException(
             SQLIntegrityConstraintViolationException e) {
         HttpStatus httpStatus = HttpStatus.FORBIDDEN;
-        Map<String, String> message = buildMap(e.getMessage(), e.getSQLState());
+        Map<String, String> message = Utils.buildMap(e.getMessage(), e.getSQLState());
 
-        ApiException apiException = buildApiException(
+        ApiException apiException = Utils.buildApiException(
                 e.getClass().getSimpleName(),
                 message,
                 httpStatus,
                 LocalDateTime.now());
         return new ResponseEntity<>(apiException, httpStatus);
     }
-
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
     public ResponseEntity<Object> handleViolationExceptions(ConstraintViolationException e) {
@@ -98,14 +100,13 @@ public class ApiExceptionHandler {
             message.put(fieldName, errorMessage);
         });
 
-       ApiException apiException = buildApiException(
+       ApiException apiException = Utils.buildApiException(
                e.getClass().getSimpleName(),
                message,
                httpStatus,
                LocalDateTime.now());
         return new ResponseEntity<>(apiException, httpStatus);
     }
-
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException e) {
@@ -117,22 +118,11 @@ public class ApiExceptionHandler {
             message.put(fieldName, errorMessage);
         });
 
-        ApiException apiException = buildApiException(
+        ApiException apiException = Utils.buildApiException(
                 e.getClass().getSimpleName(),
                 message,
                 httpStatus,
                 LocalDateTime.now());
         return new ResponseEntity<>(apiException, httpStatus);
-    }
-
-    private ApiException buildApiException(String simpleName,
-                                           Map<String, String> message,
-                                           HttpStatus badRequest,
-                                           LocalDateTime now) {
-        return new ApiException(simpleName, message, badRequest, now);
-    }
-
-    private Map<String, String> buildMap(String key, String value) {
-        return new HashMap<>(){{put(key,value);}};
     }
 }

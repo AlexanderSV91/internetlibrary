@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.Utils;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.model.Book;
 import com.faceit.example.internetlibrary.model.Role;
@@ -28,27 +29,23 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBookById(long id) {
-        Book book = null;
         Optional<Book> optionalBook = bookRepository.findById(id);
-        if (optionalBook.isPresent()) {
-            book = optionalBook.get();
-        }
-        return book;
+        return Utils.getDataFromTypeOptional(optionalBook);
     }
 
     @Override
     public Book addBook(Book newBook, Set<Role> roles) {
-        boolean isEmployee = isEmployee(roles);
+        boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
             return bookRepository.save(newBook);
         } else {
-            throw  new ApiRequestException("book not add");
+            throw new ApiRequestException("book not add");
         }
     }
 
     @Override
     public Book updateBookById(Book updateBook, long id, Set<Role> roles) {
-        boolean isEmployee = isEmployee(roles);
+        boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
             Book book = getBookById(id);
             if (book != null) {
@@ -63,15 +60,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteBookById(long id, Set<Role> roles) {
-        boolean isEmployee = isEmployee(roles);
+        boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
             bookRepository.deleteById(id);
         } else {
             throw new ApiRequestException("book not delete");
         }
-    }
-
-    private boolean isEmployee(Set<Role> roles) {
-        return roles.stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"));
     }
 }

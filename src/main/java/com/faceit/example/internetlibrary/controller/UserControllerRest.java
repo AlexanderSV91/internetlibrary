@@ -37,7 +37,6 @@ public class UserControllerRest {
 
     @PostMapping("/user")
     public User addUser(@Valid @AuthenticationPrincipal MyUserDetails userDetails, @RequestBody User newUser) {
-        System.out.println(newUser);
         return userService.addUser(newUser, userDetails.getUser().getRoles());
     }
 

@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.Utils;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.exception.ResourceAlreadyExists;
 import com.faceit.example.internetlibrary.model.Role;
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUserByUsername(User user) {
-        boolean isEmployee = isEmployee(user.getRoles());
+        boolean isEmployee = Utils.isEmployee(user.getRoles());
         List<User> users;
         if (isEmployee) {
             users = userRepository.findAll();
@@ -43,21 +44,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(long id) {
-        User user = null;
         Optional<User> optionalReader = userRepository.findById(id);
-        if (optionalReader.isPresent()) {
-            user = optionalReader.get();
-        }
-        return user;
+        return Utils.getDataFromTypeOptional(optionalReader);
     }
 
     @Override
     public User addUser(User newUser) {
         checkUsername(newUser.getUserName());
 
-        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
-        newUser.setEnabled(true);
-        newUser.setRoles(new HashSet<>(Collections.singletonList(new Role(2, "ROLE_USER"))));
+        preparingToAddUser(newUser);
         return userRepository.save(newUser);
     }
 
@@ -65,12 +60,9 @@ public class UserServiceImpl implements UserService {
     public User addUser(User newUser, Set<Role> roles) {
         checkUsername(newUser.getUserName());
 
-        boolean isEmployee = isEmployee(roles);
+        boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
-            newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
-            newUser.setEnabled(true);
-            Role userRole = roleRepository.findByName("ROLE_USER");
-            newUser.setRoles(new HashSet<>(Collections.singletonList(userRole)));
+            preparingToAddUser(newUser);
             return userRepository.save(newUser);
         } else {
             throw new ApiRequestException("user not add");
@@ -98,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(long id, Set<Role> roles) {
-        boolean isEmployee = isEmployee(roles);
+        boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
             userRepository.deleteById(id);
         } else {
@@ -119,11 +111,14 @@ public class UserServiceImpl implements UserService {
     private void checkUsername(String username) {
         boolean checkUser = existsUserByUserName(username);
         if (checkUser) {
-            throw new ResourceAlreadyExists("user exists", username);
+            throw new ResourceAlreadyExists("userName", "username exists");
         }
     }
 
-    private boolean isEmployee(Set<Role> roles) {
-        return roles.stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYEE"));
+    private void preparingToAddUser(User newUser) {
+        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        newUser.setEnabled(true);
+        Role userRole = roleRepository.findByName("ROLE_USER");
+        newUser.setRoles(new HashSet<>(Collections.singletonList(userRole)));
     }
 }
