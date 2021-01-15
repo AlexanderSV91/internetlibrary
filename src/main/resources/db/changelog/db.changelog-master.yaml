@@ -1,0 +1,187 @@
+databaseChangeLog:
+
+  - logicalFilePath: db/changelog/db.changelog-master.yaml
+  - changeSet:
+      id: 1
+      author: AlexanderSV91
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: age
+                  type: INT
+              - column:
+                  name: enabled
+                  type: TINYINT(1)
+                  defaultValue: false
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+        - createTable:
+            tableName: user_role
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: books
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: book_condition
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(500)
+        - createTable:
+            tableName: order_books
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: book_id
+                  type: BIGINT
+              - column:
+                  name: note
+                  type: varchar(500)
+              - column:
+                  name: start_date
+                  type: datetime
+                  defaultValue: now()
+              - column:
+                  name: end_date
+                  type: datetime
+                  defaultValue:
+  - changeSet:
+      id: 2
+      author: AlexanderSV91
+      changes:
+        - addPrimaryKey:
+            columnNames: user_id, role_id
+            tableName: user_role
+  - changeSet:
+      id: 3
+      author: AlexanderSV91
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_role
+            constraintName: TABLE_USER_ROLE_USER_ID_IN_TABLE_USERS_ID
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: users
+  - changeSet:
+      id: 4
+      author: AlexanderSV91
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: user_role
+            constraintName: TABLE_USER_ROLE_ROLE_ID_IN_TABLE_ROLES_ID
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: roles
+  - changeSet:
+      id: 5
+      author: AlexanderSV91
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: order_books
+            constraintName: TABLE_ORDER_BOOKS_USER_ID_IN_TABLE_USERS_ID
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: users
+  - changeSet:
+      id: 6
+      author: AlexanderSV91
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: book_id
+            baseTableName: order_books
+            constraintName: TABLE_ORDER_BOOKS_BOOK_ID_IN_TABLE_BOOKS_ID
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: books
