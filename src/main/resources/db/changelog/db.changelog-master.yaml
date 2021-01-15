@@ -116,9 +116,13 @@ databaseChangeLog:
               - column:
                   name: user_id
                   type: BIGINT
+                  constraints:
+                    nullable: false
               - column:
                   name: book_id
                   type: BIGINT
+                  constraints:
+                    nullable: false
               - column:
                   name: note
                   type: varchar(500)
@@ -189,12 +193,39 @@ databaseChangeLog:
       id: 7
       author: AlexanderSV91
       changes:
-        - addColumn:
-            tableName: users
+        - createTable:
+            tableName: confirmation_tokens
             columns:
               - column:
-                  name: activation_code
-                  type: varchar(255)
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
               - column:
-                  name: registration_date
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(30)
+                  defaultValue: 'PENDING'
+              - column:
+                  name: created_date
                   type: datetime
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 8
+      author: AlexanderSV91
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: confirmation_tokens
+            constraintName: TABLE_CONFIRMATION_TOKENS_USER_ID_IN_TABLE_USERS_ID
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: users
