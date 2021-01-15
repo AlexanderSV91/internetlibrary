@@ -1,6 +1,6 @@
 package com.faceit.example.internetlibrary.service.impl;
 
-import com.faceit.example.internetlibrary.utils.Utils;
+import com.faceit.example.internetlibrary.util.Utils;
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.repository.RoleRepository;
 import com.faceit.example.internetlibrary.service.RoleService;

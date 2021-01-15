@@ -1,6 +1,6 @@
 package com.faceit.example.internetlibrary.exception;
 
-import com.faceit.example.internetlibrary.utils.Utils;
+import com.faceit.example.internetlibrary.util.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
