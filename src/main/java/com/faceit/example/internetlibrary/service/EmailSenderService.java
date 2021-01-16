@@ -1,8 +1,10 @@
 package com.faceit.example.internetlibrary.service;
 
-import org.springframework.mail.SimpleMailMessage;
-
 public interface EmailSenderService {
 
-    void sendEmail(SimpleMailMessage email);
+    void sendTextEmail(String userMail, String token);
+
+    void sendHtmlMail(String userMail, String token) throws Exception;
+
+    void sendImageMail(String userMail, String token) throws Exception;
 }

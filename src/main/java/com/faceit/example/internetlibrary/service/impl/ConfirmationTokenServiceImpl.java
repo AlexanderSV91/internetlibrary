@@ -11,7 +11,6 @@ import com.faceit.example.internetlibrary.service.EmailSenderService;
 import com.faceit.example.internetlibrary.service.UserService;
 import com.faceit.example.internetlibrary.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -39,7 +38,13 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         User user = userService.addUser(newUser);
         ConfirmationToken confirmationToken =
                 confirmationTokenRepository.save(preparingToConfirmationToken(user));
-        sendConfirmationMail(user.getEmail(), confirmationToken.getToken());
+        try {
+            emailSenderService.sendImageMail(user.getEmail(), confirmationToken.getToken());
+            //emailSenderService.sendHtmlMail(user.getEmail(), confirmationToken.getToken());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //emailSenderService.sendTextEmail(user.getEmail(), confirmationToken.getToken());
     }
 
     @Override
@@ -99,15 +104,5 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         }
         confirmationToken.setToken(token);
         return confirmationToken;
-    }
-
-    void sendConfirmationMail(String userMail, String token) {
-        final SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(userMail);
-        mailMessage.setSubject("Mail Confirmation Link!");
-        mailMessage.setFrom("<MAIL>");
-        mailMessage.setText("Thank you for registering. Please click on the below link to activate your account."
-                        + "http://localhost:8080/api-public/confirm/" + token);
-        emailSenderService.sendEmail(mailMessage);
     }
 }
