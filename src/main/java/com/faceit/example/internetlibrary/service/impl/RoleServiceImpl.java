@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.util.Utils;
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.repository.RoleRepository;
@@ -40,6 +41,8 @@ public class RoleServiceImpl implements RoleService {
         Role role = getRoleById(id);
         if (role != null) {
             updateRole.setId(id);
+        } else {
+            throw new ResourceNotFoundException("Not found");
         }
         roleRepository.save(updateRole);
         return updateRole;
@@ -48,5 +51,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void deleteRoleById(long id) {
         roleRepository.deleteById(id);
+    }
+
+    @Override
+    public Role findByName(String role) {
+        return roleRepository.findByName(role);
     }
 }

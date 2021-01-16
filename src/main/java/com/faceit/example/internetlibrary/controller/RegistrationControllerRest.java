@@ -1,27 +1,30 @@
 package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.model.User;
-import com.faceit.example.internetlibrary.service.UserService;
+import com.faceit.example.internetlibrary.service.ConfirmationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = {"/api-public"})
 public class RegistrationControllerRest {
-    private final UserService userService;
+    private final ConfirmationTokenService confirmationTokenService;
 
     @Autowired
-    public RegistrationControllerRest(UserService userService) {
-        this.userService = userService;
+    public RegistrationControllerRest(ConfirmationTokenService confirmationTokenService) {
+        this.confirmationTokenService = confirmationTokenService;
     }
 
     @PostMapping("/registration")
-    public User addUser(@Valid @RequestBody User newUser) {
-        return userService.addUser(newUser);
+    public void addUser(@Valid @RequestBody User newUser) {
+        confirmationTokenService.addConfirmationToken(newUser);
     }
+
+/*    @GetMapping("/confirm/{token}")
+    public boolean confirmMail(@PathVariable String token) {
+        boolean isVerified = registrationService.findByToken(token);
+        return isVerified;
+    }*/
 }
