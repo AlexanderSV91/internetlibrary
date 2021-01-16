@@ -89,17 +89,17 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: name
-                  type: varchar(100)
+                  type: varchar(128)
                   constraints:
                     nullable: false
               - column:
                   name: book_condition
-                  type: varchar(100)
+                  type: varchar(128)
                   constraints:
                     nullable: false
               - column:
                   name: description
-                  type: varchar(500)
+                  type: varchar(512)
         - createTable:
             tableName: order_books
             columns:
@@ -125,7 +125,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: note
-                  type: varchar(500)
+                  type: varchar(512)
               - column:
                   name: start_date
                   type: datetime
@@ -134,17 +134,9 @@ databaseChangeLog:
                   name: end_date
                   type: datetime
                   defaultValue:
-  - changeSet:
-      id: 2
-      author: AlexanderSV91
-      changes:
         - addPrimaryKey:
             columnNames: user_id, role_id
             tableName: user_role
-  - changeSet:
-      id: 3
-      author: AlexanderSV91
-      changes:
         - addForeignKeyConstraint:
             baseColumnNames: user_id
             baseTableName: user_role
@@ -153,10 +145,6 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: users
-  - changeSet:
-      id: 4
-      author: AlexanderSV91
-      changes:
         - addForeignKeyConstraint:
             baseColumnNames: role_id
             baseTableName: user_role
@@ -165,10 +153,6 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: roles
-  - changeSet:
-      id: 5
-      author: AlexanderSV91
-      changes:
         - addForeignKeyConstraint:
             baseColumnNames: user_id
             baseTableName: order_books
@@ -177,10 +161,6 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: users
-  - changeSet:
-      id: 6
-      author: AlexanderSV91
-      changes:
         - addForeignKeyConstraint:
             baseColumnNames: book_id
             baseTableName: order_books
@@ -189,8 +169,19 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: books
+
   - changeSet:
-      id: 7
+      id: 2
+      author: AlexanderSV91
+      changes:
+        - sqlFile:
+            dbms: 'mysql'
+            splitStatements: true
+            path: db/changelog/insert.sql
+            stripComments: true
+
+  - changeSet:
+      id: 3
       author: AlexanderSV91
       changes:
         - createTable:
@@ -209,18 +200,17 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: token
+                  type: varchar(255)
+              - column:
                   name: status
                   type: varchar(30)
                   defaultValue: 'PENDING'
               - column:
-                  name: created_date
+                  name: issued_date
                   type: datetime
                   constraints:
                     nullable: false
-  - changeSet:
-      id: 8
-      author: AlexanderSV91
-      changes:
         - addForeignKeyConstraint:
             baseColumnNames: user_id
             baseTableName: confirmation_tokens
