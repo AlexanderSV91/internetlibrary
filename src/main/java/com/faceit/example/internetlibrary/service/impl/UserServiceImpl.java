@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findById(id);
         User isCurrentUser = Utils.getDataFromTypeOptional(optionalUser);
         if ((updateUser.getId() == isCurrentUser.getId() && !updateUser.getUserName().equals(isCurrentUser.getUserName()) ||
-               updateUser.getId() != isCurrentUser.getId() && updateUser.getUserName().equals(isCurrentUser.getUserName()) )) {
+                updateUser.getId() != isCurrentUser.getId() && updateUser.getUserName().equals(isCurrentUser.getUserName()))) {
             checkUsername(updateUser.getUserName());
         }
 
@@ -82,7 +82,8 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             updateUser.setId(id);
             updateUser.setRoles(user.getRoles());
-            if (updateUser.getPassword() != null) {
+            updateUser.setEnabled(user.isEnabled());
+            if (updateUser.getPassword() != null && updateUser.getPassword().length() < 30) {
                 updateUser.setPassword(bCryptPasswordEncoder.encode(updateUser.getPassword()));
             } else {
                 updateUser.setPassword(user.getPassword());
