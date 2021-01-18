@@ -39,12 +39,10 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         ConfirmationToken confirmationToken =
                 confirmationTokenRepository.save(preparingToConfirmationToken(user));
         try {
-            emailSenderService.sendImageMail(user.getEmail(), confirmationToken.getToken());
-            //emailSenderService.sendHtmlMail(user.getEmail(), confirmationToken.getToken());
+            emailSenderService.sendActiveEmail(user, confirmationToken.getToken());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //emailSenderService.sendTextEmail(user.getEmail(), confirmationToken.getToken());
     }
 
     @Override

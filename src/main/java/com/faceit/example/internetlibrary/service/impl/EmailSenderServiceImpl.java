@@ -1,8 +1,11 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.service.EmailSenderService;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,21 +13,29 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.nio.file.Path;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EmailSenderServiceImpl implements EmailSenderService {
 
     private final JavaMailSender javaMailSender;
     private final JavaMailSenderImpl mailSender;
+    private final FreeMarkerConfigurer markerConfigurer;
 
     @Autowired
-    public EmailSenderServiceImpl(JavaMailSender javaMailSender, JavaMailSenderImpl mailSender) {
+    public EmailSenderServiceImpl(JavaMailSender javaMailSender,
+                                  JavaMailSenderImpl mailSender,
+                                  FreeMarkerConfigurer markerConfigurer) {
         this.javaMailSender = javaMailSender;
         this.mailSender = mailSender;
+        this.markerConfigurer = markerConfigurer;
     }
 
     @Async
@@ -41,7 +52,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     @Async
     public void sendImageMail(String userMail, String token) throws Exception {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true);
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setTo(userMail);
         mimeMessageHelper.setSubject("Mail Confirmation Link!");
         mimeMessageHelper.setFrom("<MAIL>");
@@ -57,5 +68,35 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         mimeMessageHelper.addInline("imageId", img);
 
         mailSender.send(mimeMessage);
+    }
+
+    @Async
+    public void sendActiveEmail(User user, String token) throws MessagingException, IOException, TemplateException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        mimeMessageHelper.setFrom("<MAIL>");
+        mimeMessageHelper.setTo(user.getEmail());
+        mimeMessageHelper.setSubject("Mail Confirmation Link!");
+
+        String s = getTemplate(user, token);
+        mimeMessageHelper.setText(s, true);
+        mailSender.send(mimeMessage);
+    }
+
+    private String getTemplate(User user, String token) throws IOException, TemplateException {
+        String activeLink = "http://localhost:8080/api-public/confirm/" + token;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("userToken", token);
+        map.put("activeLink", activeLink);
+        map.put("userName", user.getUserName());
+
+        Configuration configuration = markerConfigurer.getConfiguration();
+        Template template = configuration.getTemplate("activeEmail.ftl", "UTF-8");
+
+        StringWriter stringWriter = new StringWriter();
+        template.process(map, stringWriter);
+        stringWriter.flush();
+        return stringWriter.toString();
     }
 }
