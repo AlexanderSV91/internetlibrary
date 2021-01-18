@@ -2,6 +2,7 @@ package com.faceit.example.internetlibrary;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /*
 Стек технологий:
@@ -22,6 +23,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 Для верстки можно использовать Boostrap CSS. Начини пожалуйста с модуля авторизации,
 чтобы была возможность у пользователя войти/выйти. Потом можно перейти к реализации функционала.
 */
+@EnableScheduling
 @SpringBootApplication
 public class InternetLibraryApplication {
 
