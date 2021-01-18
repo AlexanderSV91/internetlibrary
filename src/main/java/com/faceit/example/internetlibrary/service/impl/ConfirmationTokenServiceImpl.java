@@ -1,6 +1,5 @@
 package com.faceit.example.internetlibrary.service.impl;
 
-import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.model.ConfirmationToken;
 import com.faceit.example.internetlibrary.model.User;
@@ -46,7 +45,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     @Override
-    public boolean findByToken(String token) {
+    public TokenStatus findByToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token);
         if (confirmationToken.getStatus().equals(TokenStatus.PENDING)) {
             if (confirmationToken.getIssuedDate().isAfter(LocalDateTime.now().minusDays(2))) {
@@ -56,14 +55,14 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
                 confirmationToken.setStatus(TokenStatus.VERIFIED);
                 updateConfirmationTokenById(confirmationToken, confirmationToken.getId());
-                return true;
+                return TokenStatus.VERIFIED;
             } else {
                 confirmationToken.setStatus(TokenStatus.EXPIRED);
                 updateConfirmationTokenById(confirmationToken, confirmationToken.getId());
-                throw new ApiRequestException("Token expired");
+                return TokenStatus.EXPIRED;
             }
         } else {
-            throw new ApiRequestException("Token verified");
+            return TokenStatus.VERIFIED;
         }
     }
 

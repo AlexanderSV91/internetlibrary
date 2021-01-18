@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User newUser) {
         checkUsername(newUser.getUserName());
+        checkEmail(newUser.getEmail());
         preparingToAddUser(newUser);
         return userRepository.save(newUser);
     }
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User newUser, Set<Role> roles) {
         checkUsername(newUser.getUserName());
-
+        checkEmail(newUser.getEmail());
         boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
             preparingToAddUser(newUser);
@@ -76,6 +77,10 @@ public class UserServiceImpl implements UserService {
         if ((updateUser.getId() == isCurrentUser.getId() && !updateUser.getUserName().equals(isCurrentUser.getUserName()) ||
                 updateUser.getId() != isCurrentUser.getId() && updateUser.getUserName().equals(isCurrentUser.getUserName()))) {
             checkUsername(updateUser.getUserName());
+        }
+        if ((updateUser.getId() == isCurrentUser.getId() && !updateUser.getEmail().equals(isCurrentUser.getEmail()) ||
+                updateUser.getId() != isCurrentUser.getId() && updateUser.getEmail().equals(isCurrentUser.getEmail()))) {
+            checkUsername(updateUser.getEmail());
         }
 
         User user = getUserById(id);
@@ -115,12 +120,24 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsUserByUserName(username);
     }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     private void checkUsername(String username) {
         boolean checkUser = existsUserByUserName(username);
         if (checkUser) {
             throw new ResourceAlreadyExists("userName", "username exists");
         }
     }
+    private void checkEmail(String email) {
+        boolean checkEmail = existsByEmail(email);
+        if (checkEmail) {
+            throw new ResourceAlreadyExists("email", "email exists");
+        }
+    }
+
 
     private void preparingToAddUser(User newUser) {
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));

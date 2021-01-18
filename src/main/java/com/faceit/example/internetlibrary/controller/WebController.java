@@ -1,19 +1,10 @@
 package com.faceit.example.internetlibrary.controller;
 
-import com.faceit.example.internetlibrary.service.ConfirmationTokenService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class WebController {
-    private final ConfirmationTokenService confirmationTokenService;
-
-    @Autowired
-    public WebController(ConfirmationTokenService confirmationTokenService) {
-        this.confirmationTokenService = confirmationTokenService;
-    }
 
     @GetMapping("/orderbook")
     public String index() {
@@ -40,18 +31,8 @@ public class WebController {
         return "registration";
     }
 
-    @GetMapping("/api-public/confirm/**")
+    @GetMapping("/confirm/**")
     public String confirm() {
-        return "login";
-    }
-
-    @GetMapping("/api-public/confirm/{token}")
-    public
-    String confirm(@PathVariable String token) {
-        boolean isVerified = confirmationTokenService.findByToken(token);
-        if (isVerified) {
-            return "login";
-        }
-        return null;
+        return "successfulPage";
     }
 }

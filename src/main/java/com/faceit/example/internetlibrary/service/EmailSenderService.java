@@ -8,9 +8,5 @@ import java.io.IOException;
 
 public interface EmailSenderService {
 
-    void sendTextEmail(String userMail, String token);
-
-    void sendImageMail(String userMail, String token) throws Exception;
-
     void sendActiveEmail(User user, String token) throws MessagingException, IOException, TemplateException;
 }

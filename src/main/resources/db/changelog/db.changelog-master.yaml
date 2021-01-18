@@ -40,6 +40,7 @@ databaseChangeLog:
                   name: email
                   type: varchar(50)
                   constraints:
+                    unique: true
                     nullable: false
               - column:
                   name: age
