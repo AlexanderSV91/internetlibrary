@@ -20,23 +20,19 @@ public class Utils {
     }
 
     public static ApiException buildApiException(String simpleName,
-                                           Map<String, String> message,
-                                           HttpStatus badRequest,
-                                           LocalDateTime now) {
+                                                 Map<String, String> message,
+                                                 HttpStatus badRequest,
+                                                 LocalDateTime now) {
         return new ApiException(simpleName, message, badRequest, now);
     }
 
     public static Map<String, String> buildMap(String key, String value) {
-        return new HashMap<>(){{put(key,value);}};
+        return new HashMap<>() {{
+            put(key, value);
+        }};
     }
 
     public static <T> T getDataFromTypeOptional(Optional<T> optional) {
-        T data;
-        if (optional.isPresent()) {
-            data = optional.get();
-        } else {
-            throw new ResourceNotFoundException("Not found");
-        }
-        return data;
+        return optional.orElseThrow(() -> new ResourceNotFoundException("Not found"));
     }
 }
