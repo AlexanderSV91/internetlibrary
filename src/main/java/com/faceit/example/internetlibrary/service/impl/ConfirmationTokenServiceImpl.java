@@ -68,9 +68,6 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
             case VERIFIED: {
                 return TokenStatus.VERIFIED;
             }
-            case EXPIRED: {
-                return TokenStatus.EXPIRED;
-            }
             default:
                 return TokenStatus.EXPIRED;
         }
