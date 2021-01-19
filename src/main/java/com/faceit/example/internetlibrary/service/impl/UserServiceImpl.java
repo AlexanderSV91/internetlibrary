@@ -1,13 +1,14 @@
 package com.faceit.example.internetlibrary.service.impl;
 
-import com.faceit.example.internetlibrary.util.Utils;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.exception.ResourceAlreadyExists;
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.model.User;
-import com.faceit.example.internetlibrary.repository.RoleRepository;
 import com.faceit.example.internetlibrary.repository.UserRepository;
+import com.faceit.example.internetlibrary.service.RoleService;
 import com.faceit.example.internetlibrary.service.UserService;
+import com.faceit.example.internetlibrary.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,15 +19,15 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository,
+                           RoleService roleService,
                            BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User newUser) {
         checkUsername(newUser.getUserName());
-
+        checkEmail(newUser.getEmail());
         preparingToAddUser(newUser);
         return userRepository.save(newUser);
     }
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User newUser, Set<Role> roles) {
         checkUsername(newUser.getUserName());
-
+        checkEmail(newUser.getEmail());
         boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
             preparingToAddUser(newUser);
@@ -71,18 +72,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUserById(User updateUser, long id) {
-        checkUsername(updateUser.getUserName());
+        Optional<User> optionalUser = userRepository.findById(id);
+        User isCurrentUser = Utils.getDataFromTypeOptional(optionalUser);
+        if ((updateUser.getId() == isCurrentUser.getId() && !updateUser.getUserName().equals(isCurrentUser.getUserName()) ||
+                updateUser.getId() != isCurrentUser.getId() && updateUser.getUserName().equals(isCurrentUser.getUserName()))) {
+            checkUsername(updateUser.getUserName());
+        }
+        if ((updateUser.getId() == isCurrentUser.getId() && !updateUser.getEmail().equals(isCurrentUser.getEmail()) ||
+                updateUser.getId() != isCurrentUser.getId() && updateUser.getEmail().equals(isCurrentUser.getEmail()))) {
+            checkUsername(updateUser.getEmail());
+        }
 
         User user = getUserById(id);
         if (user != null) {
             updateUser.setId(id);
             updateUser.setRoles(user.getRoles());
             updateUser.setEnabled(user.isEnabled());
-            if (updateUser.getPassword() != null) {
+            if (updateUser.getPassword() != null && updateUser.getPassword().length() < 30) {
                 updateUser.setPassword(bCryptPasswordEncoder.encode(updateUser.getPassword()));
             } else {
                 updateUser.setPassword(user.getPassword());
             }
+        } else {
+            throw new ResourceNotFoundException("Not found");
         }
         userRepository.save(updateUser);
         return updateUser;
@@ -108,17 +120,29 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsUserByUserName(username);
     }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     private void checkUsername(String username) {
         boolean checkUser = existsUserByUserName(username);
         if (checkUser) {
             throw new ResourceAlreadyExists("userName", "username exists");
         }
     }
+    private void checkEmail(String email) {
+        boolean checkEmail = existsByEmail(email);
+        if (checkEmail) {
+            throw new ResourceAlreadyExists("email", "email exists");
+        }
+    }
+
 
     private void preparingToAddUser(User newUser) {
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
-        newUser.setEnabled(true);
-        Role userRole = roleRepository.findByName("ROLE_USER");
+        newUser.setEnabled(false);
+        Role userRole = roleService.findByName("ROLE_USER");
         newUser.setRoles(new HashSet<>(Collections.singletonList(userRole)));
     }
 }

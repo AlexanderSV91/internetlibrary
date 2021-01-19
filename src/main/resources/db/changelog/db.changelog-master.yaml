@@ -40,6 +40,7 @@ databaseChangeLog:
                   name: email
                   type: varchar(50)
                   constraints:
+                    unique: true
                     nullable: false
               - column:
                   name: age
@@ -205,7 +206,6 @@ databaseChangeLog:
               - column:
                   name: status
                   type: varchar(30)
-                  defaultValue: 'PENDING'
               - column:
                   name: issued_date
                   type: datetime
@@ -217,5 +217,6 @@ databaseChangeLog:
             constraintName: TABLE_CONFIRMATION_TOKENS_USER_ID_IN_TABLE_USERS_ID
             deferrable: false
             initiallyDeferred: false
+            onDelete: CASCADE
             referencedColumnNames: id
             referencedTableName: users

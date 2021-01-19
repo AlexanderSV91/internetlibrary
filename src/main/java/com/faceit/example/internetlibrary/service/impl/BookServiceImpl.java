@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.util.Utils;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.model.Book;
@@ -53,7 +54,7 @@ public class BookServiceImpl implements BookService {
             }
             bookRepository.save(updateBook);
         } else {
-            throw new ApiRequestException("book not updated");
+            throw new ResourceNotFoundException("Not found");
         }
         return updateBook;
     }

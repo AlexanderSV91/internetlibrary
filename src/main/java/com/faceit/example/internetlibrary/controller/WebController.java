@@ -30,4 +30,9 @@ public class WebController {
     public String registration() {
         return "registration";
     }
+
+    @GetMapping("/confirm/**")
+    public String confirm() {
+        return "successfulPage";
+    }
 }

@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.util.Utils;
 import com.faceit.example.internetlibrary.model.OrderBook;
 import com.faceit.example.internetlibrary.model.User;
@@ -55,6 +56,8 @@ public class OrderBookServiceImpl implements OrderBookService {
         OrderBook orderBook = getOrderBookById(id);
         if (orderBook != null) {
             updateOrderBook.setId(id);
+        } else {
+            throw new ResourceNotFoundException("Not found");
         }
         orderBookRepository.save(updateOrderBook);
         return updateOrderBook;
