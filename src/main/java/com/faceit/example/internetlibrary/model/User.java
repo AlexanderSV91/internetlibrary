@@ -1,5 +1,7 @@
 package com.faceit.example.internetlibrary.model;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
+@Schema(description = "User essence")
 @Entity(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,6 +19,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Identifier")
     private long id;
 
     @Column(name = "username")
@@ -23,6 +27,7 @@ public class User {
     private String userName;
 
     @Column(name = "password")
+    @Schema(example = "~w_3?d7`z-91&")
     private String password;
 
     @Column(name = "first_name")
@@ -36,11 +41,13 @@ public class User {
     @Column(name = "email")
     @Email(message = "Please provide a valid Email")
     @NotBlank(message = "Please provide an email")
+    @Schema(description = "Email address of the contact.", example = "alexander@gmail.com")
     private String email;
 
     @Column(name = "age")
     private int age;
 
+    @Hidden
     @Column(name = "enabled")
     private boolean enabled;
 

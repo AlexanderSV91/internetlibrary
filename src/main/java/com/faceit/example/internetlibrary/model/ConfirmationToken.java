@@ -2,6 +2,7 @@ package com.faceit.example.internetlibrary.model;
 
 import com.faceit.example.internetlibrary.model.enumeration.TokenStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Hidden
 @Entity(name = "confirmation_tokens")
 @NoArgsConstructor
 @AllArgsConstructor

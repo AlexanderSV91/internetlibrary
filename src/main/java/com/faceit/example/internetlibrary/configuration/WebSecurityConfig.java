@@ -45,7 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/login", "/registration/**", "/successfulPage/**", "/confirm/**", "/api-public/confirm/**").permitAll()
+                .antMatchers("/", "/login", "/registration/**", "/successfulPage/**").permitAll()
+                .antMatchers("/confirm/**", "/api-public/confirm/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api-public/registration").permitAll()
                 .anyRequest()
                 .authenticated()
@@ -68,6 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**")
+                .antMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**");
     }
 }

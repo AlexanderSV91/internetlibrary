@@ -2,6 +2,7 @@ package com.faceit.example.internetlibrary.configuration;
 
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.model.User;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+@Hidden
 public class MyUserDetails implements UserDetails {
 
     private final User user;
