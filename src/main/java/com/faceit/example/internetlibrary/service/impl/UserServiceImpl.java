@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         }
         if ((updateUser.getId() == isCurrentUser.getId() && !updateUser.getEmail().equals(isCurrentUser.getEmail()) ||
                 updateUser.getId() != isCurrentUser.getId() && updateUser.getEmail().equals(isCurrentUser.getEmail()))) {
-            checkUsername(updateUser.getEmail());
+            checkEmail(updateUser.getEmail());
         }
 
         User user = getUserById(id);
