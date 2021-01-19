@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,17 +41,12 @@ public class SchedulerServiceImpl implements SchedulerService {
                 Duration duration = Duration.between(currentDate, issuedDate.plusDays(2));
 
                 if (duration.toMinutes() <= 60 && duration.toMinutes() >= 0) {
-                    System.out.println(duration.toMinutes());
-                    System.out.println(TokenStatus.PENDING);
                     try {
-                        emailSenderService.sendActiveEmail(confirmationToken.getUser(),confirmationToken.getToken());
+                        emailSenderService.sendActiveEmail(confirmationToken.getUser(), confirmationToken.getToken());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 } else if (duration.toMinutes() < 0) {
-                    System.out.println(duration.toMinutes());
-                    System.out.println(TokenStatus.EXPIRED);
                     confirmationToken.setStatus(TokenStatus.EXPIRED);
                     confirmationTokenService.updateConfirmationTokenById(confirmationToken, confirmationToken.getId());
                 }

@@ -48,22 +48,31 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     @Override
     public TokenStatus findByToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token);
-        if (confirmationToken.getStatus().equals(TokenStatus.PENDING)) {
-            if (confirmationToken.getIssuedDate().isAfter(LocalDateTime.now().minusDays(2))) {
-                User user = confirmationToken.getUser();
-                user.setEnabled(true);
-                userService.updateUserById(user, user.getId());
 
-                confirmationToken.setStatus(TokenStatus.VERIFIED);
-                updateConfirmationTokenById(confirmationToken, confirmationToken.getId());
+        switch (confirmationToken.getStatus()) {
+            case PENDING: {
+                if (confirmationToken.getIssuedDate().isAfter(LocalDateTime.now().minusDays(2))) {
+                    User user = confirmationToken.getUser();
+                    user.setEnabled(true);
+                    userService.updateUserById(user, user.getId());
+
+                    confirmationToken.setStatus(TokenStatus.VERIFIED);
+                    updateConfirmationTokenById(confirmationToken, confirmationToken.getId());
+                    return TokenStatus.VERIFIED;
+                } else {
+                    confirmationToken.setStatus(TokenStatus.EXPIRED);
+                    updateConfirmationTokenById(confirmationToken, confirmationToken.getId());
+                    return TokenStatus.EXPIRED;
+                }
+            }
+            case VERIFIED: {
                 return TokenStatus.VERIFIED;
-            } else {
-                confirmationToken.setStatus(TokenStatus.EXPIRED);
-                updateConfirmationTokenById(confirmationToken, confirmationToken.getId());
+            }
+            case EXPIRED: {
                 return TokenStatus.EXPIRED;
             }
-        } else {
-            return TokenStatus.VERIFIED;
+            default:
+                return TokenStatus.EXPIRED;
         }
     }
 
