@@ -74,12 +74,10 @@ public class UserServiceImpl implements UserService {
     public User updateUserById(User updateUser, long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         User isCurrentUser = Utils.getDataFromTypeOptional(optionalUser);
-        if ((updateUser.getId() == isCurrentUser.getId() &&
-                !updateUser.getUserName().equals(isCurrentUser.getUserName()))) {
+        if (!updateUser.getUserName().equals(isCurrentUser.getUserName())) {
             checkUsername(updateUser.getUserName());
         }
-        if ((updateUser.getId() == isCurrentUser.getId() &&
-                !updateUser.getEmail().equals(isCurrentUser.getEmail()))) {
+        if ((!updateUser.getEmail().equals(isCurrentUser.getEmail()))) {
             checkEmail(updateUser.getEmail());
         }
 

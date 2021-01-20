@@ -5,6 +5,11 @@ import com.faceit.example.internetlibrary.model.Book;
 import com.faceit.example.internetlibrary.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = {"/api"})
-@Tag(name="Books", description="interaction with books")
+@Tag(name = "Books", description = "interaction with books")
 public class BookControllerRest {
     private final BookService bookService;
 
@@ -26,6 +31,8 @@ public class BookControllerRest {
     @GetMapping("/book")
     @Operation(summary = "get all books",
             description = "allows you to get all the books in the library")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = Book.class))))})
     public List<Book> getAllBook() {
         return bookService.getAllBook();
     }
@@ -33,18 +40,29 @@ public class BookControllerRest {
     @GetMapping("/book/{id}")
     @Operation(summary = "get a certain book",
             description = "allows you to get a specific book in the library")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation",
+                    content = @Content(schema = @Schema(implementation = Book.class))),
+            @ApiResponse(responseCode = "404", description = "Book not found")})
     public Book getBookById(@PathVariable @Parameter(description = "Book id") long id) {
         return bookService.getBookById(id);
     }
 
     @PostMapping("/book")
     @Operation(summary = "add new book", description = "allows you to add new book in the library")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Book created",
+                    content = @Content(schema = @Schema(implementation = Book.class))),
+            @ApiResponse(responseCode = "400", description = "book not add")})
     public Book addBook(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody Book newBook) {
         return bookService.addBook(newBook, userDetails.getUser().getRoles());
     }
 
     @DeleteMapping("/book/{id}")
     @Operation(summary = "delete book", description = "allows you to delete book in the library")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation"),
+            @ApiResponse(responseCode = "400", description = "book not delete")})
     public void deleteBookById(@AuthenticationPrincipal MyUserDetails userDetails,
                                @PathVariable @Parameter(description = "Book id") long id) {
         bookService.deleteBookById(id, userDetails.getUser().getRoles());
@@ -53,6 +71,10 @@ public class BookControllerRest {
     @PutMapping("/book/{id}")
     @Operation(summary = "update a certain book",
             description = "allows you to update a specific book in the library")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful operation",
+                    content = @Content(schema = @Schema(implementation = Book.class))),
+            @ApiResponse(responseCode = "404", description = "Book not found")})
     public Book updateBookById(@AuthenticationPrincipal MyUserDetails userDetails,
                                @RequestBody Book updateBook,
                                @Parameter(description = "Book id") @PathVariable Long id) {
