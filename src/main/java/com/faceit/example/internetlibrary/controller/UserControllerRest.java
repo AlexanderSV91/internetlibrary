@@ -58,7 +58,7 @@ public class UserControllerRest {
     @PostMapping("/user")
     @Operation(summary = "add new user", description = "allows you to add new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Role created",
+            @ApiResponse(responseCode = "201", description = "user created",
                     content = @Content(schema = @Schema(implementation = User.class))),
             @ApiResponse(responseCode = "400", description = "user not add"),
             @ApiResponse(responseCode = "409", description = "user already exists")})
@@ -69,9 +69,8 @@ public class UserControllerRest {
 
     @DeleteMapping("/user/{id}")
     @Operation(summary = "delete a certain user", description = "allows you to delete a certain user")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation"),
-            @ApiResponse(responseCode = "400", description = "role not delete")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation"),
+            @ApiResponse(responseCode = "400", description = "user not delete")})
     public void deleteUserById(@AuthenticationPrincipal MyUserDetails userDetails,
                                @PathVariable @Parameter(description = "User id") long id) {
         userService.deleteUserById(id, userDetails.getUser().getRoles());

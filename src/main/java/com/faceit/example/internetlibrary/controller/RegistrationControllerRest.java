@@ -1,12 +1,10 @@
 package com.faceit.example.internetlibrary.controller;
 
-import com.faceit.example.internetlibrary.model.Book;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enumeration.TokenStatus;
 import com.faceit.example.internetlibrary.service.ConfirmationTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,8 +29,8 @@ public class RegistrationControllerRest {
     @PostMapping("/registration")
     @Operation(summary = "User registration", description = "Allows you to register a user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created"),
-            @ApiResponse(responseCode = "409", description = "User already exists")})
+            @ApiResponse(responseCode = "201", description = "user created"),
+            @ApiResponse(responseCode = "409", description = "user already exists")})
     public void addUser(@Valid @RequestBody User newUser) {
         confirmationTokenService.addConfirmationToken(newUser);
     }

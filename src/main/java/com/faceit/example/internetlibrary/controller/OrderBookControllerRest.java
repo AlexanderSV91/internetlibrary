@@ -2,7 +2,6 @@ package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.configuration.MyUserDetails;
 import com.faceit.example.internetlibrary.model.OrderBook;
-import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
 import com.faceit.example.internetlibrary.service.OrderBookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,9 +70,8 @@ public class OrderBookControllerRest {
     @PostMapping("/orderbook")
     @Operation(summary = "add the book the user took",
             description = "allows you to add a book that the user has taken from the library")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "book created",
-                    content = @Content(schema = @Schema(implementation = User.class))),
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "book created",
+            content = @Content(schema = @Schema(implementation = OrderBook.class))),
             @ApiResponse(responseCode = "400", description = "order book not add")})
     public OrderBook addOrderBook(@RequestBody OrderBook newOrderBook) {
         return orderBookService.addOrderBook(newOrderBook);
@@ -82,8 +80,7 @@ public class OrderBookControllerRest {
     @DeleteMapping("/orderbook/{id}")
     @Operation(summary = "delete the book the user took",
             description = "allows you to delete the book the user has taken from the library")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation"),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation"),
             @ApiResponse(responseCode = "400", description = "order book not delete")})
     public void deleteOrderBookById(@PathVariable @Parameter(name = "Borrowed book id") long id) {
         orderBookService.deleteOrderBookById(id);
@@ -93,7 +90,7 @@ public class OrderBookControllerRest {
     @Operation(summary = "update the data on the book taken",
             description = "allows you to update data about a book taken from the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
-            content = @Content(schema = @Schema(implementation = User.class))),
+            content = @Content(schema = @Schema(implementation = OrderBook.class))),
             @ApiResponse(responseCode = "404", description = "order book not found")})
     public OrderBook updateReaderById(@RequestBody OrderBook updateOrderBook,
                                       @PathVariable @Parameter(name = "Borrowed book id") Long id) {

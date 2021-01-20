@@ -40,19 +40,17 @@ public class BookControllerRest {
     @GetMapping("/book/{id}")
     @Operation(summary = "get a certain book",
             description = "allows you to get a specific book in the library")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation",
-                    content = @Content(schema = @Schema(implementation = Book.class))),
-            @ApiResponse(responseCode = "404", description = "Book not found")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
+            content = @Content(schema = @Schema(implementation = Book.class))),
+            @ApiResponse(responseCode = "404", description = "book not found")})
     public Book getBookById(@PathVariable @Parameter(description = "Book id") long id) {
         return bookService.getBookById(id);
     }
 
     @PostMapping("/book")
     @Operation(summary = "add new book", description = "allows you to add new book in the library")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Book created",
-                    content = @Content(schema = @Schema(implementation = Book.class))),
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "book created",
+            content = @Content(schema = @Schema(implementation = Book.class))),
             @ApiResponse(responseCode = "400", description = "book not add")})
     public Book addBook(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody Book newBook) {
         return bookService.addBook(newBook, userDetails.getUser().getRoles());
@@ -60,8 +58,7 @@ public class BookControllerRest {
 
     @DeleteMapping("/book/{id}")
     @Operation(summary = "delete book", description = "allows you to delete book in the library")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation"),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation"),
             @ApiResponse(responseCode = "400", description = "book not delete")})
     public void deleteBookById(@AuthenticationPrincipal MyUserDetails userDetails,
                                @PathVariable @Parameter(description = "Book id") long id) {
@@ -71,10 +68,9 @@ public class BookControllerRest {
     @PutMapping("/book/{id}")
     @Operation(summary = "update a certain book",
             description = "allows you to update a specific book in the library")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation",
-                    content = @Content(schema = @Schema(implementation = Book.class))),
-            @ApiResponse(responseCode = "404", description = "Book not found")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
+            content = @Content(schema = @Schema(implementation = Book.class))),
+            @ApiResponse(responseCode = "404", description = "book not found")})
     public Book updateBookById(@AuthenticationPrincipal MyUserDetails userDetails,
                                @RequestBody Book updateBook,
                                @Parameter(description = "Book id") @PathVariable Long id) {

@@ -45,9 +45,8 @@ public class RoleControllerRest {
 
     @PostMapping("/role")
     @Operation(summary = "add new role", description = "allows you to add new role")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Role created",
-                    content = @Content(schema = @Schema(implementation = Role.class))),
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "role created",
+            content = @Content(schema = @Schema(implementation = Role.class))),
             @ApiResponse(responseCode = "400", description = "role not add")})
     public Role addRole(@RequestBody Role newRole) {
         return roleService.addRole(newRole);
@@ -55,8 +54,7 @@ public class RoleControllerRest {
 
     @DeleteMapping("/role/{id}")
     @Operation(summary = "delete a certain role", description = "allows you to delete a certain role")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation"),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation"),
             @ApiResponse(responseCode = "400", description = "role not delete")})
     public void deleteRoleById(@Parameter(description = "Role id") @PathVariable long id) {
         roleService.deleteRoleById(id);
