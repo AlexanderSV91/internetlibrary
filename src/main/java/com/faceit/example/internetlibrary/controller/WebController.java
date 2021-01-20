@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class WebController {
 
     @GetMapping("/orderbook")
-    @Operation(summary = "get a page with borrowed books", description = "allows you to get a page with borrowed books")
+    @Operation(summary = "get a page with borrowed books",
+            description = "allows you to get a page with borrowed books")
     public String index() {
         return "orderbook";
     }
