@@ -5,6 +5,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /*
+service mysql status
+sudo service mysql stop
+sudo service mysql start
+
+sudo docker-compose build
+sudo docker-compose up
+sudo docker-compose ps
+sudo docker-compose stop
+
+sudo docker rm
+sudo docker ps -a
+sudo docker image ls
+sudo docker images -a
+https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes-ru
+
 Стек технологий:
 1. Java 8 или выше
 2. Сборка проекта: Maven

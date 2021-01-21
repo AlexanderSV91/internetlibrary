@@ -11,13 +11,24 @@
     </parent>
     <groupId>com.faceit.example</groupId>
     <artifactId>internetlibrary</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>internetlibrary</name>
+    <packaging>jar</packaging>
     <description>Demo project for Spring Boot</description>
 
     <properties>
         <java.version>11</java.version>
+        <downloadSources>true</downloadSources>
+        <downloadJavadocs>true</downloadJavadocs>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>jcenter-snapshots</id>
+            <name>jcenter</name>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -99,12 +110,9 @@
         </dependency>
     </dependencies>
 
-<!--    <profiles>
+    <profiles>
         <profile>
             <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <activatedProperties>dev</activatedProperties>
             </properties>
@@ -115,7 +123,7 @@
                 <activatedProperties>prod</activatedProperties>
             </properties>
         </profile>
-    </profiles>-->
+    </profiles>
 
     <build>
         <plugins>
