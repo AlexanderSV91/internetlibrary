@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Книги</title>
+    <title th:text="#{nav.orderBook}">Книги</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -17,10 +17,10 @@
 <div class="row">
     <div class="col-11">
         <nav class="nav nav-pills nav-fill">
-            <a class="nav-item nav-link active disabled" href="http://localhost:8080/orderbook">Order
+            <a class="nav-item nav-link active disabled" href="http://localhost:8080/orderbook" th:text="#{nav.orderBook}">Order
                 Book</a>
-            <a class="nav-item nav-link" href="http://localhost:8080/book">Book</a>
-            <a class="nav-item nav-link" href="http://localhost:8080/user">User</a>
+            <a class="nav-item nav-link" href="http://localhost:8080/book" th:text="#{nav.book}">Book</a>
+            <a class="nav-item nav-link" href="http://localhost:8080/user" th:text="#{nav.user}">User</a>
         </nav>
     </div>
     <div class="col-1">
@@ -35,17 +35,17 @@
     <div class="col-12">
         <table class="table table-striped table-bordered table-hover">
             <tr>
-                <th>STATUS</th>
-                <th>USERNAME</th>
-                <th>USER FIRST NAME</th>
-                <th>USER LAST NAME</th>
-                <th>USER AGE</th>
-                <th>BOOK NAME</th>
-                <th>BOOK CONDITION</th>
-                <th>BOOK DESCRIPTION</th>
-                <th>NOTE</th>
-                <th>START DATE</th>
-                <th>END DATE</th>
+                <th th:text="#{orderbook.status}">STATUS</th>
+                <th th:text="#{orderbook.user.username1}">USERNAME</th>
+                <th th:text="#{orderbook.user.firstName}">USER FIRST NAME</th>
+                <th th:text="#{orderbook.user.lastName}">USER LAST NAME</th>
+                <th th:text="#{orderbook.user.age}">USER AGE</th>
+                <th th:text="#{orderbook.book.name}">BOOK NAME</th>
+                <th th:text="#{orderbook.book.bookCondition}">BOOK CONDITION</th>
+                <th th:text="#{orderbook.book.description}">BOOK DESCRIPTION</th>
+                <th th:text="#{orderbook.note}">NOTE</th>
+                <th th:text="#{orderbook.startDate}">START DATE</th>
+                <th th:text="#{orderbook.endDate}">END DATE</th>
                 <th>
                     <button class="btn btn-primary" ng-click="getAllOrderBook()">
                         <img
@@ -110,13 +110,13 @@
             <div class="modal-body">
                 <div class="input-group">
                     <label for="statusS"
-                           style="margin-right: 20px; line-height:25px;">Status</label>
+                           style="margin-right: 20px; line-height:25px;" th:text="#{orderbook.status}">Status</label>
                     <div class="input-group mb-1">
                         <select label="Status" id="statusS" ng-model="editFields.status">
                             <option ng-repeat="status in orderBookStatuses">{{status}}</option>
                         </select>
                     </div>
-                    <label for="userId">User</label>
+                    <label for="userId" th:text="#{orderbook.user.user}">User</label>
                     <div class="input-group mb-2">
                         <select label="User" id="userId" ng-model="userStr"
                                 ng-click="fillFieldsModalThanUser()">
@@ -124,7 +124,7 @@
                             >{{user.id}} {{user.userName}} {{user.firstName}} {{user.lastName}} {{user.age}}</option>
                         </select>
                     </div>
-                    <label for="bookId">Book</label>
+                    <label for="bookId" th:text="#{orderbook.book.book}">Book</label>
                     <div class="input-group mb-3" style="width: 450px; /*overflow: hidden;*/">
                         <select label="Book" id="bookId" style="width: inherit;" ng-model="bookStr"
                                 ng-click="fillFieldsModalThanBook()">
@@ -134,23 +134,23 @@
                     </div>
                     <div class="input-group mb-4">
                         <textarea class="form-control" aria-label="With textarea"
-                                  placeholder="note"
+                                  th:placeholder="#{orderbook.note}"
                                   ng-model="editFields.note"></textarea>
                     </div>
                     <div class="input-group mb-5">
-                        <input type="text" class="form-control" placeholder="startDate"
+                        <input type="text" class="form-control" th:placeholder="#{orderbook.startDate}"
                                ng-model="editFields.startDate">
                     </div>
                     <div class="input-group mb-6">
-                        <input type="text" class="form-control" placeholder="startDate"
+                        <input type="text" class="form-control" th:placeholder="#{orderbook.endDate}"
                                ng-model="editFields.endDate">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{nav.close}">Close</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal"
-                        ng-click="saveOrderBook()">Save
+                        ng-click="saveOrderBook()" th:text="#{nav.save}">Save
                 </button>
             </div>
         </div>

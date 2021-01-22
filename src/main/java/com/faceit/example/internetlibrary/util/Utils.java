@@ -6,10 +6,7 @@ import com.faceit.example.internetlibrary.model.Role;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class Utils {
 
@@ -34,5 +31,9 @@ public class Utils {
 
     public static <T> T getDataFromTypeOptional(Optional<T> optional) {
         return optional.orElseThrow(() -> new ResourceNotFoundException("Not found"));
+    }
+
+    public static String getMessageForLocale(String messageKey, Locale locale) {
+        return ResourceBundle.getBundle("messages", locale).getString(messageKey);
     }
 }

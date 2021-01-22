@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
@@ -17,40 +17,60 @@
 <div class="row">
     <form style="max-width: 600px; width: 400px; margin: 0 auto;">
         <div class="border border-secondary p-3 rounded">
-            <p>Registration</p>
+            <p th:text="#{registration.registration}"></p>
             <p>
-                <label>Username</label>
-                <input type="text" name="username" class="form-control" placeholder="Username" ng-model="editFields.userName" required autofocus/>
+                <label th:text="#{registration.username}"></label>
+                <input type="text" name="username" class="form-control" th:placeholder="#{registration.username}" ng-model="editFields.userName" required autofocus/>
             </p>
             <p>
-                <label>Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Password" ng-model="editFields.password" required />
+                <label th:text="#{registration.password}"></label>
+                <input type="password" name="password" class="form-control" th:placeholder="#{registration.password}" ng-model="editFields.password" required />
             </p>
             <p>
-                <label>Confirm password</label>
-                <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm password" ng-model="editFields.confirmPassword" required />
+                <label th:text="#{registration.confirmPassword}"></label>
+                <input type="password" name="confirmPassword" class="form-control" th:placeholder="#{registration.confirmPassword}" ng-model="editFields.confirmPassword" required />
             </p>
             <p>
-                <label>First name</label>
-                <input type="text" name="username" class="form-control" placeholder="First name" ng-model="editFields.firstName" required />
+                <label th:text="#{registration.firstName}"></label>
+                <input type="text" name="username" class="form-control" th:placeholder="#{registration.firstName}" ng-model="editFields.firstName" required />
             </p>
             <p>
-                <label>Last name</label>
-                <input type="text" name="username" class="form-control" placeholder="Last name" ng-model="editFields.lastName" required />
+                <label th:text="#{registration.lastName}"></label>
+                <input type="text" name="username" class="form-control" th:placeholder="#{registration.lastName}" ng-model="editFields.lastName" required />
             </p>
             <p>
-                <label>Email</label>
-                <input type="email" name="email" class="form-control" placeholder="E-mail" ng-model="editFields.email" required />
+                <label th:text="#{registration.email}"></label>
+                <input type="email" name="email" class="form-control" th:placeholder="#{registration.email}" ng-model="editFields.email" required />
             </p>
             <p>
-                <label>Age</label>
-                <input type="text" name="age" class="form-control" placeholder="Age" ng-model="editFields.age" required/>
+                <label th:text="#{registration.age}"></label>
+                <input type="text" name="age" class="form-control" th:placeholder="#{registration.age}" ng-model="editFields.age" required/>
             </p>
             <p>
-                <input type="submit" value="Registration" class="btn btn-primary" ng-click="saveUser()"/>
+                <input type="submit" th:value="#{registration.registration}" class="btn btn-primary" ng-click="saveUser()"/>
             </p>
         </div>
+
+        <br/><br/>
+
+        <span th:text="#{lang.change}"></span>:
+        <select id="locales">
+            <option value=""></option>
+            <option value="en" th:text="#{lang.en}"></option>
+            <option value="ru" th:text="#{lang.ru}"></option>
+        </select>
     </form>
 </div>
 </body>
+<script>
+    $(document).ready(function () {
+        $("#locales").change(function () {
+            var selectedOption = $('#locales').val();
+            if (selectedOption !== '') {
+                console.log(selectedOption);
+                window.location.replace('registration?lang=' + selectedOption);
+            }
+        });
+    });
+</script>
 </html>
