@@ -14,10 +14,16 @@ sudo docker-compose up
 sudo docker-compose ps
 sudo docker-compose stop
 
+docker-compose up --build -d mongo
+
+sudo docker exec -it mysql bash
+mysql -u root -p
+
 sudo docker rm
 sudo docker ps -a
 sudo docker image ls
 sudo docker images -a
+sudo docker system prune
 https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes-ru
 
 Стек технологий:
