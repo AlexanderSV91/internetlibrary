@@ -5,7 +5,8 @@ services:
     #    restart: always
     container_name: mongodb
     volumes:
-      - /home/developer/IdeaProjects/mongo/library:/data/db
+#      - /home/developer/IdeaProjects/mongo/library:/data/db
+      - "./db/mongo/library:/data/db"
     networks:
       - library-mongodb
     environment:
@@ -17,7 +18,8 @@ services:
     restart: always
     container_name: "mysql"
     volumes:
-      - /home/developer/IdeaProjects/mysql/library:/var/lib/mysql
+      - "./db/mysql/library:/var/lib/mysql"
+#      - /home/developer/IdeaProjects/mysql/library:/var/lib/mysql
     networks:
       - library-mysql
     environment:
@@ -40,6 +42,7 @@ services:
     networks:
       - library-mysql
     depends_on:
+      - mongo
       - mysql
 
 networks:
