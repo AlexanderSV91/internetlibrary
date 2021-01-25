@@ -7,7 +7,7 @@ app.controller("registrationCtrl", function ($scope, $http) {
         confirmPassword: "",
         firstName: "",
         lastName: "",
-        email: "alex.shalamov@faceit-team.com",
+        email: "",
         age: ""
     };
 

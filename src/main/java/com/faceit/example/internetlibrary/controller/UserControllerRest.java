@@ -3,6 +3,7 @@ package com.faceit.example.internetlibrary.controller;
 import com.faceit.example.internetlibrary.configuration.MyUserDetails;
 import com.faceit.example.internetlibrary.dto.request.UserRequest;
 import com.faceit.example.internetlibrary.dto.response.UserResponse;
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.UserMapper;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.service.UserService;
@@ -42,13 +43,14 @@ public class UserControllerRest {
     @GetMapping("/user")
     @Operation(summary = "get all users", description = "allows you to get all users")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))))})
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)))),
+            @ApiResponse(responseCode = "404", description = "users not found")})
     public List<UserResponse> getAllUserByUsername(@AuthenticationPrincipal MyUserDetails userDetails) {
         List<User> users = userService.getAllUserByUsername(userDetails.getUser());
         if (users != null) {
             return users.stream().map(userMapper::userToUserResponse).collect(Collectors.toList());
         }
-        return Collections.emptyList();
+        throw new ResourceNotFoundException("exception.notFound");
     }
 
     @GetMapping("/current-user")

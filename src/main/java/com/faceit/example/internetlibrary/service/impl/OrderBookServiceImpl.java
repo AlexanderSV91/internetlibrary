@@ -57,7 +57,7 @@ public class OrderBookServiceImpl implements OrderBookService {
         if (orderBook != null) {
             updateOrderBook.setId(id);
         } else {
-            throw new ResourceNotFoundException("Not found");
+            throw new ResourceNotFoundException("exception.notFound");
         }
         orderBookRepository.save(updateOrderBook);
         return updateOrderBook;

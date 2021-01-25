@@ -3,6 +3,7 @@ package com.faceit.example.internetlibrary.controller;
 import com.faceit.example.internetlibrary.configuration.MyUserDetails;
 import com.faceit.example.internetlibrary.dto.request.BookRequest;
 import com.faceit.example.internetlibrary.dto.response.BookResponse;
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.BookMapper;
 import com.faceit.example.internetlibrary.model.Book;
 import com.faceit.example.internetlibrary.service.BookService;
@@ -20,7 +21,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,13 +43,14 @@ public class BookControllerRest {
     @Operation(summary = "get all books",
             description = "allows you to get all the books in the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookResponse.class))))})
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookResponse.class)))),
+            @ApiResponse(responseCode = "404", description = "books not found")})
     public List<BookResponse> getAllBook() {
         List<Book> books = bookService.getAllBook();
         if (books != null) {
             return books.stream().map(bookMapper::bookToBookResponse).collect(Collectors.toList());
         }
-        return Collections.emptyList();
+        throw new ResourceNotFoundException("exception.notFound");
     }
 
     @GetMapping("/book/{id}")

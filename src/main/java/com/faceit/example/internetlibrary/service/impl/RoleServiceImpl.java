@@ -42,7 +42,7 @@ public class RoleServiceImpl implements RoleService {
         if (role != null) {
             updateRole.setId(id);
         } else {
-            throw new ResourceNotFoundException("Not found");
+            throw new ResourceNotFoundException("exception.notFound");
         }
         roleRepository.save(updateRole);
         return updateRole;

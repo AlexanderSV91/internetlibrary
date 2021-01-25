@@ -23,7 +23,6 @@ public class User {
     private long id;
 
     @Column(name = "username")
-    @NotBlank(message = "Please provide a username")
     private String userName;
 
     @Column(name = "password")
@@ -31,16 +30,12 @@ public class User {
     private String password;
 
     @Column(name = "first_name")
-    @NotBlank(message = "Please provide your first name")
     private String firstName;
 
     @Column(name = "last_name")
-    @NotBlank(message = "Please provide your last name")
     private String lastName;
 
     @Column(name = "email")
-    @Email(message = "Please provide a valid Email")
-    @NotBlank(message = "Please provide an email")
     @Schema(description = "Email address of the contact.", example = "alexander@gmail.com")
     private String email;
 
@@ -52,7 +47,8 @@ public class User {
     private boolean enabled;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 }

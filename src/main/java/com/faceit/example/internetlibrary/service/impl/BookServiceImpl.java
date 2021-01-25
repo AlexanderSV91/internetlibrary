@@ -40,7 +40,7 @@ public class BookServiceImpl implements BookService {
         if (isEmployee) {
             return bookRepository.save(newBook);
         } else {
-            throw new ApiRequestException("book not add");
+            throw new ApiRequestException("exception.bookNotAdd");
         }
     }
 
@@ -54,7 +54,7 @@ public class BookServiceImpl implements BookService {
             }
             bookRepository.save(updateBook);
         } else {
-            throw new ResourceNotFoundException("Not found");
+            throw new ResourceNotFoundException("exception.notFound");
         }
         return updateBook;
     }
@@ -65,7 +65,7 @@ public class BookServiceImpl implements BookService {
         if (isEmployee) {
             bookRepository.deleteById(id);
         } else {
-            throw new ApiRequestException("book not delete");
+            throw new ApiRequestException("exception.bookNotDelete");
         }
     }
 }

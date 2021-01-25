@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
             preparingToAddUser(newUser);
             return userRepository.save(newUser);
         } else {
-            throw new ApiRequestException("user not add");
+            throw new ApiRequestException("exception.userNotAdd");
         }
     }
 
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
                 updateUser.setPassword(isCurrentUser.getPassword());
             }
         } else {
-            throw new ResourceNotFoundException("Not found");
+            throw new ResourceNotFoundException("exception.notFound");
         }
         userRepository.save(updateUser);
         return updateUser;
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
         if (isEmployee) {
             userRepository.deleteById(id);
         } else {
-            throw new ApiRequestException("user not delete");
+            throw new ApiRequestException("exception.userNotDelete");
         }
     }
 
@@ -123,14 +123,14 @@ public class UserServiceImpl implements UserService {
     private void checkUsername(String username) {
         boolean checkUser = existsUserByUserName(username);
         if (checkUser) {
-            throw new ResourceAlreadyExists("userName", "username exists");
+            throw new ResourceAlreadyExists("userName", "exception.usernameExists");
         }
     }
 
     private void checkEmail(String email) {
         boolean checkEmail = existsByEmail(email);
         if (checkEmail) {
-            throw new ResourceAlreadyExists("email", "email exists");
+            throw new ResourceAlreadyExists("email", "exception.emailExists");
         }
     }
 

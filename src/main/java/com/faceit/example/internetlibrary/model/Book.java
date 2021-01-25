@@ -23,7 +23,7 @@ public class Book {
     private String name;
 
     @Column(name = "book_condition")
-    @Schema(example = "Destroyed")
+    @Schema(example = "Excellent")
     private String bookCondition;
 
     @Column(name = "description")

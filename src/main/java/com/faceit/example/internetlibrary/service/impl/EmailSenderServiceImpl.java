@@ -44,8 +44,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
     @Async
     public void sendActiveEmail(User user, String token) throws MessagingException, IOException, TemplateException {
-        Locale locale = new Locale(LocaleContextHolder.getLocale().toString());
-        String subject = Utils.getMessageForLocale("activeEmail.mailConfirmationLink", locale);
+        String subject = Utils.getMessageForLocale("activeEmail.mailConfirmationLink");
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -53,18 +52,18 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         mimeMessageHelper.setTo(user.getEmail());
         mimeMessageHelper.setSubject(subject);
 
-        String s = getTemplate(user, locale, token);
+        String s = getTemplate(user, token);
         mimeMessageHelper.setText(s, true);
         mailSender.send(mimeMessage);
     }
 
-    private String getTemplate(User user, Locale locale, String token) throws IOException, TemplateException {
+    private String getTemplate(User user, String token) throws IOException, TemplateException {
         String activeLink = serverHost + CONFIRMATION_URL + token;
-        String newUser = Utils.getMessageForLocale("activeEmail.newUser", locale);
-        String copyright = Utils.getMessageForLocale("activeEmail.copyright", locale);
-        String yourToken = Utils.getMessageForLocale("activeEmail.yourToken", locale);
-        String internetLibrary = Utils.getMessageForLocale("activeEmail.internetLibrary", locale);
-        String confirmRegistration = Utils.getMessageForLocale("activeEmail.confirmRegistration", locale);
+        String newUser = Utils.getMessageForLocale("activeEmail.newUser");
+        String copyright = Utils.getMessageForLocale("activeEmail.copyright");
+        String yourToken = Utils.getMessageForLocale("activeEmail.yourToken");
+        String internetLibrary = Utils.getMessageForLocale("activeEmail.internetLibrary");
+        String confirmRegistration = Utils.getMessageForLocale("activeEmail.confirmRegistration");
 
         Map<String, String> map = new HashMap<>();
         map.put("userToken", token);

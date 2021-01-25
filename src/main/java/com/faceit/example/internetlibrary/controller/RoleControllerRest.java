@@ -2,6 +2,7 @@ package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.dto.request.RoleRequest;
 import com.faceit.example.internetlibrary.dto.response.RoleResponse;
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.RoleMapper;
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.service.RoleService;
@@ -40,13 +41,14 @@ public class RoleControllerRest {
     @GetMapping("/role")
     @Operation(summary = "get all roles", description = "allows you to get all roles")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class))))})
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))),
+            @ApiResponse(responseCode = "404", description = "roles not found")})
     public List<RoleResponse> getAllRole() {
         List<Role> roles = roleService.getAllRole();
         if (roles != null) {
             return roles.stream().map(roleMapper::roleToRoleResponse).collect(Collectors.toList());
         }
-        return Collections.emptyList();
+        throw new ResourceNotFoundException("exception.notFound");
     }
 
     @GetMapping("/role/{id}")

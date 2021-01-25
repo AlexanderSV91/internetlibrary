@@ -3,6 +3,7 @@ package com.faceit.example.internetlibrary.controller;
 import com.faceit.example.internetlibrary.configuration.MyUserDetails;
 import com.faceit.example.internetlibrary.dto.request.OrderBookRequest;
 import com.faceit.example.internetlibrary.dto.response.OrderBookResponse;
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.OrderBookMapper;
 import com.faceit.example.internetlibrary.model.OrderBook;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,13 +43,14 @@ public class OrderBookControllerRest {
     @Operation(summary = "get all borrowed books",
             description = "allows you to receive all borrowed books in the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = OrderBookResponse.class))))})
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = OrderBookResponse.class)))),
+            @ApiResponse(responseCode = "404", description = "order books not found")})
     public List<OrderBookResponse> getOrderBooksByUserUserName(@AuthenticationPrincipal MyUserDetails userDetails) {
         List<OrderBook> orderBooks = orderBookService.findOrderBooksByUserUserName(userDetails.getUser());
         if (orderBooks != null) {
             return orderBooks.stream().map(orderBookMapper::orderBookToOrderBookResponse).collect(Collectors.toList());
         }
-        return Collections.emptyList();
+        throw new ResourceNotFoundException("exception.notFound");
     }
 
     @GetMapping("/orderbook/status")
@@ -76,13 +77,13 @@ public class OrderBookControllerRest {
             description = "allows you to get all the books taken by the user to the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = OrderBookResponse.class)))),
-            @ApiResponse(responseCode = "404", description = "order book not found")})
+            @ApiResponse(responseCode = "404", description = "order books not found")})
     public List<OrderBookResponse> getOrderBookByReader(@PathVariable @Parameter(name = "User id") long id) {
         List<OrderBook> orderBooks = orderBookService.getOrderBookByReaderId(id);
         if (orderBooks != null) {
             return orderBooks.stream().map(orderBookMapper::orderBookToOrderBookResponse).collect(Collectors.toList());
         }
-        return Collections.emptyList();
+        throw new ResourceNotFoundException("exception.notFound");
     }
 
     @PostMapping("/orderbook")

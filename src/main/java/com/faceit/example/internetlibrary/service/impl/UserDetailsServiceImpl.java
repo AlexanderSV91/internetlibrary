@@ -1,6 +1,7 @@
 package com.faceit.example.internetlibrary.service.impl;
 
 import com.faceit.example.internetlibrary.configuration.MyUserDetails;
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findUserByUserName(username);
         if (user == null) {
-            throw new UsernameNotFoundException("Could not find user");
+            throw new ResourceNotFoundException("exception.couldNotFindUser");
         }
         return new MyUserDetails(user);
     }
