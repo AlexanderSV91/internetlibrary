@@ -1,5 +1,7 @@
 package com.faceit.example.internetlibrary.controller;
 
+import com.faceit.example.internetlibrary.dto.request.UserRequest;
+import com.faceit.example.internetlibrary.mapper.UserMapper;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enumeration.TokenStatus;
 import com.faceit.example.internetlibrary.service.ConfirmationTokenService;
@@ -9,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +21,16 @@ import javax.validation.Valid;
 @RequestMapping(value = {"/api-public"})
 @Tag(name = "Registration", description = "registration and verification of users")
 public class RegistrationControllerRest {
+
     private final ConfirmationTokenService confirmationTokenService;
+    private final UserMapper userMapper;
+
 
     @Autowired
-    public RegistrationControllerRest(ConfirmationTokenService confirmationTokenService) {
+    public RegistrationControllerRest(ConfirmationTokenService confirmationTokenService,
+                                      UserMapper userMapper) {
         this.confirmationTokenService = confirmationTokenService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/registration")
@@ -32,8 +38,9 @@ public class RegistrationControllerRest {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "user created"),
             @ApiResponse(responseCode = "409", description = "user already exists")})
-    public void addUser(@Valid @RequestBody User newUser) {
-        confirmationTokenService.addConfirmationToken(newUser);
+    public void addUser(@Valid @RequestBody UserRequest userRequest) {
+        User user = userMapper.userRequestToUser(userRequest);
+        confirmationTokenService.addConfirmationToken(user);
     }
 
     @GetMapping("/confirm/{token}")

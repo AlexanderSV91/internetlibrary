@@ -10,8 +10,6 @@ app.controller("userCtrl", function ($scope, $http) {
         lastName: "",
         email: "",
         age: 0,
-        roleId: 0,
-        roleName: ""
     };
 
     $scope.changeTitleModal = function (titleName) {
@@ -24,8 +22,6 @@ app.controller("userCtrl", function ($scope, $http) {
             $scope.editFields.lastName = "";
             $scope.editFields.email = "";
             $scope.editFields.age = "";
-            $scope.editFields.roleId = 0;
-            $scope.editFields.roleName = "";
         }
     }
 
@@ -36,8 +32,6 @@ app.controller("userCtrl", function ($scope, $http) {
         $scope.editFields.lastName = user.lastName;
         $scope.editFields.email = user.email;
         $scope.editFields.age = user.age;
-        $scope.editFields.roleId = user.role.id;
-        $scope.editFields.roleName = user.role.name;
     }
 
     $scope.getAllUser = function () {
@@ -73,12 +67,6 @@ app.controller("userCtrl", function ($scope, $http) {
                 lastName: $scope.editFields.lastName,
                 email: $scope.editFields.email,
                 age: $scope.editFields.age,
-                role: [
-                    {
-                        id: $scope.editFields.roleId,
-                        name: $scope.editFields.roleName
-                    }
-                ]
             };
         } else {
             request = 'http://localhost:8080/api/user/' + $scope.editFields.id;
@@ -91,12 +79,6 @@ app.controller("userCtrl", function ($scope, $http) {
                 lastName: $scope.editFields.lastName,
                 email: $scope.editFields.email,
                 age: $scope.editFields.age,
-                role: [
-                    {
-                        id: $scope.editFields.roleId,
-                        name: $scope.editFields.roleName
-                    }
-                ]
             };
         }
         $http({
@@ -106,7 +88,6 @@ app.controller("userCtrl", function ($scope, $http) {
         }).then(function successCallback(response) {
             $scope.getAllUser();
         }, function errorCallback(response) {
-            console.log('post', response.data);
         });
     }
 });

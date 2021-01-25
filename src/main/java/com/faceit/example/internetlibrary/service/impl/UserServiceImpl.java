@@ -72,24 +72,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUserById(User updateUser, long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        User isCurrentUser = Utils.getDataFromTypeOptional(optionalUser);
-        if (!updateUser.getUserName().equals(isCurrentUser.getUserName())) {
-            checkUsername(updateUser.getUserName());
-        }
-        if ((!updateUser.getEmail().equals(isCurrentUser.getEmail()))) {
-            checkEmail(updateUser.getEmail());
-        }
-
-        User user = getUserById(id);
-        if (user != null) {
+        User isCurrentUser = getUserById(id);
+        if (isCurrentUser != null) {
+            if (!updateUser.getUserName().equals(isCurrentUser.getUserName())) {
+                checkUsername(updateUser.getUserName());
+            }
+            if ((!updateUser.getEmail().equals(isCurrentUser.getEmail()))) {
+                checkEmail(updateUser.getEmail());
+            }
             updateUser.setId(id);
-            updateUser.setRoles(user.getRoles());
-            updateUser.setEnabled(user.isEnabled());
+            updateUser.setRoles(isCurrentUser.getRoles());
+            updateUser.setEnabled(isCurrentUser.isEnabled());
             if (updateUser.getPassword() != null && updateUser.getPassword().length() < 30) {
                 updateUser.setPassword(bCryptPasswordEncoder.encode(updateUser.getPassword()));
             } else {
-                updateUser.setPassword(user.getPassword());
+                updateUser.setPassword(isCurrentUser.getPassword());
             }
         } else {
             throw new ResourceNotFoundException("Not found");
@@ -129,6 +126,7 @@ public class UserServiceImpl implements UserService {
             throw new ResourceAlreadyExists("userName", "username exists");
         }
     }
+
     private void checkEmail(String email) {
         boolean checkEmail = existsByEmail(email);
         if (checkEmail) {
