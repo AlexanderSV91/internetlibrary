@@ -78,7 +78,7 @@ public class UserControllerRest {
                     content = @Content(schema = @Schema(implementation = UserResponse.class))),
             @ApiResponse(responseCode = "400", description = "user not add"),
             @ApiResponse(responseCode = "409", description = "user already exists")})
-    public UserResponse addUser(@Valid @AuthenticationPrincipal MyUserDetails userDetails,
+    public UserResponse addUser(@AuthenticationPrincipal MyUserDetails userDetails,
                         @Valid @RequestBody UserRequest userRequest) {
         User user = userMapper.userRequestToUser(userRequest);
         return userMapper.userToUserResponse(userService.addUser(user, userDetails.getUser().getRoles()));
