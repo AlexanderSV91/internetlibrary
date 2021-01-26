@@ -48,7 +48,7 @@ public class UserControllerRest {
     public List<UserResponse> getAllUserByUsername(@AuthenticationPrincipal MyUserDetails userDetails) {
         List<User> users = userService.getAllUserByUsername(userDetails.getUser());
         if (users != null) {
-            return users.stream().map(userMapper::userToUserResponse).collect(Collectors.toList());
+            return userMapper.usersToUsersResponse(users);
         }
         throw new ResourceNotFoundException("exception.notFound");
     }

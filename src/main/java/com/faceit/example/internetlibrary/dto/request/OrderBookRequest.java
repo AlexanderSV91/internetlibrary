@@ -1,5 +1,7 @@
 package com.faceit.example.internetlibrary.dto.request;
 
+import com.faceit.example.internetlibrary.dto.response.BookResponse;
+import com.faceit.example.internetlibrary.dto.response.UserResponse;
 import com.faceit.example.internetlibrary.model.Book;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
@@ -18,10 +20,10 @@ public class OrderBookRequest {
     private Status status;
 
     @NotNull(message = "exception.userDoesNotExist")
-    private User user;
+    private UserResponse user;
 
     @NotNull(message = "exception.bookDoesNotExist")
-    private Book book;
+    private BookResponse book;
 
     private String note;
 

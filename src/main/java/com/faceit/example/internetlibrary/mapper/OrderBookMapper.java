@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface OrderBookMapper {
 
@@ -19,4 +21,6 @@ public interface OrderBookMapper {
             @Mapping(source = "startDate", dateFormat = "dd/MM/yyyy hh:mm", target = "startDate"),
             @Mapping(source = "endDate", dateFormat = "dd/MM/yyyy hh:mm", target = "endDate")})
     OrderBook orderBookRequestToOrderBook(OrderBookRequest orderBookRequest);
+
+    List<OrderBookResponse> orderBooksToOrderBookResponse(List<OrderBook> orderBooks);
 }

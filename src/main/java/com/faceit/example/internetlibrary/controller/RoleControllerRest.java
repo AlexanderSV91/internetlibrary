@@ -19,9 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = {"/api"})
@@ -46,7 +44,7 @@ public class RoleControllerRest {
     public List<RoleResponse> getAllRole() {
         List<Role> roles = roleService.getAllRole();
         if (roles != null) {
-            return roles.stream().map(roleMapper::roleToRoleResponse).collect(Collectors.toList());
+            return roleMapper.rolesToRolesResponse(roles);
         }
         throw new ResourceNotFoundException("exception.notFound");
     }

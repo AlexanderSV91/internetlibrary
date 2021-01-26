@@ -48,7 +48,7 @@ public class BookControllerRest {
     public List<BookResponse> getAllBook() {
         List<Book> books = bookService.getAllBook();
         if (books != null) {
-            return books.stream().map(bookMapper::bookToBookResponse).collect(Collectors.toList());
+            return bookMapper.booksToBooksResponse(books);
         }
         throw new ResourceNotFoundException("exception.notFound");
     }

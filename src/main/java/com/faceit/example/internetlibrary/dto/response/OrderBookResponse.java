@@ -18,8 +18,8 @@ public class OrderBookResponse {
 
     @Schema(description = "Book status in the library", example = "IN_LIBRARY")
     private Status status;
-    private User user;
-    private Book book;
+    private UserResponse user;
+    private BookResponse book;
     private String note;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")

@@ -48,7 +48,7 @@ public class OrderBookControllerRest {
     public List<OrderBookResponse> getOrderBooksByUserUserName(@AuthenticationPrincipal MyUserDetails userDetails) {
         List<OrderBook> orderBooks = orderBookService.findOrderBooksByUserUserName(userDetails.getUser());
         if (orderBooks != null) {
-            return orderBooks.stream().map(orderBookMapper::orderBookToOrderBookResponse).collect(Collectors.toList());
+            return orderBookMapper.orderBooksToOrderBookResponse(orderBooks);
         }
         throw new ResourceNotFoundException("exception.notFound");
     }
@@ -81,7 +81,7 @@ public class OrderBookControllerRest {
     public List<OrderBookResponse> getOrderBookByReader(@PathVariable @Parameter(name = "User id") long id) {
         List<OrderBook> orderBooks = orderBookService.getOrderBookByReaderId(id);
         if (orderBooks != null) {
-            return orderBooks.stream().map(orderBookMapper::orderBookToOrderBookResponse).collect(Collectors.toList());
+            return orderBookMapper.orderBooksToOrderBookResponse(orderBooks);
         }
         throw new ResourceNotFoundException("exception.notFound");
     }
