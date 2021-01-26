@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.service;
 
+import com.faceit.example.internetlibrary.dto.request.BookRequest;
 import com.faceit.example.internetlibrary.model.Book;
 import com.faceit.example.internetlibrary.model.Role;
 
@@ -13,7 +14,7 @@ public interface BookService {
 
     Book addBook(Book newBook, Set<Role> roleSet);
 
-    Book updateBookById(Book updateBook, long id, Set<Role> roleSet);
+    Book updateBookById(BookRequest bookRequest, long id, Set<Role> roleSet);
 
     void deleteBookById(long id, Set<Role> roleSet);
 }

@@ -1,12 +1,16 @@
 package com.faceit.example.internetlibrary.service.impl;
 
-import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
-import com.faceit.example.internetlibrary.util.Utils;
+import com.faceit.example.internetlibrary.dto.request.OrderBookRequest;
+import com.faceit.example.internetlibrary.mapper.OrderBookMapper;
+import com.faceit.example.internetlibrary.model.Book;
 import com.faceit.example.internetlibrary.model.OrderBook;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
 import com.faceit.example.internetlibrary.repository.OrderBookRepository;
+import com.faceit.example.internetlibrary.service.BookService;
 import com.faceit.example.internetlibrary.service.OrderBookService;
+import com.faceit.example.internetlibrary.service.UserService;
+import com.faceit.example.internetlibrary.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +20,21 @@ import java.util.Optional;
 
 @Service
 public class OrderBookServiceImpl implements OrderBookService {
+
     private final OrderBookRepository orderBookRepository;
+    private final OrderBookMapper orderBookMapper;
+    private final UserService userService;
+    private final BookService bookService;
 
     @Autowired
-    public OrderBookServiceImpl(OrderBookRepository orderBookRepository) {
+    public OrderBookServiceImpl(OrderBookRepository orderBookRepository,
+                                OrderBookMapper orderBookMapper,
+                                UserService userService,
+                                BookService bookService) {
         this.orderBookRepository = orderBookRepository;
+        this.orderBookMapper = orderBookMapper;
+        this.userService = userService;
+        this.bookService = bookService;
     }
 
     @Override
@@ -52,15 +66,21 @@ public class OrderBookServiceImpl implements OrderBookService {
     }
 
     @Override
-    public OrderBook updateOrderBookById(OrderBook updateOrderBook, long id) {
-        OrderBook orderBook = getOrderBookById(id);
-        if (orderBook != null) {
-            updateOrderBook.setId(id);
-        } else {
-            throw new ResourceNotFoundException("exception.notFound");
-        }
-        orderBookRepository.save(updateOrderBook);
-        return updateOrderBook;
+    public OrderBook updateOrderBookById(OrderBookRequest orderBookRequest, long id) {
+        /*OrderBook updateOrderBook = orderBookMapper
+                .updateOrderBookFromOrderBookRequest(orderBookRequest, getOrderBookById(id));
+
+        System.out.println(updateOrderBook);
+        Book book = bookService.getBookById(updateOrderBook.getBook().getId());
+        User user = userService.getUserById(updateOrderBook.getUser().getId());
+        updateOrderBook.setBook(book);
+        updateOrderBook.setUser(user);
+        System.out.println(updateOrderBook);
+        System.out.println(updateOrderBook.getUser());
+        System.out.println(updateOrderBook.getBook());*/
+        OrderBook updateOrderBook = orderBookMapper.orderBookRequestToOrderBook(orderBookRequest);
+
+        return orderBookRepository.save(updateOrderBook);
     }
 
     @Override

@@ -100,7 +100,6 @@ public class UserControllerRest {
             @ApiResponse(responseCode = "404", description = "user not found")})
     public UserResponse updateUserById(@Valid @RequestBody UserRequest userRequest,
                                @PathVariable @Parameter(description = "User id") Long id) {
-        User user = userMapper.userRequestToUser(userRequest);
-        return userMapper.userToUserResponse(userService.updateUserById(user, id));
+        return userMapper.userToUserResponse(userService.updateUserById(userRequest, id));
     }
 }

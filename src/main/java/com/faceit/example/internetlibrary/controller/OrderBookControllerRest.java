@@ -114,7 +114,6 @@ public class OrderBookControllerRest {
             @ApiResponse(responseCode = "404", description = "order book not found")})
     public OrderBookResponse updateReaderById(@RequestBody OrderBookRequest orderBookRequest,
                                               @PathVariable @Parameter(name = "Borrowed book id") Long id) {
-        OrderBook orderBook = orderBookMapper.orderBookRequestToOrderBook(orderBookRequest);
-        return orderBookMapper.orderBookToOrderBookResponse(orderBookService.updateOrderBookById(orderBook, id));
+        return orderBookMapper.orderBookToOrderBookResponse(orderBookService.updateOrderBookById(orderBookRequest, id));
     }
 }

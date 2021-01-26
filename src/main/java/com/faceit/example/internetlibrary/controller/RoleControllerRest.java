@@ -83,7 +83,6 @@ public class RoleControllerRest {
             @ApiResponse(responseCode = "404", description = "role not found")})
     public RoleResponse updateRoleById(@RequestBody RoleRequest roleRequest,
                                @Parameter(description = "Role id") @PathVariable Long id) {
-        Role role = roleMapper.roleRequestToRole(roleRequest);
-        return roleMapper.roleToRoleResponse(roleService.updateRoleById(role, id));
+        return roleMapper.roleToRoleResponse(roleService.updateRoleById(roleRequest, id));
     }
 }

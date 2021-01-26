@@ -4,6 +4,8 @@ import com.faceit.example.internetlibrary.dto.request.BookRequest;
 import com.faceit.example.internetlibrary.dto.response.BookResponse;
 import com.faceit.example.internetlibrary.model.Book;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -12,7 +14,11 @@ public interface BookMapper {
 
     BookResponse bookToBookResponse(Book book);
 
+    @Mapping(target = "id", ignore = true)
     Book bookRequestToBook(BookRequest bookRequest);
 
     List<BookResponse> booksToBooksResponse(List<Book> books);
+
+    @Mapping(target = "id", ignore = true)
+    Book updateBookFromBookRequest(BookRequest bookRequest, @MappingTarget Book book);
 }

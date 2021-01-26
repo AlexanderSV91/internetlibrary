@@ -90,10 +90,9 @@ public class BookControllerRest {
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "404", description = "book not found")})
     public BookResponse updateBookById(@AuthenticationPrincipal MyUserDetails userDetails,
-                               @RequestBody BookRequest bookRequest,
-                               @Parameter(description = "Book id") @PathVariable Long id) {
-        Book book = bookMapper.bookRequestToBook(bookRequest);
+                                       @RequestBody BookRequest bookRequest,
+                                       @Parameter(description = "Book id") @PathVariable Long id) {
         return bookMapper.bookToBookResponse(
-                bookService.updateBookById(book, id, userDetails.getUser().getRoles()));
+                bookService.updateBookById(bookRequest, id, userDetails.getUser().getRoles()));
     }
 }

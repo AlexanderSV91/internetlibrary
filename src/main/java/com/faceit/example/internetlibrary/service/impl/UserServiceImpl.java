@@ -1,8 +1,9 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.dto.request.UserRequest;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.exception.ResourceAlreadyExists;
-import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
+import com.faceit.example.internetlibrary.mapper.UserMapper;
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.repository.UserRepository;
@@ -21,14 +22,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserMapper userMapper;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            RoleService roleService,
-                           BCryptPasswordEncoder bCryptPasswordEncoder) {
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           UserMapper userMapper) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -72,27 +76,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUserById(User updateUser, long id) {
-        User isCurrentUser = getUserById(id);
-        if (isCurrentUser != null) {
-            if (!updateUser.getUserName().equals(isCurrentUser.getUserName())) {
-                checkUsername(updateUser.getUserName());
-            }
-            if ((!updateUser.getEmail().equals(isCurrentUser.getEmail()))) {
-                checkEmail(updateUser.getEmail());
-            }
-            updateUser.setId(id);
-            updateUser.setRoles(isCurrentUser.getRoles());
-            updateUser.setEnabled(isCurrentUser.isEnabled());
-            if (updateUser.getPassword() != null && updateUser.getPassword().length() < 30) {
-                updateUser.setPassword(bCryptPasswordEncoder.encode(updateUser.getPassword()));
-            } else {
-                updateUser.setPassword(isCurrentUser.getPassword());
-            }
-        } else {
-            throw new ResourceNotFoundException("exception.notFound");
+        if (updateUser.getPassword() != null && updateUser.getPassword().length() < 30) {
+            updateUser.setPassword(bCryptPasswordEncoder.encode(updateUser.getPassword()));
         }
         userRepository.save(updateUser);
         return updateUser;
+    }
+
+    public User updateUserById(UserRequest userRequest, long id) {
+        User updateUser = userMapper.updateUserFromUserRequest(userRequest, getUserById(id));
+        return updateUserById(updateUser, id);
     }
 
     @Override
