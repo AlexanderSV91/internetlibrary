@@ -21,4 +21,8 @@ public interface BookMapper {
 
     @Mapping(target = "id", ignore = true)
     Book updateBookFromBookRequest(BookRequest bookRequest, @MappingTarget Book book);
+
+    com.faceit.example.internetlibrary.dto.response.mongodb.BookResponse bookMongoToBookMongoResponse(com.faceit.example.internetlibrary.model.mongodb.Book book);
+
+    com.faceit.example.internetlibrary.model.mongodb.Book bookMongoRequestToBookMongo(com.faceit.example.internetlibrary.dto.request.mongodb.BookRequest bookRequest);
 }
