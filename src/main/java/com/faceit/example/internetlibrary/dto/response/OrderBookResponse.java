@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 @Schema(description = "Order book response")
@@ -17,6 +19,7 @@ public class OrderBookResponse {
     private long id;
 
     @Schema(description = "Book status in the library", example = "IN_LIBRARY")
+    @Enumerated(EnumType.STRING)
     private Status status;
     private UserResponse user;
     private BookResponse book;

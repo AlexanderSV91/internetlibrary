@@ -25,6 +25,8 @@ sudo docker image ls
 sudo docker images -a
 sudo docker system prune
 https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes-ru
+https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-20-04-ru
+https://linuxize.com/post/how-to-install-mongodb-on-ubuntu-20-04/
 
 Стек технологий:
 1. Java 8 или выше
