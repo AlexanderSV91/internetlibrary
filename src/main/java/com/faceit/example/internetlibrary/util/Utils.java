@@ -2,7 +2,7 @@ package com.faceit.example.internetlibrary.util;
 
 import com.faceit.example.internetlibrary.exception.ApiException;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
-import com.faceit.example.internetlibrary.model.Role;
+import com.faceit.example.internetlibrary.model.mysql.Role;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 

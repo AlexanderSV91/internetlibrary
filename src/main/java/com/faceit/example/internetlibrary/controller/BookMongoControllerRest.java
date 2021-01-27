@@ -1,6 +1,6 @@
 package com.faceit.example.internetlibrary.controller;
 
-import com.faceit.example.internetlibrary.mapper.BookMapper;
+import com.faceit.example.internetlibrary.mapper.mysql.BookMapper;
 import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

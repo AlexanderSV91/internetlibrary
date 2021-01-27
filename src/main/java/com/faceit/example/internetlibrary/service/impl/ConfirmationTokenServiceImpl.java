@@ -1,13 +1,13 @@
 package com.faceit.example.internetlibrary.service.impl;
 
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
-import com.faceit.example.internetlibrary.model.ConfirmationToken;
-import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enumeration.TokenStatus;
-import com.faceit.example.internetlibrary.repository.ConfirmationTokenRepository;
+import com.faceit.example.internetlibrary.model.mysql.ConfirmationToken;
+import com.faceit.example.internetlibrary.model.mysql.User;
+import com.faceit.example.internetlibrary.repository.mysql.ConfirmationTokenRepository;
 import com.faceit.example.internetlibrary.service.ConfirmationTokenService;
 import com.faceit.example.internetlibrary.service.EmailSenderService;
-import com.faceit.example.internetlibrary.service.UserService;
+import com.faceit.example.internetlibrary.service.mysql.UserService;
 import com.faceit.example.internetlibrary.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

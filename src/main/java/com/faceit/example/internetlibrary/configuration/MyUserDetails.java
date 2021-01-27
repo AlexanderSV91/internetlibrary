@@ -1,7 +1,7 @@
 package com.faceit.example.internetlibrary.configuration;
 
-import com.faceit.example.internetlibrary.model.Role;
-import com.faceit.example.internetlibrary.model.User;
+import com.faceit.example.internetlibrary.model.mysql.Role;
+import com.faceit.example.internetlibrary.model.mysql.User;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

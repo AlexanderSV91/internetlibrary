@@ -1,8 +1,8 @@
 package com.faceit.example.internetlibrary.service;
 
-import com.faceit.example.internetlibrary.model.ConfirmationToken;
-import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enumeration.TokenStatus;
+import com.faceit.example.internetlibrary.model.mysql.ConfirmationToken;
+import com.faceit.example.internetlibrary.model.mysql.User;
 
 import java.util.List;
 

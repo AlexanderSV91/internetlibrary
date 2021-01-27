@@ -1,13 +1,13 @@
 package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.configuration.MyUserDetails;
-import com.faceit.example.internetlibrary.dto.request.OrderBookRequest;
-import com.faceit.example.internetlibrary.dto.response.OrderBookResponse;
+import com.faceit.example.internetlibrary.dto.request.mysql.OrderBookRequest;
+import com.faceit.example.internetlibrary.dto.response.mysql.OrderBookResponse;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
-import com.faceit.example.internetlibrary.mapper.OrderBookMapper;
-import com.faceit.example.internetlibrary.model.OrderBook;
+import com.faceit.example.internetlibrary.mapper.mysql.OrderBookMapper;
+import com.faceit.example.internetlibrary.model.mysql.OrderBook;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
-import com.faceit.example.internetlibrary.service.OrderBookService;
+import com.faceit.example.internetlibrary.service.mysql.OrderBookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -22,7 +22,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = {"/api"})

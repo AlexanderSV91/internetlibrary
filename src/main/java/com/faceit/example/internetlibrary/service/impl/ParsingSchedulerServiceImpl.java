@@ -1,9 +1,9 @@
 package com.faceit.example.internetlibrary.service.impl;
 
-import com.faceit.example.internetlibrary.model.mongodb.Book;
 import com.faceit.example.internetlibrary.model.enumeration.BookCondition;
-import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
+import com.faceit.example.internetlibrary.model.mongodb.Book;
 import com.faceit.example.internetlibrary.service.ParsingSchedulerService;
+import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -35,7 +35,6 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
     @Scheduled(fixedDelay = 30_000)
     public void parsingPage() {
         parsing();
-        System.out.println();
     }
 
     private void parsing() {

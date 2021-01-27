@@ -1,12 +1,12 @@
 package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.configuration.MyUserDetails;
-import com.faceit.example.internetlibrary.dto.request.UserRequest;
-import com.faceit.example.internetlibrary.dto.response.UserResponse;
+import com.faceit.example.internetlibrary.dto.request.mysql.UserRequest;
+import com.faceit.example.internetlibrary.dto.response.mysql.UserResponse;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
-import com.faceit.example.internetlibrary.mapper.UserMapper;
-import com.faceit.example.internetlibrary.model.User;
-import com.faceit.example.internetlibrary.service.UserService;
+import com.faceit.example.internetlibrary.mapper.mysql.UserMapper;
+import com.faceit.example.internetlibrary.model.mysql.User;
+import com.faceit.example.internetlibrary.service.mysql.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -21,9 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = {"/api"})
@@ -79,7 +77,7 @@ public class UserControllerRest {
             @ApiResponse(responseCode = "400", description = "user not add"),
             @ApiResponse(responseCode = "409", description = "user already exists")})
     public UserResponse addUser(@AuthenticationPrincipal MyUserDetails userDetails,
-                        @Valid @RequestBody UserRequest userRequest) {
+                                @Valid @RequestBody UserRequest userRequest) {
         User user = userMapper.userRequestToUser(userRequest);
         return userMapper.userToUserResponse(userService.addUser(user, userDetails.getUser().getRoles()));
     }
@@ -99,7 +97,7 @@ public class UserControllerRest {
             content = @Content(schema = @Schema(implementation = UserResponse.class))),
             @ApiResponse(responseCode = "404", description = "user not found")})
     public UserResponse updateUserById(@Valid @RequestBody UserRequest userRequest,
-                               @PathVariable @Parameter(description = "User id") Long id) {
+                                       @PathVariable @Parameter(description = "User id") Long id) {
         return userMapper.userToUserResponse(userService.updateUserById(userRequest, id));
     }
 }

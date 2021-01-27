@@ -1,6 +1,6 @@
 package com.faceit.example.internetlibrary.service;
 
-import com.faceit.example.internetlibrary.model.User;
+import com.faceit.example.internetlibrary.model.mysql.User;
 import freemarker.template.TemplateException;
 
 import javax.mail.MessagingException;

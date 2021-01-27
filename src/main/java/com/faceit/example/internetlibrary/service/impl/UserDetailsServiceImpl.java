@@ -2,8 +2,8 @@ package com.faceit.example.internetlibrary.service.impl;
 
 import com.faceit.example.internetlibrary.configuration.MyUserDetails;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
-import com.faceit.example.internetlibrary.model.User;
-import com.faceit.example.internetlibrary.service.UserService;
+import com.faceit.example.internetlibrary.model.mysql.User;
+import com.faceit.example.internetlibrary.service.mysql.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
