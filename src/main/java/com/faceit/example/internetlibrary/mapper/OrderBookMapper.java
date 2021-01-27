@@ -27,15 +27,11 @@ public interface OrderBookMapper {
 
     List<OrderBookResponse> orderBooksToOrderBookResponse(List<OrderBook> orderBooks);
 
-/*    @Mapping(target = "user.userName", ignore = true)
-    @Mapping(target = "user.firstName", ignore = true)
-    @Mapping(target = "user.lastName", ignore = true)
-    @Mapping(target = "user.email", ignore = true)
-    @Mapping(target = "user.age", ignore = true)
-    @Mapping(target = "book.name", ignore = true)
-    @Mapping(target = "book.bookCondition", ignore = true)
-    @Mapping(target = "book.description", ignore = true)*/
-    @Mapping(target = "id", ignore = true)
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "user", ignore = true),
+            @Mapping(target = "book", ignore = true)
+    })
     OrderBook updateOrderBookFromOrderBookRequest(OrderBookRequest orderBookRequest,
                                                   @MappingTarget OrderBook orderBook);
 }

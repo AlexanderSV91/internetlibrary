@@ -67,18 +67,13 @@ public class OrderBookServiceImpl implements OrderBookService {
 
     @Override
     public OrderBook updateOrderBookById(OrderBookRequest orderBookRequest, long id) {
-        /*OrderBook updateOrderBook = orderBookMapper
-                .updateOrderBookFromOrderBookRequest(orderBookRequest, getOrderBookById(id));
+        Book book = bookService.getBookById(orderBookRequest.getBook().getId());
+        User user = userService.getUserById(orderBookRequest.getUser().getId());
 
-        System.out.println(updateOrderBook);
-        Book book = bookService.getBookById(updateOrderBook.getBook().getId());
-        User user = userService.getUserById(updateOrderBook.getUser().getId());
+        OrderBook updateOrderBook = orderBookMapper
+                .updateOrderBookFromOrderBookRequest(orderBookRequest, getOrderBookById(id));
         updateOrderBook.setBook(book);
         updateOrderBook.setUser(user);
-        System.out.println(updateOrderBook);
-        System.out.println(updateOrderBook.getUser());
-        System.out.println(updateOrderBook.getBook());*/
-        OrderBook updateOrderBook = orderBookMapper.orderBookRequestToOrderBook(orderBookRequest);
 
         return orderBookRepository.save(updateOrderBook);
     }
