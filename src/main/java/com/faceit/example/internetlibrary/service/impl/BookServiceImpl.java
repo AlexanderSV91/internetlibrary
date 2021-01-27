@@ -1,6 +1,8 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.dto.request.BookRequest;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
+import com.faceit.example.internetlibrary.mapper.BookMapper;
 import com.faceit.example.internetlibrary.util.Utils;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.model.Book;
@@ -16,11 +18,14 @@ import java.util.Set;
 
 @Service
 public class BookServiceImpl implements BookService {
+
     private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper) {
         this.bookRepository = bookRepository;
+        this.bookMapper = bookMapper;
     }
 
     @Override
@@ -40,23 +45,19 @@ public class BookServiceImpl implements BookService {
         if (isEmployee) {
             return bookRepository.save(newBook);
         } else {
-            throw new ApiRequestException("book not add");
+            throw new ApiRequestException("exception.bookNotAdd");
         }
     }
 
     @Override
-    public Book updateBookById(Book updateBook, long id, Set<Role> roles) {
+    public Book updateBookById(BookRequest bookRequest, long id, Set<Role> roles) {
         boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
-            Book book = getBookById(id);
-            if (book != null) {
-                updateBook.setId(id);
-            }
-            bookRepository.save(updateBook);
+            Book updateBook = bookMapper.updateBookFromBookRequest(bookRequest, getBookById(id));
+            return bookRepository.save(updateBook);
         } else {
-            throw new ResourceNotFoundException("Not found");
+            throw new ResourceNotFoundException("exception.notFound");
         }
-        return updateBook;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class BookServiceImpl implements BookService {
         if (isEmployee) {
             bookRepository.deleteById(id);
         } else {
-            throw new ApiRequestException("book not delete");
+            throw new ApiRequestException("exception.bookNotDelete");
         }
     }
 }

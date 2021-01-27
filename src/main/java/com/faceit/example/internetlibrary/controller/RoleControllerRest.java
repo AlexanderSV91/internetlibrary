@@ -1,5 +1,9 @@
 package com.faceit.example.internetlibrary.controller;
 
+import com.faceit.example.internetlibrary.dto.request.RoleRequest;
+import com.faceit.example.internetlibrary.dto.response.RoleResponse;
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
+import com.faceit.example.internetlibrary.mapper.RoleMapper;
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,37 +26,46 @@ import java.util.List;
 @Tag(name = "Roles", description = "interaction with roles")
 @SecurityRequirement(name = "basic")
 public class RoleControllerRest {
+
     private final RoleService roleService;
+    private final RoleMapper roleMapper;
 
     @Autowired
-    public RoleControllerRest(RoleService roleService) {
+    public RoleControllerRest(RoleService roleService, RoleMapper roleMapper) {
         this.roleService = roleService;
+        this.roleMapper = roleMapper;
     }
 
     @GetMapping("/role")
     @Operation(summary = "get all roles", description = "allows you to get all roles")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = Role.class))))})
-    public List<Role> getAllRole() {
-        return roleService.getAllRole();
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))),
+            @ApiResponse(responseCode = "404", description = "roles not found")})
+    public List<RoleResponse> getAllRole() {
+        List<Role> roles = roleService.getAllRole();
+        if (roles != null) {
+            return roleMapper.rolesToRolesResponse(roles);
+        }
+        throw new ResourceNotFoundException("exception.notFound");
     }
 
     @GetMapping("/role/{id}")
     @Operation(summary = "get a certain role", description = "allows you to get a certain role")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = Role.class)))),
+            content = @Content(schema = @Schema(implementation = RoleResponse.class))),
             @ApiResponse(responseCode = "404", description = "role not found")})
-    public Role getAllRoleById(@Parameter(description = "Role id") @PathVariable long id) {
-        return roleService.getRoleById(id);
+    public RoleResponse getAllRoleById(@Parameter(description = "Role id") @PathVariable long id) {
+        return roleMapper.roleToRoleResponse(roleService.getRoleById(id));
     }
 
     @PostMapping("/role")
     @Operation(summary = "add new role", description = "allows you to add new role")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "role created",
-            content = @Content(schema = @Schema(implementation = Role.class))),
+            content = @Content(schema = @Schema(implementation = RoleResponse.class))),
             @ApiResponse(responseCode = "400", description = "role not add")})
-    public Role addRole(@RequestBody Role newRole) {
-        return roleService.addRole(newRole);
+    public RoleResponse addRole(@Valid @RequestBody RoleRequest roleRequest) {
+        Role role = roleMapper.roleRequestToRole(roleRequest);
+        return roleMapper.roleToRoleResponse(roleService.addRole(role));
     }
 
     @DeleteMapping("/role/{id}")
@@ -65,10 +79,10 @@ public class RoleControllerRest {
     @PutMapping("/role/{id}")
     @Operation(summary = "update a certain role", description = "allows you to update a certain role")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
-            content = @Content(schema = @Schema(implementation = Role.class))),
+            content = @Content(schema = @Schema(implementation = RoleResponse.class))),
             @ApiResponse(responseCode = "404", description = "role not found")})
-    public Role updateRoleById(@RequestBody Role updateRole,
+    public RoleResponse updateRoleById(@RequestBody RoleRequest roleRequest,
                                @Parameter(description = "Role id") @PathVariable Long id) {
-        return roleService.updateRoleById(updateRole, id);
+        return roleMapper.roleToRoleResponse(roleService.updateRoleById(roleRequest, id));
     }
 }

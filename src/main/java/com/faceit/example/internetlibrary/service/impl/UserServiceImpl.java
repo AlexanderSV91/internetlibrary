@@ -1,8 +1,9 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.dto.request.UserRequest;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.exception.ResourceAlreadyExists;
-import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
+import com.faceit.example.internetlibrary.mapper.UserMapper;
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.repository.UserRepository;
@@ -21,14 +22,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserMapper userMapper;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            RoleService roleService,
-                           BCryptPasswordEncoder bCryptPasswordEncoder) {
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           UserMapper userMapper) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -66,36 +70,22 @@ public class UserServiceImpl implements UserService {
             preparingToAddUser(newUser);
             return userRepository.save(newUser);
         } else {
-            throw new ApiRequestException("user not add");
+            throw new ApiRequestException("exception.userNotAdd");
         }
     }
 
     @Override
     public User updateUserById(User updateUser, long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        User isCurrentUser = Utils.getDataFromTypeOptional(optionalUser);
-        if (!updateUser.getUserName().equals(isCurrentUser.getUserName())) {
-            checkUsername(updateUser.getUserName());
-        }
-        if ((!updateUser.getEmail().equals(isCurrentUser.getEmail()))) {
-            checkEmail(updateUser.getEmail());
-        }
-
-        User user = getUserById(id);
-        if (user != null) {
-            updateUser.setId(id);
-            updateUser.setRoles(user.getRoles());
-            updateUser.setEnabled(user.isEnabled());
-            if (updateUser.getPassword() != null && updateUser.getPassword().length() < 30) {
-                updateUser.setPassword(bCryptPasswordEncoder.encode(updateUser.getPassword()));
-            } else {
-                updateUser.setPassword(user.getPassword());
-            }
-        } else {
-            throw new ResourceNotFoundException("Not found");
+        if (updateUser.getPassword() != null && updateUser.getPassword().length() < 30) {
+            updateUser.setPassword(bCryptPasswordEncoder.encode(updateUser.getPassword()));
         }
         userRepository.save(updateUser);
         return updateUser;
+    }
+
+    public User updateUserById(UserRequest userRequest, long id) {
+        User updateUser = userMapper.updateUserFromUserRequest(userRequest, getUserById(id));
+        return updateUserById(updateUser, id);
     }
 
     @Override
@@ -104,7 +94,7 @@ public class UserServiceImpl implements UserService {
         if (isEmployee) {
             userRepository.deleteById(id);
         } else {
-            throw new ApiRequestException("user not delete");
+            throw new ApiRequestException("exception.userNotDelete");
         }
     }
 
@@ -126,13 +116,14 @@ public class UserServiceImpl implements UserService {
     private void checkUsername(String username) {
         boolean checkUser = existsUserByUserName(username);
         if (checkUser) {
-            throw new ResourceAlreadyExists("userName", "username exists");
+            throw new ResourceAlreadyExists("userName", "exception.usernameExists");
         }
     }
+
     private void checkEmail(String email) {
         boolean checkEmail = existsByEmail(email);
         if (checkEmail) {
-            throw new ResourceAlreadyExists("email", "email exists");
+            throw new ResourceAlreadyExists("email", "exception.emailExists");
         }
     }
 

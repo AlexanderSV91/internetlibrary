@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.service;
 
+import com.faceit.example.internetlibrary.dto.request.OrderBookRequest;
 import com.faceit.example.internetlibrary.model.OrderBook;
 import com.faceit.example.internetlibrary.model.User;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
@@ -13,7 +14,7 @@ public interface OrderBookService {
 
     OrderBook addOrderBook(OrderBook newOrderBook);
 
-    OrderBook updateOrderBookById(OrderBook updateOrderBook, long id);
+    OrderBook updateOrderBookById(OrderBookRequest orderBookRequest, long id);
 
     void deleteOrderBookById(long id);
 

@@ -1,5 +1,6 @@
 package com.faceit.example.internetlibrary.service;
 
+import com.faceit.example.internetlibrary.dto.request.UserRequest;
 import com.faceit.example.internetlibrary.model.Role;
 import com.faceit.example.internetlibrary.model.User;
 
@@ -16,6 +17,8 @@ public interface UserService {
     User addUser(User newUser, Set<Role> roles);
 
     User updateUserById(User updateUser, long id);
+
+    User updateUserById(UserRequest userRequest, long id);
 
     void deleteUserById(long id, Set<Role> roles);
 

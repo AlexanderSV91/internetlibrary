@@ -3,13 +3,11 @@ package com.faceit.example.internetlibrary.util;
 import com.faceit.example.internetlibrary.exception.ApiException;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.model.Role;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class Utils {
 
@@ -33,6 +31,11 @@ public class Utils {
     }
 
     public static <T> T getDataFromTypeOptional(Optional<T> optional) {
-        return optional.orElseThrow(() -> new ResourceNotFoundException("Not found"));
+        return optional.orElseThrow(() -> new ResourceNotFoundException("exception.notFound"));
+    }
+
+    public static String getMessageForLocale(String messageKey) {
+        Locale locale = new Locale(LocaleContextHolder.getLocale().toString());
+        return ResourceBundle.getBundle("messages", locale).getString(messageKey);
     }
 }

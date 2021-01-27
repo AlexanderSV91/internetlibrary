@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -45,14 +45,14 @@
 					</span>
                             <i style="width: 20px;height: 20px;z-index: 2;background: #FFB900;display: inline-block;position: relative;left: -30px;top: 10px;">
                             </i>
-                            <strong style="position: relative;">Internet Library</strong>
+                            <strong style="position: relative;">${internetLibrary}</strong>
                             <b style="width: 20px;height: 20px;background: #00C6FF;display: inline-block;position: relative;left: 40px;top: 5px;">
                             </b>
                             <em style="width: 20px;height: 20px;background: #FFB900;display: inline-block;position: relative;left: 0px;top: 10px;">
                             </em>
                         </h2>
                         <p style="margin: 0;padding: 0;text-align: center;color: #969696;	font-size: 14px;">
-                            NEW USER
+                            ${newUser}
                         </p>
                     </td>
                 </tr>
@@ -60,11 +60,11 @@
                     <td style="min-height: 182px;width: 852px;margin: 0 auto;padding: 26px 46px;border: 1px #ECECEC solid;position: relative;">
                         <span style="width: 8px;height: 35px;display: table-cell;background: #00C6FF;position: absolute;left: 31px;"></span>
                         <h3 style="display: table-cell;margin: 0;padding: 0;font-size: 22px;line-height: 35px;">
-                            ${userName}, confirm registration.
+                            ${userName} ${confirmRegistration}
                             <br>
-                            Your token ${userToken}
+                            ${yourToken} ${userToken}
                         </h3>
-                        <a href=${activeLink}><img src="https://dzt53h2bjh4s.cloudfront.net/wp-content/uploads/2017/11/08054655/confirmation.jpg"></a>
+                        <a href=${activeLink}><img src="https://img2.freepng.ru/20180926/wzb/kisspng-email-logo-organization-the-british-geotechnical-a-form-confirmation-sullivans-5bab48f32ecb42.9350542115379519871917.jpg"></a>
                     </td>
                 </tr>
                 </tbody>
@@ -91,7 +91,7 @@
                             </li>
                         </ul>
                         <p style="margin: 0; padding: 0;float: right; margin-right: 20px; color: #A4A4A4; line-height: 126px;">
-                            copyright© 2009-2021 All Right Reserved</p>
+                            ${copyright}</p>
                     </td>
                 </tr>
                 </tfoot>

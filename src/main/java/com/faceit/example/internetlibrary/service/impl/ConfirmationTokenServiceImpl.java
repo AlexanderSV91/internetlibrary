@@ -90,7 +90,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         if (confirmationToken != null) {
             updateConfirmationToken.setId(id);
         } else {
-            throw new ResourceNotFoundException("Not found");
+            throw new ResourceNotFoundException("exception.notFound");
         }
         confirmationTokenRepository.save(updateConfirmationToken);
         return updateConfirmationToken;
