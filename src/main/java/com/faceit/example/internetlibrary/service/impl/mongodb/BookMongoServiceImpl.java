@@ -2,17 +2,14 @@ package com.faceit.example.internetlibrary.service.impl.mongodb;
 
 import com.faceit.example.internetlibrary.dto.request.mongodb.BookRequest;
 import com.faceit.example.internetlibrary.mapper.mongo.BookMongoMapper;
-import com.faceit.example.internetlibrary.model.enumeration.BookCondition;
 import com.faceit.example.internetlibrary.model.mongodb.Book;
 import com.faceit.example.internetlibrary.repository.mongodb.BookMongoRepository;
 import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
 import com.faceit.example.internetlibrary.util.Utils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BookMongoServiceImpl implements BookMongoService {
@@ -24,25 +21,6 @@ public class BookMongoServiceImpl implements BookMongoService {
                                 BookMongoMapper bookMongoMapper) {
         this.bookMongoRepository = bookMongoRepository;
         this.bookMongoMapper = bookMongoMapper;
-    }
-
-    @Override
-    public List<Book> test() {
-        List<Book> books = getAllBook();
-
-/*        List<Book> test = books
-                .stream()
-                .filter(book -> BookCondition.GOOD.equals(book.getBookCondition()))
-                .collect(Collectors.toList());*/
-
-        List<Book> test = new ArrayList<>();
-        long count = books
-                .stream()
-                .filter(book -> BookCondition.GOOD.equals(book.getBookCondition()))
-                .count();
-        System.out.println(count);
-
-        return test;
     }
 
     @Override

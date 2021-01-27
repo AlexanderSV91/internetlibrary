@@ -33,15 +33,6 @@ public class BookMongoControllerRest {
         this.bookMongoMapper = bookMongoMapper;
     }
 
-    @GetMapping("/test")
-    public List<BookResponse> test() {
-        List<Book> books = bookMongoService.test();
-        if (books != null) {
-            return bookMongoMapper.booksToBooksResponse(books);
-        }
-        throw new ResourceNotFoundException("exception.notFound");
-    }
-
     @GetMapping("/mongo-book")
     @Operation(summary = "get all books from mongodb",
             description = "allows you to get all the books in the library")

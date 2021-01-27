@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface BookMongoService {
 
-    List<Book> test();
-
     List<Book> getAllBook();
 
     Book getBookById(String id);

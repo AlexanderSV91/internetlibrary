@@ -138,6 +138,9 @@
         </profile>
         <profile>
             <id>prod</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <activatedProperties>prod</activatedProperties>
             </properties>
