@@ -5,7 +5,6 @@ services:
     restart: always
     container_name: "mysql"
     volumes:
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - /home/developer/IdeaProjects/mysql/library:/var/lib/mysql
     #      - "./db/mysql/library:/var/lib/mysql"
     networks:
@@ -18,16 +17,17 @@ services:
   mongo:
     image: mongo:latest
     #    restart: always
-    container_name: mongodb
+    container_name: mongo
     volumes:
+#      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - /home/developer/IdeaProjects/mongo/library:/data/db
-#      - "./db/mongo/library:/data/db"
+    #      - "./db/mongo/library:/data/db"
     networks:
-      - library-mongodb
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root
-      - MONGO_INITDB_DATABASE=library
+      - library-mongo
+#    environment:
+#      - MONGO_INITDB_ROOT_USERNAME=root
+#      - MONGO_INITDB_ROOT_PASSWORD=root
+#      - MONGO_INITDB_DATABASE=library
   server:
     build: .
     container_name: internetlibrary
@@ -40,13 +40,15 @@ services:
       - DB_HOST=mysql
       - MYSQL_USER=alexlibrary
       - MYSQL_USER_PASSWORD=alexlibrary
+      - MONGO_DB_HOSTNAME=mongo
     networks:
       - library-mysql
+      - library-mongo
     depends_on:
       - mysql
       - mongo
 
 networks:
   library-mysql:
-  library-mongodb:
+  library-mongo:
 

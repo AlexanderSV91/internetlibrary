@@ -5,6 +5,9 @@ import com.faceit.example.internetlibrary.dto.response.mongodb.BookResponse;
 import com.faceit.example.internetlibrary.model.mongodb.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BookMongoMapper {
@@ -13,4 +16,9 @@ public interface BookMongoMapper {
 
     @Mapping(target = "id", ignore = true)
     Book bookMongoRequestToBookMongo(BookRequest bookRequest);
+
+    List<BookResponse> booksToBooksResponse(List<Book> books);
+
+    @Mapping(target = "id", ignore = true)
+    Book updateBookFromBookRequest(BookRequest bookRequest, @MappingTarget Book book);
 }

@@ -32,17 +32,16 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
     }
 
     @Override
-    @Scheduled(fixedDelay = 30_000)
+    @Scheduled(fixedDelay = 60_000)
     public void parsingPage() {
-        parsing();
-    }
+        System.out.println("parse the page: " + parsingPage);
 
-    private void parsing() {
         Document doc = null;
         try {
-            doc = Jsoup.connect(parsingPage)
+            doc = Jsoup
+                    .connect(parsingPage)
                     .userAgent("Mozilla")
-                    .timeout(5000)
+                    .timeout(15_000)
                     .get();
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,17 +63,39 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
                 book.setImageUrl(span3AppendBottom.select("img").attr("src"));
 
                 book.setName(span11Prepend1AppendBottom.select("h3").text());
-                Elements bookAuthor = span11Prepend1AppendBottom.select("h4").select("em").select("a");
-                book.setAuthors(bookAuthor.stream().map(Element::text).collect(Collectors.toList()));
-                book.setDescription(span11Prepend1AppendBottom.first().select("p").text());
-                book.setBookCondition(BookCondition.values()[new Random().nextInt(BookCondition.values().length)]);
+
+                Elements bookAuthor = span11Prepend1AppendBottom
+                        .select("h4")
+                        .select("em")
+                        .select("a");
+
+                book.setAuthors(
+                        bookAuthor
+                                .stream()
+                                .map(Element::text)
+                                .collect(Collectors.toList()));
+
+                book.setDescription(
+                        span11Prepend1AppendBottom
+                                .first()
+                                .select("p")
+                                .text());
+
+                book.setBookCondition(
+                        BookCondition
+                                .values()[new Random().nextInt(BookCondition.values().length)]);
+
                 book.setAddTime(LocalDateTime.now());
 
-                book.setPrice(Double.parseDouble(span3Prepend1AppendBottomLastCenter.select("h3").first().text().replace("$ ", "")));
+                book.setPrice(Double.parseDouble(
+                        span3Prepend1AppendBottomLastCenter
+                                .select("h3")
+                                .first()
+                                .text()
+                                .replace("$ ", "")));
 
                 if (!bookMongoService.existsByName(book.getName())) {
                     Book bm = bookMongoService.addBook(book);
-                    System.out.println(bm);
                 }
 
                 parsingPage = "http://www.feedbooks.com" +
