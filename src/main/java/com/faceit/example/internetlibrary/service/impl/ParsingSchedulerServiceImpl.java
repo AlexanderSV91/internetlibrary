@@ -34,8 +34,6 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
     @Override
     @Scheduled(fixedDelay = 60_000)
     public void parsingPage() {
-        System.out.println("parse the page: " + parsingPage);
-
         Document doc = null;
         try {
             doc = Jsoup
