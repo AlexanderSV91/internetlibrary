@@ -16,7 +16,7 @@ public interface OrderBookService {
 
     OrderBook updateOrderBookById(OrderBookRequest orderBookRequest, long id);
 
-    void deleteOrderBookById(long id);
+    void deleteOrderBookById(long id, long idUser);
 
     List<OrderBook> getOrderBookByReaderId(long idReader);
 
