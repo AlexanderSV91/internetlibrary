@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @Hidden
-@Tag(name="Pages", description="page display")
+@Tag(name = "Pages", description = "page display")
 public class WebController {
 
     @GetMapping("/orderbook")

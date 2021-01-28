@@ -1,8 +1,8 @@
 package com.faceit.example.internetlibrary.controller;
 
-import com.faceit.example.internetlibrary.dto.request.UserRequest;
-import com.faceit.example.internetlibrary.mapper.UserMapper;
-import com.faceit.example.internetlibrary.model.User;
+import com.faceit.example.internetlibrary.dto.request.mysql.UserRequest;
+import com.faceit.example.internetlibrary.mapper.mysql.UserMapper;
+import com.faceit.example.internetlibrary.model.mysql.User;
 import com.faceit.example.internetlibrary.model.enumeration.TokenStatus;
 import com.faceit.example.internetlibrary.service.ConfirmationTokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,6 @@ public class RegistrationControllerRest {
 
     private final ConfirmationTokenService confirmationTokenService;
     private final UserMapper userMapper;
-
 
     @Autowired
     public RegistrationControllerRest(ConfirmationTokenService confirmationTokenService,

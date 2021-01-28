@@ -1,7 +1,7 @@
 package com.faceit.example.internetlibrary.service.impl;
 
-import com.faceit.example.internetlibrary.model.ConfirmationToken;
 import com.faceit.example.internetlibrary.model.enumeration.TokenStatus;
+import com.faceit.example.internetlibrary.model.mysql.ConfirmationToken;
 import com.faceit.example.internetlibrary.service.ConfirmationTokenService;
 import com.faceit.example.internetlibrary.service.EmailSenderService;
 import com.faceit.example.internetlibrary.service.SchedulerService;

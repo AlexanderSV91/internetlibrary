@@ -1,11 +1,11 @@
 package com.faceit.example.internetlibrary.controller;
 
-import com.faceit.example.internetlibrary.dto.request.RoleRequest;
-import com.faceit.example.internetlibrary.dto.response.RoleResponse;
+import com.faceit.example.internetlibrary.dto.request.mysql.RoleRequest;
+import com.faceit.example.internetlibrary.dto.response.mysql.RoleResponse;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
-import com.faceit.example.internetlibrary.mapper.RoleMapper;
-import com.faceit.example.internetlibrary.model.Role;
-import com.faceit.example.internetlibrary.service.RoleService;
+import com.faceit.example.internetlibrary.mapper.mysql.RoleMapper;
+import com.faceit.example.internetlibrary.model.mysql.Role;
+import com.faceit.example.internetlibrary.service.mysql.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -82,7 +82,7 @@ public class RoleControllerRest {
             content = @Content(schema = @Schema(implementation = RoleResponse.class))),
             @ApiResponse(responseCode = "404", description = "role not found")})
     public RoleResponse updateRoleById(@RequestBody RoleRequest roleRequest,
-                               @Parameter(description = "Role id") @PathVariable Long id) {
+                                       @Parameter(description = "Role id") @PathVariable Long id) {
         return roleMapper.roleToRoleResponse(roleService.updateRoleById(roleRequest, id));
     }
 }

@@ -1,12 +1,12 @@
 package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.configuration.MyUserDetails;
-import com.faceit.example.internetlibrary.dto.request.BookRequest;
-import com.faceit.example.internetlibrary.dto.response.BookResponse;
+import com.faceit.example.internetlibrary.dto.request.mysql.BookRequest;
+import com.faceit.example.internetlibrary.dto.response.mysql.BookResponse;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
-import com.faceit.example.internetlibrary.mapper.BookMapper;
-import com.faceit.example.internetlibrary.model.Book;
-import com.faceit.example.internetlibrary.service.BookService;
+import com.faceit.example.internetlibrary.mapper.mysql.BookMapper;
+import com.faceit.example.internetlibrary.model.mysql.Book;
+import com.faceit.example.internetlibrary.service.mysql.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = {"/api"})
