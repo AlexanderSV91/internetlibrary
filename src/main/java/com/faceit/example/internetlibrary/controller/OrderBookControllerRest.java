@@ -101,8 +101,9 @@ public class OrderBookControllerRest {
             description = "allows you to delete the book the user has taken from the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation"),
             @ApiResponse(responseCode = "400", description = "order book not delete")})
-    public void deleteOrderBookById(@PathVariable @Parameter(name = "Borrowed book id") long id) {
-        orderBookService.deleteOrderBookById(id);
+    public void deleteOrderBookById(@AuthenticationPrincipal MyUserDetails userDetails,
+                                    @PathVariable @Parameter(name = "Borrowed book id") long id) {
+        orderBookService.deleteOrderBookById(id, userDetails.getUser().getId());
     }
 
     @PutMapping("/orderbook/{id}")

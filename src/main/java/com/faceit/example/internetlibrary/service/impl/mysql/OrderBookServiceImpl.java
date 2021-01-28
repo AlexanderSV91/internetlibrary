@@ -12,6 +12,8 @@ import com.faceit.example.internetlibrary.service.mysql.OrderBookService;
 import com.faceit.example.internetlibrary.service.mysql.UserService;
 import com.faceit.example.internetlibrary.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -49,6 +51,7 @@ public class OrderBookServiceImpl implements OrderBookService {
     }
 
     @Override
+    @CacheEvict(value = "orderbooks", key = "#newOrderBook.user.id", allEntries = true)
     public OrderBook addOrderBook(OrderBook newOrderBook) {
         LocalDateTime now = LocalDateTime.now().withNano(0);
         if (newOrderBook.getStartDate() == null) {
@@ -66,6 +69,7 @@ public class OrderBookServiceImpl implements OrderBookService {
     }
 
     @Override
+    @CacheEvict(value = "orderbooks", key = "#orderBookRequest.user.id", allEntries = true)
     public OrderBook updateOrderBookById(OrderBookRequest orderBookRequest, long id) {
         Book book = bookService.getBookById(orderBookRequest.getBook().getId());
         User user = userService.getUserById(orderBookRequest.getUser().getId());
@@ -79,16 +83,19 @@ public class OrderBookServiceImpl implements OrderBookService {
     }
 
     @Override
-    public void deleteOrderBookById(long id) {
+    @CacheEvict(value = "orderbooks", key = "#idUser", allEntries = true)
+    public void deleteOrderBookById(long id, long idUser) {
         orderBookRepository.deleteById(id);
     }
 
     @Override
+    @Cacheable(value = "orderbooks", key = "#idReader")
     public List<OrderBook> getOrderBookByReaderId(long idReader) {
         return orderBookRepository.getOrderBookByUserId(idReader);
     }
 
     @Override
+    @Cacheable(value = "orderbooks", key = "#user.id")
     public List<OrderBook> findOrderBooksByUserUserName(User user) {
         boolean isEmployee = Utils.isEmployee(user.getRoles());
         List<OrderBook> orderBookList;

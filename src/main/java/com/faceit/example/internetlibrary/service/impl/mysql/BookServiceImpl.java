@@ -10,6 +10,9 @@ import com.faceit.example.internetlibrary.repository.mysql.BookRepository;
 import com.faceit.example.internetlibrary.service.mysql.BookService;
 import com.faceit.example.internetlibrary.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,12 +37,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Cacheable(value = "book", key = "#id")
     public Book getBookById(long id) {
         Optional<Book> optionalBook = bookRepository.findById(id);
         return Utils.getDataFromTypeOptional(optionalBook);
     }
 
     @Override
+    @CachePut(value = "book", key = "#newBook.id")
     public Book addBook(Book newBook, Set<Role> roles) {
         boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
@@ -50,6 +55,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @CachePut(value = "book", key = "#id")
     public Book updateBookById(BookRequest bookRequest, long id, Set<Role> roles) {
         boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
@@ -61,6 +67,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @CacheEvict(value = "book", key = "#id")
     public void deleteBookById(long id, Set<Role> roles) {
         boolean isEmployee = Utils.isEmployee(roles);
         if (isEmployee) {
