@@ -2,12 +2,18 @@ package com.faceit.example.internetlibrary.service.mysql;
 
 import com.faceit.example.internetlibrary.dto.request.mysql.OrderBookRequest;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
+import com.faceit.example.internetlibrary.model.mysql.Book;
 import com.faceit.example.internetlibrary.model.mysql.OrderBook;
 import com.faceit.example.internetlibrary.model.mysql.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface OrderBookService {
+
+    Page<OrderBook> getPagingOrderBook(Pageable pageable);
+
     List<OrderBook> getAllOrderBook();
 
     OrderBook getOrderBookById(long id);
@@ -20,7 +26,7 @@ public interface OrderBookService {
 
     List<OrderBook> getOrderBookByReaderId(long idReader);
 
-    List<OrderBook> findOrderBooksByUserUserName(User user);
+    Page<OrderBook> findOrderBooksByUserUserName(Pageable pageable, User user);
 
     Status[] getAllStatus();
 }

@@ -3,6 +3,14 @@ app.controller("bookCtrl", function ($scope, $http) {
 
     $scope.titleModal = "";
     $scope.books = [];
+    $scope.pageable = {
+        pageNumber: 0,
+        pageSize: 0,
+        totalPages: 0,
+        totalElements: 0,
+        last: false,
+        first: true,
+    };
     $scope.editFields = {
         id: 0,
         name: "",
@@ -27,12 +35,32 @@ app.controller("bookCtrl", function ($scope, $http) {
         $scope.editFields.description = book.description;
     }
 
+    $scope.previousPage = function () {
+        if ($scope.pageable.pageNumber > 0) {
+            $scope.pageable.pageNumber--;
+            $scope.getAllBook();
+        }
+    }
+
+    $scope.nextPage = function () {
+        if ($scope.pageable.pageNumber < $scope.pageable.totalPages - 1) {
+            $scope.pageable.pageNumber++;
+            $scope.getAllBook();
+        }
+    }
+
     $scope.getAllBook = function () {
         $http({
-            url: 'http://localhost:8080/api/book',
+            url: 'http://localhost:8080/api/book?page=' + $scope.pageable.pageNumber + '&size=5',
             method: 'GET'
         }).then(function (response) {
-            $scope.books = response.data;
+            $scope.books = response.data.content;
+            $scope.pageable.pageNumber = response.data.pageable.pageNumber;
+            $scope.pageable.pageSize = response.data.pageable.pageSize;
+            $scope.pageable.totalPages = response.data.totalPages;
+            $scope.pageable.totalElements = response.data.totalElements;
+            $scope.pageable.last = response.data.last;
+            $scope.pageable.first = response.data.first;
         })
     }
     $scope.getAllBook();
