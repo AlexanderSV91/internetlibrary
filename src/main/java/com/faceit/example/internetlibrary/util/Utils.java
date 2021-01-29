@@ -4,6 +4,8 @@ import com.faceit.example.internetlibrary.exception.ApiException;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.model.mysql.Role;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -37,5 +39,9 @@ public class Utils {
     public static String getMessageForLocale(String messageKey) {
         Locale locale = new Locale(LocaleContextHolder.getLocale().toString());
         return ResourceBundle.getBundle("messages", locale).getString(messageKey);
+    }
+
+    public static <R, T> PageImpl<R> pageEntityToPageResponse(Page<T> page, List<R> list) {
+        return new PageImpl<>(list, page.getPageable(), page.getTotalElements());
     }
 }

@@ -5,10 +5,10 @@ import com.faceit.example.internetlibrary.dto.request.mysql.OrderBookRequest;
 import com.faceit.example.internetlibrary.dto.response.mysql.OrderBookResponse;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.mysql.OrderBookMapper;
-import com.faceit.example.internetlibrary.mapper.mysql.PageMapper;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
 import com.faceit.example.internetlibrary.model.mysql.OrderBook;
 import com.faceit.example.internetlibrary.service.mysql.OrderBookService;
+import com.faceit.example.internetlibrary.util.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -34,15 +34,12 @@ public class OrderBookControllerRest {
 
     private final OrderBookService orderBookService;
     private final OrderBookMapper orderBookMapper;
-    private final PageMapper pageMapper;
 
     @Autowired
     public OrderBookControllerRest(OrderBookService orderBookService,
-                                   OrderBookMapper orderBookMapper,
-                                   PageMapper pageMapper) {
+                                   OrderBookMapper orderBookMapper) {
         this.orderBookService = orderBookService;
         this.orderBookMapper = orderBookMapper;
-        this.pageMapper = pageMapper;
     }
 
     @GetMapping("/orderbook")
@@ -60,7 +57,7 @@ public class OrderBookControllerRest {
         }
         List<OrderBookResponse> orderBookResponses =
                 orderBookMapper.orderBooksToOrderBookResponse(orderBooks.getContent());
-        return pageMapper.pageEntityToPageResponse(orderBooks, orderBookResponses);
+        return Utils.pageEntityToPageResponse(orderBooks, orderBookResponses);
     }
 
     @GetMapping("/orderbook/status")

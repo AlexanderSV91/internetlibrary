@@ -5,9 +5,9 @@ import com.faceit.example.internetlibrary.dto.request.mysql.BookRequest;
 import com.faceit.example.internetlibrary.dto.response.mysql.BookResponse;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.mysql.BookMapper;
-import com.faceit.example.internetlibrary.mapper.mysql.PageMapper;
 import com.faceit.example.internetlibrary.model.mysql.Book;
 import com.faceit.example.internetlibrary.service.mysql.BookService;
+import com.faceit.example.internetlibrary.util.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -34,13 +34,11 @@ public class BookControllerRest {
 
     private final BookService bookService;
     private final BookMapper bookMapper;
-    private final PageMapper pageMapper;
 
     @Autowired
-    public BookControllerRest(BookService bookService, BookMapper bookMapper, PageMapper pageMapper) {
+    public BookControllerRest(BookService bookService, BookMapper bookMapper) {
         this.bookService = bookService;
         this.bookMapper = bookMapper;
-        this.pageMapper = pageMapper;
     }
 
     @GetMapping("/book")
@@ -55,7 +53,7 @@ public class BookControllerRest {
             throw new ResourceNotFoundException("exception.notFound");
         }
         List<BookResponse> bookResponseList = bookMapper.booksToBooksResponse(books.getContent());
-        return pageMapper.pageEntityToPageResponse(books, bookResponseList);
+        return Utils.pageEntityToPageResponse(books, bookResponseList);
     }
 
     @GetMapping("/book/{id}")
