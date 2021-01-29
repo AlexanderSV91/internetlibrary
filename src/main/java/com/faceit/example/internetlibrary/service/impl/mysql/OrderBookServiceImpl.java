@@ -14,6 +14,8 @@ import com.faceit.example.internetlibrary.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,6 +39,11 @@ public class OrderBookServiceImpl implements OrderBookService {
         this.orderBookMapper = orderBookMapper;
         this.userService = userService;
         this.bookService = bookService;
+    }
+
+    @Override
+    public Page<OrderBook> getPagingOrderBook(Pageable pageable) {
+        return orderBookRepository.findAll(pageable);
     }
 
     @Override
@@ -95,14 +102,14 @@ public class OrderBookServiceImpl implements OrderBookService {
     }
 
     @Override
-    @Cacheable(value = "orderbooks", key = "#user.id")
-    public List<OrderBook> findOrderBooksByUserUserName(User user) {
+    @Cacheable(value = "orderbooks", key = "{#user.id, #pageable.pageNumber}")
+    public Page<OrderBook> findOrderBooksByUserUserName(Pageable pageable, User user) {
         boolean isEmployee = Utils.isEmployee(user.getRoles());
-        List<OrderBook> orderBookList;
+        Page<OrderBook> orderBookList;
         if (isEmployee) {
-            orderBookList = getAllOrderBook();
+            orderBookList = getPagingOrderBook(pageable);
         } else {
-            orderBookList = orderBookRepository.findOrderBooksByUserUserName(user.getUserName());
+            orderBookList = orderBookRepository.findOrderBooksByUserUserName(user.getUserName(), pageable);
         }
         return orderBookList;
     }

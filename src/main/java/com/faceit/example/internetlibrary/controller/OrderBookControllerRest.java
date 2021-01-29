@@ -5,9 +5,10 @@ import com.faceit.example.internetlibrary.dto.request.mysql.OrderBookRequest;
 import com.faceit.example.internetlibrary.dto.response.mysql.OrderBookResponse;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.mysql.OrderBookMapper;
-import com.faceit.example.internetlibrary.model.mysql.OrderBook;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
+import com.faceit.example.internetlibrary.model.mysql.OrderBook;
 import com.faceit.example.internetlibrary.service.mysql.OrderBookService;
+import com.faceit.example.internetlibrary.util.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,6 +19,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +36,8 @@ public class OrderBookControllerRest {
     private final OrderBookMapper orderBookMapper;
 
     @Autowired
-    public OrderBookControllerRest(OrderBookService orderBookService, OrderBookMapper orderBookMapper) {
+    public OrderBookControllerRest(OrderBookService orderBookService,
+                                   OrderBookMapper orderBookMapper) {
         this.orderBookService = orderBookService;
         this.orderBookMapper = orderBookMapper;
     }
@@ -44,12 +48,16 @@ public class OrderBookControllerRest {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = OrderBookResponse.class)))),
             @ApiResponse(responseCode = "404", description = "order books not found")})
-    public List<OrderBookResponse> getOrderBooksByUserUserName(@AuthenticationPrincipal MyUserDetails userDetails) {
-        List<OrderBook> orderBooks = orderBookService.findOrderBooksByUserUserName(userDetails.getUser());
-        if (orderBooks != null) {
-            return orderBookMapper.orderBooksToOrderBookResponse(orderBooks);
+    public Page<OrderBookResponse> getOrderBooksByUserUserName(final Pageable pageable,
+                                                               @AuthenticationPrincipal MyUserDetails userDetails) {
+        Page<OrderBook> orderBooks = orderBookService
+                .findOrderBooksByUserUserName(pageable, userDetails.getUser());
+        if (orderBooks.getContent().isEmpty()) {
+            throw new ResourceNotFoundException("exception.notFound");
         }
-        throw new ResourceNotFoundException("exception.notFound");
+        List<OrderBookResponse> orderBookResponses =
+                orderBookMapper.orderBooksToOrderBookResponse(orderBooks.getContent());
+        return Utils.pageEntityToPageResponse(orderBooks, orderBookResponses);
     }
 
     @GetMapping("/orderbook/status")

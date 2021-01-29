@@ -7,6 +7,7 @@ import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.mysql.BookMapper;
 import com.faceit.example.internetlibrary.model.mysql.Book;
 import com.faceit.example.internetlibrary.service.mysql.BookService;
+import com.faceit.example.internetlibrary.util.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -17,6 +18,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,12 +47,13 @@ public class BookControllerRest {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookResponse.class)))),
             @ApiResponse(responseCode = "404", description = "books not found")})
-    public List<BookResponse> getAllBook() {
-        List<Book> books = bookService.getAllBook();
-        if (books != null) {
-            return bookMapper.booksToBooksResponse(books);
+    public Page<BookResponse> getAllBook(final Pageable pageable) {
+        Page<Book> books = bookService.getPagingBook(pageable);
+        if (books.getContent().isEmpty()) {
+            throw new ResourceNotFoundException("exception.notFound");
         }
-        throw new ResourceNotFoundException("exception.notFound");
+        List<BookResponse> bookResponseList = bookMapper.booksToBooksResponse(books.getContent());
+        return Utils.pageEntityToPageResponse(books, bookResponseList);
     }
 
     @GetMapping("/book/{id}")

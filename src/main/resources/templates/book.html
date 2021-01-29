@@ -44,6 +44,13 @@
                                 src="https://upload.wikimedia.org/wikipedia/commons/0/06/OOjs_UI_icon_add.svg"
                                 width="20">
                     </button>
+                    <button class="btn btn-primary" ng-click="previousPage()">
+                        <
+                    </button>
+                    <label style="font-size:20px">{{pageable.pageNumber}}</label>
+                    <button class="btn btn-primary" ng-click="nextPage()">
+                        >
+                    </button>
                 </th>
             </tr>
             <tr ng-repeat="book in books">
