@@ -4,6 +4,7 @@ import com.faceit.example.internetlibrary.dto.request.mysql.UserRequest;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.exception.ResourceAlreadyExists;
 import com.faceit.example.internetlibrary.mapper.mysql.UserMapper;
+import com.faceit.example.internetlibrary.model.mysql.NumberAuthorization;
 import com.faceit.example.internetlibrary.model.mysql.Role;
 import com.faceit.example.internetlibrary.model.mysql.User;
 import com.faceit.example.internetlibrary.repository.mysql.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -133,5 +135,9 @@ public class UserServiceImpl implements UserService {
         newUser.setEnabled(false);
         Role userRole = roleService.findByName("ROLE_USER");
         newUser.setRoles(new HashSet<>(Collections.singletonList(userRole)));
+        NumberAuthorization numberAuthorization = new NumberAuthorization();
+        numberAuthorization.setQuantity(3);
+        numberAuthorization.setLastAuthorizationDate(LocalDateTime.now());
+        newUser.setNumberAuthorization(numberAuthorization);
     }
 }

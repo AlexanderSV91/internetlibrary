@@ -220,3 +220,38 @@ databaseChangeLog:
             onDelete: CASCADE
             referencedColumnNames: id
             referencedTableName: users
+  - changeSet:
+      id: 4
+      author: AlexanderSV91
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              name: number_authorization_id
+              type: BIGINT
+        - createTable:
+            tableName: number_authorizations
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: INT
+                  defaultValue: 3
+              - column:
+                  name: last_authorization_date
+                  type: datetime
+                  defaultValue: now()
+        - addForeignKeyConstraint:
+            baseColumnNames: number_authorization_id
+            baseTableName: users
+            constraintName: TABLE_USERS_NUMBER_AUTHORIZATION_ID_IN_NUMBER_AUTHORIZATIONS
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: number_authorizations
