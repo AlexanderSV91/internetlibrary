@@ -5,6 +5,7 @@ import com.faceit.example.internetlibrary.model.mysql.User;
 import com.faceit.example.internetlibrary.service.mysql.NumberAuthorizationService;
 import com.faceit.example.internetlibrary.service.mysql.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +21,7 @@ public class LoginAttemptService {
         this.numberAuthorizationService = numberAuthorizationService;
     }
 
+    @Transactional
     public void loginSucceeded(String username) {
         NumberAuthorization numberAuthorization = userService
                 .findUserByUserName(username).getNumberAuthorization();
@@ -27,6 +29,7 @@ public class LoginAttemptService {
         numberAuthorizationService.updateNumberAuthorizationById(numberAuthorization);
     }
 
+    @Transactional
     public void loginFailed(String username) {
         User user = userService.findUserByUserName(username);
         NumberAuthorization numberAuthorization = user.getNumberAuthorization();
