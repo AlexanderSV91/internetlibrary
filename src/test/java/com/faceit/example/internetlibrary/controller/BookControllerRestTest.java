@@ -2,6 +2,7 @@ package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.configuration.MyUserDetails;
 import com.faceit.example.internetlibrary.dto.request.mysql.BookRequest;
+import com.faceit.example.internetlibrary.dto.response.mysql.BookResponse;
 import com.faceit.example.internetlibrary.model.mysql.Book;
 import com.faceit.example.internetlibrary.model.mysql.NumberAuthorization;
 import com.faceit.example.internetlibrary.model.mysql.Role;
@@ -23,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,10 +51,7 @@ class BookControllerRestTest {
     @DisplayName("GET /api/book success")
     @WithMockUser(username = "1", password = "1", roles = "EMPLOYEE")
     void testGetAllBook() throws Exception {
-        Book book1 = new Book(1L, "name1", "bookCondition1", "description1");
-        Book book2 = new Book(2L, "name2", "bookCondition2", "description2");
-        List<Book> list = Lists.newArrayList(book1, book2);
-        Page<Book> returnPage = new PageImpl<>(list, PageRequest.of(0, 10), list.size());
+        Page<Book> returnPage = getPageBook();
 
         doReturn(returnPage).when(bookService).getPagingBook(isA(Pageable.class));
         mockMvc.perform(get("/api/book"))
@@ -64,67 +63,97 @@ class BookControllerRestTest {
     @DisplayName("GET /api/book/{id} success")
     @WithMockUser(username = "1", password = "1", roles = "EMPLOYEE")
     void testGetBookById() throws Exception {
-        Book book = new Book(1L, "name1", "bookCondition1", "description1");
+        Book book = getBook();
+        book.setId(1);
+        BookResponse bookResponse = getBookResponse();
         when(bookService.getBookById(1)).thenReturn(book);
         mockMvc.perform(get("/api/book/{id}", 1L))
                 .andExpect(status().isOk())
-                .andExpect(content().string(asJsonString(book)));
+                .andExpect(content().string(asJsonString(bookResponse)));
     }
 
     @Test
     @DisplayName("POST /api/book success")
     @WithMockUser(value = "1", username = "1", password = "1", roles = "EMPLOYEE")
     void testAddBook() throws Exception {
-        Book bookToPost = new Book();
-        bookToPost.setName("name11");
-        bookToPost.setBookCondition("bookCondition11");
-        bookToPost.setDescription("description11");
-        Book bookToReturn = new Book(1L, "name11", "bookCondition11", "description11");
+        User user = getUserAuth();
+        Book bookToPost = getBook();
+        BookResponse bookResponse = getBookResponse();
+        Book bookToReturn = getBook();
+        bookToReturn.setId(1);
 
-        Set<Role> roleSet = new HashSet<>();
-        roleSet.add(new Role(1, "ROLE_EMPLOYEE"));
-        User user = new User(1, "1", "1", "1", "1", "1@1.com", 1, true, roleSet, new NumberAuthorization());
-        MyUserDetails myUserDetails = new MyUserDetails(user);
-
-        doReturn(bookToReturn).when(bookService).addBook(bookToPost, roleSet);
+        doReturn(bookToReturn).when(bookService).addBook(bookToPost, user.getRoles());
 
         mockMvc.perform(post("/api/book")
-                .with(user(myUserDetails))
+                .with(user(new MyUserDetails(user)))
                 .content(asJsonString(bookToPost))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(asJsonString(bookToReturn)));
+                .andExpect(content().string(asJsonString(bookResponse)));
     }
 
     @Test
     @DisplayName("PUT /api/book/{id} success")
     @WithMockUser(value = "1", username = "1", password = "1", roles = "EMPLOYEE")
     void updateBookById() throws Exception {
-        BookRequest bookToPut = new BookRequest();
-        bookToPut.setName("name11");
-        bookToPut.setBookCondition("bookCondition11");
-        bookToPut.setDescription("description11");
-        Book bookToReturn = new Book(1L, "name1", "bookCondition1", "description1");
+        User user = getUserAuth();
+        Book bookToReturn = getBook();
+        bookToReturn.setId(1);
+        BookResponse bookResponse = getBookResponse();
+        BookRequest bookToPut = getBookRequest();
 
-        Set<Role> roleSet = new HashSet<>();
-        roleSet.add(new Role(1, "ROLE_EMPLOYEE"));
-        User user = new User(1, "1", "1", "1", "1", "1@1.com", 1, true, roleSet, new NumberAuthorization());
-        MyUserDetails myUserDetails = new MyUserDetails(user);
-
-        doReturn(bookToReturn).when(bookService).updateBookById(bookToPut, 1L, roleSet);
+        doReturn(bookToReturn).when(bookService).updateBookById(bookToPut, 1L, user.getRoles());
 
         mockMvc.perform(put("/api/book/{id}", 1L)
-                .with(user(myUserDetails))
+                .with(user(new MyUserDetails(user)))
                 .content(asJsonString(bookToPut))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(asJsonString(bookToReturn)));
-
+                .andExpect(content().string(asJsonString(bookResponse)));
     }
 
-    static String asJsonString(final Object obj) {
+    private static Book getBook() {
+        Book book = new Book();
+        book.setName("name1");
+        book.setBookCondition("bookCondition1");
+        book.setDescription("description1");
+        return book;
+    }
+
+    private static BookRequest getBookRequest() {
+        BookRequest bookRequest = new BookRequest();
+        bookRequest.setName("name1");
+        bookRequest.setBookCondition("bookCondition1");
+        bookRequest.setDescription("description1");
+        return bookRequest;
+    }
+
+    private static BookResponse getBookResponse() {
+        BookResponse bookResponse = new BookResponse();
+        bookResponse.setId(1);
+        bookResponse.setName("name1");
+        bookResponse.setBookCondition("bookCondition1");
+        bookResponse.setDescription("description1");
+        return bookResponse;
+    }
+
+    private static User getUserAuth() {
+        NumberAuthorization numberAuthorization = new NumberAuthorization(1, 3, LocalDateTime.now());
+        Set<Role> roleSet = new HashSet<>();
+        roleSet.add(new Role(1, "ROLE_EMPLOYEE"));
+        return new User(1, "123456", "123456", "123456", "123456", "1@1.com", 1, true, roleSet, numberAuthorization);
+    }
+
+    private static Page<Book> getPageBook() {
+        Book book1 = new Book(1L, "name1", "bookCondition1", "description1");
+        Book book2 = new Book(2L, "name2", "bookCondition2", "description2");
+        List<Book> list = Lists.newArrayList(book1, book2);
+        return new PageImpl<>(list, PageRequest.of(0, 10), list.size());
+    }
+
+    private static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
         } catch (Exception e) {
