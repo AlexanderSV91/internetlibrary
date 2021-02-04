@@ -51,7 +51,10 @@ class BookControllerRestTest {
     @DisplayName("GET /api/book success")
     @WithMockUser(username = "1", password = "1", roles = "EMPLOYEE")
     void testGetAllBook() throws Exception {
-        Page<Book> returnPage = getPageBook();
+        Book book1 = new Book(1L, "name1", "bookCondition1", "description1");
+        Book book2 = new Book(2L, "name2", "bookCondition2", "description2");
+        List<Book> list = Lists.newArrayList(book1, book2);
+        Page<Book> returnPage = new PageImpl<>(list, PageRequest.of(0, 10), list.size());
 
         doReturn(returnPage).when(bookService).getPagingBook(isA(Pageable.class));
         mockMvc.perform(get("/api/book"))
@@ -101,13 +104,16 @@ class BookControllerRestTest {
         Book bookToReturn = getBook();
         bookToReturn.setId(1);
         BookResponse bookResponse = getBookResponse();
-        BookRequest bookToPut = getBookRequest();
+        BookRequest bookRequest = new BookRequest();
+        bookRequest.setName("name1");
+        bookRequest.setBookCondition("bookCondition1");
+        bookRequest.setDescription("description1");
 
-        doReturn(bookToReturn).when(bookService).updateBookById(bookToPut, 1L, user.getRoles());
+        doReturn(bookToReturn).when(bookService).updateBookById(bookRequest, 1L, user.getRoles());
 
         mockMvc.perform(put("/api/book/{id}", 1L)
                 .with(user(new MyUserDetails(user)))
-                .content(asJsonString(bookToPut))
+                .content(asJsonString(bookRequest))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -120,14 +126,6 @@ class BookControllerRestTest {
         book.setBookCondition("bookCondition1");
         book.setDescription("description1");
         return book;
-    }
-
-    private static BookRequest getBookRequest() {
-        BookRequest bookRequest = new BookRequest();
-        bookRequest.setName("name1");
-        bookRequest.setBookCondition("bookCondition1");
-        bookRequest.setDescription("description1");
-        return bookRequest;
     }
 
     private static BookResponse getBookResponse() {
@@ -144,13 +142,6 @@ class BookControllerRestTest {
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(new Role(1, "ROLE_EMPLOYEE"));
         return new User(1, "123456", "123456", "123456", "123456", "1@1.com", 1, true, roleSet, numberAuthorization);
-    }
-
-    private static Page<Book> getPageBook() {
-        Book book1 = new Book(1L, "name1", "bookCondition1", "description1");
-        Book book2 = new Book(2L, "name2", "bookCondition2", "description2");
-        List<Book> list = Lists.newArrayList(book1, book2);
-        return new PageImpl<>(list, PageRequest.of(0, 10), list.size());
     }
 
     private static String asJsonString(final Object obj) {

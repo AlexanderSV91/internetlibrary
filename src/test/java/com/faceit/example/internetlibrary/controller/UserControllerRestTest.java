@@ -46,8 +46,41 @@ class UserControllerRestTest {
     @WithMockUser(username = "1", password = "1", roles = "EMPLOYEE")
     void getAllUserByUsername() throws Exception {
         User userAuth = getUserAuth();
-        List<User> users = getUsers();
-        List<UserResponse> userResponses = getUserResponses();
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUserName("123456");
+        user1.setPassword("123456");
+        user1.setFirstName("1");
+        user1.setLastName("1");
+        user1.setEmail("1@1.com");
+        user1.setAge(1);
+
+        User user2 = new User();
+        user2.setId(2);
+        user2.setUserName("1234567");
+        user2.setPassword("123456");
+        user2.setFirstName("2");
+        user2.setLastName("2");
+        user2.setEmail("2@2.com");
+        user2.setAge(2);
+        List<User> users = Lists.newArrayList(user1, user2);
+
+        UserResponse userResponse1 = new UserResponse();
+        userResponse1.setId(1);
+        userResponse1.setUserName("123456");
+        userResponse1.setFirstName("1");
+        userResponse1.setLastName("1");
+        userResponse1.setEmail("1@1.com");
+        userResponse1.setAge(1);
+
+        UserResponse userResponse2 = new UserResponse();
+        userResponse2.setId(2);
+        userResponse2.setUserName("1234567");
+        userResponse2.setFirstName("2");
+        userResponse2.setLastName("2");
+        userResponse2.setEmail("2@2.com");
+        userResponse2.setAge(2);
+        List<UserResponse> userResponses = Lists.newArrayList(userResponse1, userResponse2);
 
         doReturn(users).when(userService).getAllUserByUsername(userAuth);
 
@@ -118,7 +151,12 @@ class UserControllerRestTest {
     @DisplayName("PUT /api/user/{id} success")
     @WithMockUser(value = "1", username = "1", password = "1", roles = "EMPLOYEE")
     void updateUserById() throws Exception {
-        UserRequest userRequest = getUserRequest();
+        UserRequest userRequest = new UserRequest();
+        userRequest.setUserName("123456");
+        userRequest.setFirstName("123456");
+        userRequest.setLastName("123456");
+        userRequest.setEmail("1@1.com");
+        userRequest.setAge(1);
         UserResponse userResponse = getUserResponse();
         User userAuth = getUserAuth();
         User userReturn = getUser();
@@ -133,16 +171,6 @@ class UserControllerRestTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(asJsonString(userResponse)));
-    }
-
-    private static UserRequest getUserRequest() {
-        UserRequest userRequest = new UserRequest();
-        userRequest.setUserName("123456");
-        userRequest.setFirstName("123456");
-        userRequest.setLastName("123456");
-        userRequest.setEmail("1@1.com");
-        userRequest.setAge(1);
-        return userRequest;
     }
 
     private static UserResponse getUserResponse() {
@@ -165,46 +193,6 @@ class UserControllerRestTest {
         user.setEmail("1@1.com");
         user.setAge(1);
         return user;
-    }
-
-    private static List<User> getUsers() {
-        User user1 = new User();
-        user1.setId(1);
-        user1.setUserName("123456");
-        user1.setPassword("123456");
-        user1.setFirstName("1");
-        user1.setLastName("1");
-        user1.setEmail("1@1.com");
-        user1.setAge(1);
-
-        User user2 = new User();
-        user2.setId(2);
-        user2.setUserName("1234567");
-        user2.setPassword("123456");
-        user2.setFirstName("2");
-        user2.setLastName("2");
-        user2.setEmail("2@2.com");
-        user2.setAge(2);
-        return Lists.newArrayList(user1, user2);
-    }
-
-    private static List<UserResponse> getUserResponses() {
-        UserResponse userResponse1 = new UserResponse();
-        userResponse1.setId(1);
-        userResponse1.setUserName("123456");
-        userResponse1.setFirstName("1");
-        userResponse1.setLastName("1");
-        userResponse1.setEmail("1@1.com");
-        userResponse1.setAge(1);
-
-        UserResponse userResponse2 = new UserResponse();
-        userResponse2.setId(2);
-        userResponse2.setUserName("1234567");
-        userResponse2.setFirstName("2");
-        userResponse2.setLastName("2");
-        userResponse2.setEmail("2@2.com");
-        userResponse2.setAge(2);
-        return Lists.newArrayList(userResponse1, userResponse2);
     }
 
     private static User getUserAuth() {
