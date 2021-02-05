@@ -6,6 +6,9 @@ import com.faceit.example.internetlibrary.model.mongodb.Book;
 import com.faceit.example.internetlibrary.repository.mongodb.BookMongoRepository;
 import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
 import com.faceit.example.internetlibrary.util.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +20,7 @@ public class BookMongoServiceImpl implements BookMongoService {
     private final BookMongoRepository bookMongoRepository;
     private final BookMongoMapper bookMongoMapper;
 
+    @Autowired
     public BookMongoServiceImpl(BookMongoRepository bookMongoRepository,
                                 BookMongoMapper bookMongoMapper) {
         this.bookMongoRepository = bookMongoRepository;
@@ -24,8 +28,8 @@ public class BookMongoServiceImpl implements BookMongoService {
     }
 
     @Override
-    public List<Book> getAllBook() {
-        return bookMongoRepository.findAll();
+    public Page<Book> getAllBook(Pageable pageable) {
+        return bookMongoRepository.findAll(pageable);
     }
 
     @Override
@@ -37,6 +41,11 @@ public class BookMongoServiceImpl implements BookMongoService {
     @Override
     public Book addBook(Book newBook) {
         return bookMongoRepository.save(newBook);
+    }
+
+    @Override
+    public void addBookBulk(List<Book> books) {
+        bookMongoRepository.saveAll(books);
     }
 
     @Override

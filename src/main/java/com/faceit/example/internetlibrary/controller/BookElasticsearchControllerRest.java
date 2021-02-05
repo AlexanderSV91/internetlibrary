@@ -1,11 +1,12 @@
 package com.faceit.example.internetlibrary.controller;
 
-import com.faceit.example.internetlibrary.dto.request.mongodb.BookRequest;
-import com.faceit.example.internetlibrary.dto.response.mongodb.BookResponse;
+
+import com.faceit.example.internetlibrary.dto.request.elasticsearch.BookRequest;
+import com.faceit.example.internetlibrary.dto.response.elasticsearch.BookResponse;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
-import com.faceit.example.internetlibrary.mapper.mongo.BookMongoMapper;
-import com.faceit.example.internetlibrary.model.mongodb.Book;
-import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
+import com.faceit.example.internetlibrary.mapper.elasticsearch.BookElasticsearchMapper;
+import com.faceit.example.internetlibrary.model.elasticsearch.Book;
+import com.faceit.example.internetlibrary.service.elasticsearch.BookElasticsearchService;
 import com.faceit.example.internetlibrary.util.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,90 +25,91 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = {"/api"})
-@Tag(name = "BookMongo", description = "interaction with books in mongodb")
+@Tag(name = "BookElasticsearch", description = "interaction with books in elasticsearch")
 @SecurityRequirement(name = "basic")
-public class BookMongoControllerRest {
+public class BookElasticsearchControllerRest {
 
-    private final BookMongoService bookMongoService;
-    private final BookMongoMapper bookMongoMapper;
+    private final BookElasticsearchService bookElasticsearchService;
+    private final BookElasticsearchMapper bookElasticsearchMapper;
 
-    public BookMongoControllerRest(BookMongoService bookMongoService, BookMongoMapper bookMongoMapper) {
-        this.bookMongoService = bookMongoService;
-        this.bookMongoMapper = bookMongoMapper;
+    public BookElasticsearchControllerRest(BookElasticsearchService bookElasticsearchService,
+                                           BookElasticsearchMapper bookElasticsearchMapper) {
+        this.bookElasticsearchService = bookElasticsearchService;
+        this.bookElasticsearchMapper = bookElasticsearchMapper;
     }
 
-    @GetMapping("/mongo-book")
-    @Operation(summary = "get all books from mongodb",
+    @GetMapping("/elasticsearch-book")
+    @Operation(summary = "get all books from elasticsearch",
             description = "allows you to get all the books in the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookResponse.class)))),
             @ApiResponse(responseCode = "404", description = "books not found")})
     public Page<BookResponse> getAllBook(final Pageable pageable) {
-        Page<Book> books = bookMongoService.getAllBook(pageable);
+        Page<Book> books = bookElasticsearchService.getAllBook(pageable);
         if (books.getContent().isEmpty()) {
             throw new ResourceNotFoundException("exception.notFound");
         }
-        List<BookResponse> bookResponseList = bookMongoMapper.booksToBooksResponse(books.getContent());
+        List<BookResponse> bookResponseList = bookElasticsearchMapper.booksToBooksResponse(books.getContent());
         return Utils.pageEntityToPageResponse(books, bookResponseList);
     }
 
-    @GetMapping("/mongo-book/{id}")
-    @Operation(summary = "get a certain book from mongodb",
+    @GetMapping("/elasticsearch-book/{id}")
+    @Operation(summary = "get a certain book from elasticsearch",
             description = "allows you to get a specific book in the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "404", description = "book not found")})
     public BookResponse getBookById(@PathVariable @Parameter(description = "Book id") String id) {
-        return bookMongoMapper.bookMongoToBookMongoResponse(bookMongoService.getBookById(id));
+        return bookElasticsearchMapper.bookMongoToBookMongoResponse(bookElasticsearchService.getBookById(id));
     }
 
-    @GetMapping("/mongo-book/name/{name}")
-    @Operation(summary = "get a certain book by name from mongodb",
+    @GetMapping("/elasticsearch-book/name/{name}")
+    @Operation(summary = "get a certain book by name from elasticsearch",
             description = "allows you to get a specific book in the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "404", description = "book not found")})
     public BookResponse findByName(@PathVariable @Parameter(description = "Book name") String name) {
-        return bookMongoMapper.bookMongoToBookMongoResponse(bookMongoService.findByName(name));
+        return bookElasticsearchMapper.bookMongoToBookMongoResponse(bookElasticsearchService.findByName(name));
     }
 
-    @GetMapping("/mongo-book/author/{author}")
-    @Operation(summary = "get all books by author from mongodb",
+    @GetMapping("/elasticsearch-book/author/{author}")
+    @Operation(summary = "get all books by author from elasticsearch",
             description = "allows you to get all the books by author in the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "404", description = "book not found")})
     public List<BookResponse> findByAuthors(@PathVariable @Parameter(description = "Book name") String author) {
-        return bookMongoMapper.booksToBooksResponse(bookMongoService.findByAuthors(author));
+        return bookElasticsearchMapper.booksToBooksResponse(bookElasticsearchService.findByAuthors(author));
     }
 
-    @PostMapping("/mongo-book")
-    @Operation(summary = "add new book in mongodb", description = "allows you to add new book in the library")
+    @PostMapping("/elasticsearch-book")
+    @Operation(summary = "add new book in elasticsearch", description = "allows you to add new book in the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "book created",
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "400", description = "book not add")})
     public BookResponse addBook(@RequestBody BookRequest bookRequest) {
-        Book book = bookMongoMapper.bookMongoRequestToBookMongo(bookRequest);
-        return bookMongoMapper.bookMongoToBookMongoResponse(bookMongoService.addBook(book));
+        Book book = bookElasticsearchMapper.bookMongoRequestToBookMongo(bookRequest);
+        return bookElasticsearchMapper.bookMongoToBookMongoResponse(bookElasticsearchService.addBook(book));
     }
 
-    @DeleteMapping("/mongo-book/{id}")
-    @Operation(summary = "delete book from mongodb", description = "allows you to delete book in the library")
+    @DeleteMapping("/elasticsearch-book/{id}")
+    @Operation(summary = "delete book from elasticsearch", description = "allows you to delete book in the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation"),
             @ApiResponse(responseCode = "400", description = "book not delete")})
     public void deleteBookById(@PathVariable @Parameter(description = "Book id") String id) {
-        bookMongoService.deleteBookById(id);
+        bookElasticsearchService.deleteBookById(id);
     }
 
-    @PutMapping("/mongo-book/{id}")
-    @Operation(summary = "update a certain book in mongodb",
+    @PutMapping("/elasticsearch-book/{id}")
+    @Operation(summary = "update a certain book in elasticsearch",
             description = "allows you to update a specific book in the library")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "404", description = "book not found")})
     public BookResponse updateBookById(@RequestBody BookRequest bookRequest,
                                        @Parameter(description = "Book id") @PathVariable String id) {
-        return bookMongoMapper.bookMongoToBookMongoResponse(
-                bookMongoService.updateBookById(bookRequest, id));
+        return bookElasticsearchMapper.bookMongoToBookMongoResponse(
+                bookElasticsearchService.updateBookById(bookRequest, id));
     }
 }

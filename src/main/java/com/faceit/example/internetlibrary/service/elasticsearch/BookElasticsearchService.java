@@ -1,13 +1,13 @@
-package com.faceit.example.internetlibrary.service.mongodb;
+package com.faceit.example.internetlibrary.service.elasticsearch;
 
-import com.faceit.example.internetlibrary.dto.request.mongodb.BookRequest;
-import com.faceit.example.internetlibrary.model.mongodb.Book;
+import com.faceit.example.internetlibrary.dto.request.elasticsearch.BookRequest;
+import com.faceit.example.internetlibrary.model.elasticsearch.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface BookMongoService {
+public interface BookElasticsearchService {
 
     Page<Book> getAllBook(Pageable pageable);
 
@@ -15,7 +15,7 @@ public interface BookMongoService {
 
     Book addBook(Book newBook);
 
-    void addBookBulk(List<Book> books);
+    void addBookBulk(final List<Book> books);
 
     void deleteBookById(String id);
 

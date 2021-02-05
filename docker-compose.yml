@@ -21,6 +21,38 @@ services:
       - /home/developer/IdeaProjects/mongo/library:/data/db
     networks:
       - library-mongo
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+    container_name: elastic
+    environment:
+      - discovery.type=single-node
+      - node.name=elasticsearch
+      - cluster.name=elasticsearch-docker-cluster
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+#      - /home/developer/IdeaProjects/elasticsearch/library:/usr/share/elasticsearch/data
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - library-elastic
+      - esnet
+  elastichq:
+    image: elastichq/elasticsearch-hq
+    container_name: elastichq
+    environment:
+      - HQ_DEFAULT_URL=http://elastic:9200
+      - HQ_DEBUG=false
+    ports:
+      - 5000:5000
+    networks:
+      - esnet
   server:
     build: .
     container_name: internetlibrary
@@ -34,14 +66,25 @@ services:
       - MYSQL_USER=alexlibrary
       - MYSQL_USER_PASSWORD=alexlibrary
       - MONGO_DB_HOSTNAME=mongo
+      - MONGO_DB_PORT=27017
+      - MONGO_DB_NAME=library
+      - ELASTICSEARCH_HOSTNAME=elastic
+      - ELASTICSEARCH_PORT=9200
     networks:
       - library-mysql
       - library-mongo
+      - library-elastic
     depends_on:
       - mysql
       - mongo
-
+      - elastic
+volumes:
+  esdata:
+    driver: local
 networks:
   library-mysql:
   library-mongo:
+  library-elastic:
+  esnet:
+    driver: bridge
 
