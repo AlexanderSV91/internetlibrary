@@ -4,6 +4,7 @@ import com.faceit.example.internetlibrary.mapper.elasticsearch.BookElasticsearch
 import com.faceit.example.internetlibrary.service.DataTransferService;
 import com.faceit.example.internetlibrary.service.elasticsearch.BookElasticsearchService;
 import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -37,19 +38,21 @@ public class DataTransferServiceImpl implements DataTransferService {
     @Scheduled(fixedDelay = FIXED_DELAY)
     public void mongoToElastic() {
         Pageable sortedById = PageRequest.of(page, 20, Sort.by("id"));
-        List<com.faceit.example.internetlibrary.model.mongodb.Book> mongoBook =
-                bookMongoService
-                        .getAllBook(sortedById)
-                        .getContent();
-        List<com.faceit.example.internetlibrary.model.elasticsearch.Book> elasticBook =
-                bookElasticsearchMapper
-                        .mongoBooksToElasticBooks(mongoBook)
-                        .stream()
-                        .filter(book -> !elasticsearchService.existsByName(book.getName()))
-                        .collect(Collectors.toList());
-        if (!elasticBook.isEmpty()) {
-            elasticsearchService.addBookBulk(elasticBook);
+        Page<com.faceit.example.internetlibrary.model.mongodb.Book> mongoBook =
+                bookMongoService.getAllBook(sortedById);
+
+        long totalPages = mongoBook.getTotalPages();
+        if (page <= totalPages) {
+            List<com.faceit.example.internetlibrary.model.elasticsearch.Book> elasticBook =
+                    bookElasticsearchMapper
+                            .mongoBooksToElasticBooks(mongoBook.getContent())
+                            .stream()
+                            .filter(book -> !elasticsearchService.existsByName(book.getName()))
+                            .collect(Collectors.toList());
+            if (!elasticBook.isEmpty()) {
+                elasticsearchService.addBookBulk(elasticBook);
+            }
+            page++;
         }
-        page++;
     }
 }
