@@ -4,12 +4,14 @@ import com.faceit.example.internetlibrary.model.enumeration.BookCondition;
 import com.faceit.example.internetlibrary.service.ParsingSchedulerService;
 import com.faceit.example.internetlibrary.service.elasticsearch.BookElasticsearchService;
 import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
+
+    private static final int FIXED_DELAY = 60_000;
 
     @Value(value = "${parsingPage}")
     private String parsingPage;
@@ -37,7 +41,8 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
     }
 
     @Override
-    @Scheduled(fixedDelay = 60_000)
+    @Async("threadPoolTaskExecutorParsing")
+    @Scheduled(fixedDelay = FIXED_DELAY)
     public void parsingPage() {
         Document doc = null;
         try {

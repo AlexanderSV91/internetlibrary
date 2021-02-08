@@ -60,7 +60,7 @@ public class BookElasticsearchControllerRest {
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "404", description = "book not found")})
     public BookResponse getBookById(@PathVariable @Parameter(description = "Book id") String id) {
-        return bookElasticsearchMapper.bookMongoToBookMongoResponse(bookElasticsearchService.getBookById(id));
+        return bookElasticsearchMapper.bookElasticToBookElasticResponse(bookElasticsearchService.getBookById(id));
     }
 
     @GetMapping("/elasticsearch-book/name/{name}")
@@ -70,7 +70,7 @@ public class BookElasticsearchControllerRest {
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "404", description = "book not found")})
     public BookResponse findByName(@PathVariable @Parameter(description = "Book name") String name) {
-        return bookElasticsearchMapper.bookMongoToBookMongoResponse(bookElasticsearchService.findByName(name));
+        return bookElasticsearchMapper.bookElasticToBookElasticResponse(bookElasticsearchService.findByName(name));
     }
 
     @GetMapping("/elasticsearch-book/author/{author}")
@@ -89,8 +89,8 @@ public class BookElasticsearchControllerRest {
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "400", description = "book not add")})
     public BookResponse addBook(@RequestBody BookRequest bookRequest) {
-        Book book = bookElasticsearchMapper.bookMongoRequestToBookMongo(bookRequest);
-        return bookElasticsearchMapper.bookMongoToBookMongoResponse(bookElasticsearchService.addBook(book));
+        Book book = bookElasticsearchMapper.bookElasticRequestToBookElastic(bookRequest);
+        return bookElasticsearchMapper.bookElasticToBookElasticResponse(bookElasticsearchService.addBook(book));
     }
 
     @DeleteMapping("/elasticsearch-book/{id}")
@@ -109,7 +109,7 @@ public class BookElasticsearchControllerRest {
             @ApiResponse(responseCode = "404", description = "book not found")})
     public BookResponse updateBookById(@RequestBody BookRequest bookRequest,
                                        @Parameter(description = "Book id") @PathVariable String id) {
-        return bookElasticsearchMapper.bookMongoToBookMongoResponse(
+        return bookElasticsearchMapper.bookElasticToBookElasticResponse(
                 bookElasticsearchService.updateBookById(bookRequest, id));
     }
 }
