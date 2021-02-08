@@ -14,5 +14,5 @@ public interface BookElasticsearchRepository extends ElasticsearchRepository<Boo
 
     List<Book> findByAuthors(String author);
 
-    boolean existsByName(String name);
+    Book existsByName(String name);
 }

@@ -71,6 +71,7 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
 
     @Override
     public boolean existsByName(String name) {
-        return bookElasticsearchRepository.existsByName(name);
+        Book book = bookElasticsearchRepository.existsByName(name);
+        return null != book;
     }
 }

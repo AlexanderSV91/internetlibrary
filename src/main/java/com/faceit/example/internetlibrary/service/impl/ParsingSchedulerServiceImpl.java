@@ -112,18 +112,7 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
                     mongoBooks.add(book);
                 }
 
-                com.faceit.example.internetlibrary.model.elasticsearch.Book book =
-                        new com.faceit.example.internetlibrary.model.elasticsearch.Book();
-                book.setName(name);
-                book.setAuthors(authors);
-                book.setDescription(description);
-                book.setBookCondition(bookCondition);
-                book.setPrice(price);
-                book.setAddTime(addTime);
-
-                elasticBooks.add(book);
-
-                /*if (!bookElasticsearchService.existsByName(name)) {
+                if (!bookElasticsearchService.existsByName(name)) {
                     com.faceit.example.internetlibrary.model.elasticsearch.Book book =
                             new com.faceit.example.internetlibrary.model.elasticsearch.Book();
                     book.setName(name);
@@ -134,7 +123,7 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
                     book.setAddTime(addTime);
 
                     elasticBooks.add(book);
-                }*/
+                }
 
                 parsingPage = "http://www.feedbooks.com" +
                         doc

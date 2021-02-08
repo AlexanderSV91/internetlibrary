@@ -22,7 +22,7 @@ services:
     networks:
       - library-mongo
   elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
     container_name: elastic
     environment:
       - discovery.type=single-node
@@ -36,7 +36,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-#      - /home/developer/IdeaProjects/elasticsearch/library:/usr/share/elasticsearch/data
+      - /home/developer/IdeaProjects/elasticsearch/library:/usr/share/elasticsearch/data
       - esdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
@@ -70,6 +70,8 @@ services:
       - MONGO_DB_NAME=library
       - ELASTICSEARCH_HOSTNAME=elastic
       - ELASTICSEARCH_PORT=9200
+      - ELASTICSEARCH_USER=elastic
+      - ELASTICSEARCH_PASSWORD=elastic
     networks:
       - library-mysql
       - library-mongo
