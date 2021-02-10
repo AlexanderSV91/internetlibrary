@@ -1,10 +1,10 @@
 package com.faceit.example.internetlibrary.service.impl;
 
+import com.faceit.example.internetlibrary.mapper.elasticsearch.BookElasticsearchMapper;
 import com.faceit.example.internetlibrary.model.enumeration.BookCondition;
 import com.faceit.example.internetlibrary.service.ParsingSchedulerService;
 import com.faceit.example.internetlibrary.service.elasticsearch.BookElasticsearchService;
 import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
-import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -32,12 +32,15 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
 
     private final BookMongoService bookMongoService;
     private final BookElasticsearchService bookElasticsearchService;
+    private final BookElasticsearchMapper bookElasticsearchMapper;
 
     @Autowired
     public ParsingSchedulerServiceImpl(BookMongoService bookMongoService,
-                                       BookElasticsearchService bookElasticsearchService) {
+                                       BookElasticsearchService bookElasticsearchService,
+                                       BookElasticsearchMapper bookElasticsearchMapper) {
         this.bookMongoService = bookMongoService;
         this.bookElasticsearchService = bookElasticsearchService;
+        this.bookElasticsearchMapper = bookElasticsearchMapper;
     }
 
     @Override
@@ -63,7 +66,7 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
         if (bookElements != null) {
             int size = bookElements.size();
             List<com.faceit.example.internetlibrary.model.mongodb.Book> mongoBooks = new ArrayList<>(size);
-            List<com.faceit.example.internetlibrary.model.elasticsearch.Book> elasticBooks = new ArrayList<>(size);
+            List<com.faceit.example.internetlibrary.model.elasticsearch.Book> elasticBooks;
 
             for (int i = 0; i < size; ) {
                 Elements span3AppendBottom = bookElements.get(i).getAllElements();
@@ -103,31 +106,18 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
                 LocalDateTime addTime = LocalDateTime.now();
 
                 if (!bookMongoService.existsByName(name)) {
-                    com.faceit.example.internetlibrary.model.mongodb.Book book =
+                    com.faceit.example.internetlibrary.model.mongodb.Book mongoBook =
                             new com.faceit.example.internetlibrary.model.mongodb.Book();
-                    book.setUrl(url);
-                    book.setImageUrl(imageUrl);
-                    book.setName(name);
-                    book.setAuthors(authors);
-                    book.setDescription(description);
-                    book.setBookCondition(bookCondition);
-                    book.setPrice(price);
-                    book.setAddTime(addTime);
+                    mongoBook.setUrl(url);
+                    mongoBook.setImageUrl(imageUrl);
+                    mongoBook.setName(name);
+                    mongoBook.setAuthors(authors);
+                    mongoBook.setDescription(description);
+                    mongoBook.setBookCondition(bookCondition);
+                    mongoBook.setPrice(price);
+                    mongoBook.setAddTime(addTime);
 
-                    mongoBooks.add(book);
-                }
-
-                if (!bookElasticsearchService.existsByName(name)) {
-                    com.faceit.example.internetlibrary.model.elasticsearch.Book book =
-                            new com.faceit.example.internetlibrary.model.elasticsearch.Book();
-                    book.setName(name);
-                    book.setAuthors(authors);
-                    book.setDescription(description);
-                    book.setBookCondition(bookCondition);
-                    book.setPrice(price);
-                    book.setAddTime(addTime);
-
-                    elasticBooks.add(book);
+                    mongoBooks.add(mongoBook);
                 }
 
                 parsingPage = "http://www.feedbooks.com" +
@@ -138,8 +128,17 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
                                 .attr("href");
                 i += 3;
             }
+
             bookMongoService.addBookBulk(mongoBooks);
-            bookElasticsearchService.addBookBulk(elasticBooks);
+
+            elasticBooks = bookElasticsearchMapper
+                    .mongoBooksToElasticBooks(mongoBooks)
+                    .stream()
+                    .filter(book -> !bookElasticsearchService.existsByName(book.getName()))
+                    .collect(Collectors.toList());
+            if (!elasticBooks.isEmpty()) {
+                bookElasticsearchService.addBookBulk(elasticBooks);
+            }
         }
     }
 }

@@ -9,6 +9,16 @@ import java.util.List;
 
 public interface BookElasticsearchService {
 
+    Page<Book> searchMatchingFieldName(String text, Pageable pageable);
+
+    Page<Book> searchRegexFieldName(String text, Pageable pageable);
+
+    Page<Book> searchNameWithFuzziness(String text, Pageable pageable);
+
+    Page<Book> searchQueryMultiMatchFieldsNameDescription(String text, Pageable pageable);
+
+    Page<Book> searchPhraseFieldDescription(String text, Pageable pageable);
+
     Page<Book> getAllBook(Pageable pageable);
 
     Book getBookById(String id);

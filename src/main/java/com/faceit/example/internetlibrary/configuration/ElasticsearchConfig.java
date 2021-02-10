@@ -1,7 +1,8 @@
 package com.faceit.example.internetlibrary.configuration;
 
+import lombok.RequiredArgsConstructor;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,27 +12,22 @@ import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfig
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableElasticsearchRepositories(basePackages = "com.faceit.example.internetlibrary.repository")
 @ComponentScan(basePackages = {"com.faceit.example.internetlibrary.service"})
 public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
 
-    @Value("${spring.elasticsearch.rest.uris}")
-    private String uris;
+    private final ElasticsearchRestClientProperties clientProperties;
 
-    @Value("${spring.elasticsearch.rest.username}")
-    private String username;
-
-    @Value("${spring.elasticsearch.rest.password}")
-    private String password;
-
-    @Bean
     @Override
+    @Bean
     public RestHighLevelClient elasticsearchClient() {
-        ClientConfiguration.TerminalClientConfigurationBuilder builder =
-                ClientConfiguration
-                        .builder()
-                        .connectedTo(uris)
-                        .withBasicAuth(username, password);
+        final ClientConfiguration.TerminalClientConfigurationBuilder builder =
+                ClientConfiguration.builder()
+                        .connectedTo(clientProperties.getUris().get(0))
+                        .withConnectTimeout(clientProperties.getConnectionTimeout())
+                        .withSocketTimeout(clientProperties.getReadTimeout())
+                        .withBasicAuth(clientProperties.getUsername(), clientProperties.getPassword());
         final ClientConfiguration clientConfiguration = builder.build();
         return RestClients.create(clientConfiguration).rest();
     }

@@ -20,10 +20,5 @@ public interface BookElasticsearchMapper {
     @Mapping(target = "id", ignore = true)
     Book updateBookFromBookRequest(BookRequest bookRequest, @MappingTarget Book book);
 
-    @IterableMapping(qualifiedByName="mapWithoutId")
     List<Book> mongoBooksToElasticBooks(List<com.faceit.example.internetlibrary.model.mongodb.Book> mongoBook);
-
-    @Named("mapWithoutId")
-    @Mapping(target = "id", ignore = true)
-    Book mongoBookToElasticBook(com.faceit.example.internetlibrary.model.mongodb.Book mongoBook);
 }
