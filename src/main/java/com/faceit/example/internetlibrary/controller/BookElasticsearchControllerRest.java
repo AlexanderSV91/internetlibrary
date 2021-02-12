@@ -3,6 +3,7 @@ package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.dto.request.elasticsearch.BookRequest;
 import com.faceit.example.internetlibrary.dto.response.elasticsearch.BookResponse;
+import com.faceit.example.internetlibrary.dto.response.elasticsearch.BooksResponse;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.elasticsearch.BookElasticsearchMapper;
 import com.faceit.example.internetlibrary.model.elasticsearch.Book;
@@ -51,6 +52,17 @@ public class BookElasticsearchControllerRest {
         }
         List<BookResponse> bookResponseList = bookElasticsearchMapper.booksToBooksResponse(books.getContent());
         return Utils.pageEntityToPageResponse(books, bookResponseList);
+    }
+
+    @GetMapping("/elasticsearch-book/aggregation")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "successful operation",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = BooksResponse.class)))),
+            @ApiResponse(responseCode = "404", description = "books not found")})
+    public BooksResponse getBookWithAggregation(@RequestParam(defaultValue = "0") int more,
+                                                @RequestParam(defaultValue = "5") int less,
+                                                @RequestParam(defaultValue = "bookCondition") String field,
+                                                final Pageable pageable) {
+        return bookElasticsearchService.searchRangeFieldPriceAndAggregation(more, less, field, pageable);
     }
 
     @GetMapping("/elasticsearch-book/{id}")
