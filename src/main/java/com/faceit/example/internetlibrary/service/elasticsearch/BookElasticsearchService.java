@@ -11,6 +11,8 @@ import java.util.Map;
 
 public interface BookElasticsearchService {
 
+    BooksResponse aggregationFiledPrice(Pageable pageable);
+
     BooksResponse searchRangeFieldPriceAndAggregation(int more, int less, String field, Pageable pageable);
 
     Page<Book> searchBoolFieldsBookConditionAndPrice(int more, int less, String condition, Pageable pageable);

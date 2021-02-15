@@ -12,25 +12,24 @@ import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.BucketOrder;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BookElasticsearchServiceImpl implements BookElasticsearchService {
@@ -52,18 +51,24 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
 
     @Override
     public Page<Book> getAllBook(Pageable pageable) {
-        //return searchMatchingFieldName("First Flush", pageable);
-        //return searchRegex(".*first.*", pageable);
-        //return searchNameWithFuzziness("firs", pageable);
-        //return searchQueryMultiMatchFieldsNameDescription("first", pageable);
-        //return searchPhraseFieldDescription("poet", pageable);
-        //aggregateTerm("bookCondition", pageable).forEach((s, aLong) -> System.out.println(s + " : " + aLong));
-        //return searchRangeFieldPrice(5, 10, pageable);
-        //return searchBoolFieldName("first", "flush", pageable);
-        //return searchBoolFieldsBookConditionAndPrice(1, 5, BookCondition.NEW.name(), pageable);
-
-
         return bookElasticsearchRepository.findAll(pageable);
+    }
+
+    @Override
+    public BooksResponse aggregationFiledPrice(Pageable pageable) {
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withPageable(pageable)
+                .addAggregation(new TermsAggregationBuilder("price")
+                        .field("price")
+                        .size(pageable.getPageSize()))
+                .build();
+
+        SearchHits<Book> searchHits = elasticsearch(searchQuery);
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        Map<String, Long> aggregations = Utils.getAggregations(searchHits);
+        List<BookResponse> bookResponses = bookElasticsearchMapper.booksToBooksResponse(books);
+        return new BooksResponse(Utils
+                .listBooksToPageBooksResponse(bookResponses, pageable, searchHits.getTotalHits()), aggregations);
     }
 
     @Override
@@ -75,23 +80,15 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
                         .lt(less))
                 .addAggregation(new TermsAggregationBuilder(field)
                         .field(field)
-                        .size(20))
+                        .size(pageable.getPageSize()))
                 .build();
 
         SearchHits<Book> searchHits = elasticsearch(searchQuery);
-        List<Book> books = searchHitsToListBooks(searchHits);
-        Map<String, Long> resultAggr = new HashMap<>();
-        searchHits
-                .getAggregations()
-                .asList()
-                .forEach(aggregation -> {
-                    ((Terms) aggregation)
-                            .getBuckets()
-                            .forEach(bucket -> resultAggr.put(bucket.getKeyAsString(), bucket.getDocCount()));
-                });
-
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        Map<String, Long> aggregations = Utils.getAggregations(searchHits);
         List<BookResponse> bookResponses = bookElasticsearchMapper.booksToBooksResponse(books);
-        return new BooksResponse(listBooksToPageBooksResponse(bookResponses, pageable, searchHits.getTotalHits()), resultAggr);
+        return new BooksResponse(Utils
+                .listBooksToPageBooksResponse(bookResponses, pageable, searchHits.getTotalHits()), aggregations);
     }
 
     @Override
@@ -106,8 +103,8 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
                 .build();
 
         SearchHits<Book> searchHits = elasticsearch(searchQuery);
-        List<Book> books = searchHitsToListBooks(searchHits);
-        return listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        return Utils.listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -120,8 +117,8 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
                 .build();
 
         SearchHits<Book> searchHits = elasticsearch(searchQuery);
-        List<Book> books = searchHitsToListBooks(searchHits);
-        return listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        return Utils.listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -134,8 +131,8 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
                 .build();
 
         SearchHits<Book> searchHits = elasticsearch(searchQuery);
-        List<Book> books = searchHitsToListBooks(searchHits);
-        return listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        return Utils.listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -144,22 +141,15 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
                 .withPageable(pageable)
                 .addAggregation(new TermsAggregationBuilder(field)
                         .field(field)
-                        .size(20))
+                        .size(pageable.getPageSize()))
                 .build();
 
         SearchHits<Book> searchHits = elasticsearch(searchQuery);
-        List<Book> books = searchHitsToListBooks(searchHits);
-        Map<String, Long> resultAggr = new HashMap<>();
-        searchHits
-                .getAggregations()
-                .asList()
-                .forEach(aggregation -> {
-                    ((Terms) aggregation)
-                            .getBuckets()
-                            .forEach(bucket -> resultAggr.put(bucket.getKeyAsString(), bucket.getDocCount()));
-                });
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        Map<String, Long> aggregations = Utils.getAggregations(searchHits);
         List<BookResponse> bookResponses = bookElasticsearchMapper.booksToBooksResponse(books);
-        return new BooksResponse(listBooksToPageBooksResponse(bookResponses, pageable, searchHits.getTotalHits()), resultAggr);
+        return new BooksResponse(Utils
+                .listBooksToPageBooksResponse(bookResponses, pageable, searchHits.getTotalHits()), aggregations);
     }
 
     @Override
@@ -172,8 +162,8 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
                         .build();
 
         SearchHits<Book> searchHits = elasticsearch(searchQuery);
-        List<Book> books = searchHitsToListBooks(searchHits);
-        return listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        return Utils.listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -184,8 +174,8 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
                 .build();
 
         SearchHits<Book> searchHits = elasticsearch(searchQuery);
-        List<Book> books = searchHitsToListBooks(searchHits);
-        return listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        return Utils.listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -198,8 +188,8 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
                 .build();
 
         SearchHits<Book> searchHits = elasticsearch(searchQuery);
-        List<Book> books = searchHitsToListBooks(searchHits);
-        return listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        return Utils.listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -213,8 +203,8 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
                 .build();
 
         SearchHits<Book> searchHits = elasticsearch(searchQuery);
-        List<Book> books = searchHitsToListBooks(searchHits);
-        return listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        return Utils.listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -225,8 +215,8 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
                 .build();
 
         SearchHits<Book> searchHits = elasticsearch(searchQuery);
-        List<Book> books = searchHitsToListBooks(searchHits);
-        return listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
+        List<Book> books = Utils.searchHitsToListBooks(searchHits);
+        return Utils.listBooksToPageBooks(books, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -270,18 +260,6 @@ public class BookElasticsearchServiceImpl implements BookElasticsearchService {
     public boolean existsByName(String name) {
         Book book = bookElasticsearchRepository.existsByName(name);
         return null != book;
-    }
-
-    private List<Book> searchHitsToListBooks(SearchHits<Book> searchHits) {
-        return searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-    }
-
-    private Page<Book> listBooksToPageBooks(List<Book> books, Pageable pageable, long total) {
-        return new PageImpl<>(books, pageable, total);
-    }
-
-    private Page<BookResponse> listBooksToPageBooksResponse(List<BookResponse> books, Pageable pageable, long total) {
-        return new PageImpl<>(books, pageable, total);
     }
 
     private SearchHits<Book> elasticsearch(NativeSearchQuery searchQuery) {
