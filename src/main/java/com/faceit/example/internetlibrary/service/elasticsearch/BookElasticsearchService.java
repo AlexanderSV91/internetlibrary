@@ -1,13 +1,13 @@
 package com.faceit.example.internetlibrary.service.elasticsearch;
 
 import com.faceit.example.internetlibrary.dto.request.elasticsearch.BookRequest;
+import com.faceit.example.internetlibrary.dto.response.elasticsearch.BookResponse;
 import com.faceit.example.internetlibrary.dto.response.elasticsearch.BooksResponse;
-import com.faceit.example.internetlibrary.model.elasticsearch.Book;
+import com.faceit.example.internetlibrary.model.elasticsearch.ElasticBook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Map;
 
 public interface BookElasticsearchService {
 
@@ -15,39 +15,37 @@ public interface BookElasticsearchService {
 
     BooksResponse searchRangeFieldPriceAndAggregation(int more, int less, String field, Pageable pageable);
 
-    Page<Book> searchBoolFieldsBookConditionAndPrice(int more, int less, String condition, Pageable pageable);
+    Page<ElasticBook> searchBoolFieldsBookConditionAndPrice(int more, int less, String condition, Pageable pageable);
 
-    Page<Book> searchBoolFieldName(String text1, String text2, Pageable pageable);
+    Page<ElasticBook> searchBoolFieldName(List<String> searchValue, Pageable pageable);
 
-    Page<Book> searchRangeFieldPrice(int more, int less, Pageable pageable);
+    Page<ElasticBook> searchRangeFieldPrice(int more, int less, Pageable pageable);
 
     BooksResponse aggregateTerm(String field, Pageable pageable);
 
-    Page<Book> searchMatchingFieldName(String text, Pageable pageable);
+    Page<ElasticBook> searchMatchingFieldName(String text, Pageable pageable);
 
-    Page<Book> searchRegexFieldName(String text, Pageable pageable);
+    Page<ElasticBook> searchRegexFieldName(String text, Pageable pageable);
 
-    Page<Book> searchNameWithFuzziness(String text, Pageable pageable);
+    Page<ElasticBook> searchNameWithFuzziness(String text, Pageable pageable);
 
-    Page<Book> searchQueryMultiMatchFieldsNameDescription(String text, Pageable pageable);
+    Page<ElasticBook> searchQueryMultiMatchFieldsNameDescription(String text, Pageable pageable);
 
-    Page<Book> searchPhraseFieldDescription(String text, Pageable pageable);
+    Page<ElasticBook> searchPhraseFieldDescription(String text, Pageable pageable);
 
-    Page<Book> getAllBook(Pageable pageable);
+    Page<BookResponse> getAllBook(Pageable pageable);
 
-    Book getBookById(String id);
+    ElasticBook getBookById(String id);
 
-    Book addBook(Book newBook);
+    ElasticBook addBook(ElasticBook newBook);
 
-    void addBookBulk(final List<Book> books);
+    void addBookBulk(final List<ElasticBook> books);
 
     void deleteBookById(String id);
 
-    Book updateBookById(BookRequest bookRequest, String id);
+    ElasticBook updateBookById(BookRequest bookRequest, String id);
 
-    Book findByName(String name);
+    ElasticBook findByName(String name);
 
-    List<Book> findByAuthors(String author);
-
-    boolean existsByName(String name);
+    List<ElasticBook> findByAuthors(String author);
 }

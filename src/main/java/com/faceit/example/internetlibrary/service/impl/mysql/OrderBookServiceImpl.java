@@ -1,6 +1,8 @@
 package com.faceit.example.internetlibrary.service.impl.mysql;
 
 import com.faceit.example.internetlibrary.dto.request.mysql.OrderBookRequest;
+import com.faceit.example.internetlibrary.dto.response.mysql.OrderBookResponse;
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.mysql.OrderBookMapper;
 import com.faceit.example.internetlibrary.model.enumeration.Status;
 import com.faceit.example.internetlibrary.model.mysql.Book;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -103,19 +106,31 @@ public class OrderBookServiceImpl implements OrderBookService {
 
     @Override
     @Cacheable(value = "orderbooks", key = "{#user.id, #pageable.pageNumber}")
-    public Page<OrderBook> findOrderBooksByUserUserName(Pageable pageable, User user) {
+    public Page<OrderBookResponse> findOrderBooksByUserUserName(Pageable pageable, User user) {
         boolean isEmployee = Utils.isEmployee(user.getRoles());
+
         Page<OrderBook> orderBookList;
         if (isEmployee) {
             orderBookList = getPagingOrderBook(pageable);
         } else {
             orderBookList = orderBookRepository.findOrderBooksByUserUserName(user.getUserName(), pageable);
         }
-        return orderBookList;
+
+        if (orderBookList.getContent().isEmpty()) {
+            throw new ResourceNotFoundException("exception.notFound");
+        }
+        List<OrderBookResponse> orderBookResponses =
+                orderBookMapper.orderBooksToOrderBookResponse(orderBookList.getContent());
+        return pageEntityToPageResponse(orderBookList, orderBookResponses);
     }
 
     @Override
     public Status[] getAllStatus() {
         return Status.values();
+    }
+
+    private PageImpl<OrderBookResponse> pageEntityToPageResponse(Page<OrderBook> page,
+                                                                 List<OrderBookResponse> list) {
+        return new PageImpl<>(list, page.getPageable(), page.getTotalElements());
     }
 }

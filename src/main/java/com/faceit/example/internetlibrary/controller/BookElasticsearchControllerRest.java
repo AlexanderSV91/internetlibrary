@@ -6,7 +6,7 @@ import com.faceit.example.internetlibrary.dto.response.elasticsearch.BookRespons
 import com.faceit.example.internetlibrary.dto.response.elasticsearch.BooksResponse;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.elasticsearch.BookElasticsearchMapper;
-import com.faceit.example.internetlibrary.model.elasticsearch.Book;
+import com.faceit.example.internetlibrary.model.elasticsearch.ElasticBook;
 import com.faceit.example.internetlibrary.service.elasticsearch.BookElasticsearchService;
 import com.faceit.example.internetlibrary.util.Utils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,12 +46,7 @@ public class BookElasticsearchControllerRest {
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookResponse.class)))),
             @ApiResponse(responseCode = "404", description = "books not found")})
     public Page<BookResponse> getAllBook(final Pageable pageable) {
-        Page<Book> books = bookElasticsearchService.getAllBook(pageable);
-        if (books.getContent().isEmpty()) {
-            throw new ResourceNotFoundException("exception.notFound");
-        }
-        List<BookResponse> bookResponseList = bookElasticsearchMapper.booksToBooksResponse(books.getContent());
-        return Utils.pageEntityToPageResponse(books, bookResponseList);
+        return bookElasticsearchService.getAllBook(pageable);
     }
 
     @GetMapping("/elasticsearch-book/aggregation")
@@ -101,7 +96,7 @@ public class BookElasticsearchControllerRest {
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "400", description = "book not add")})
     public BookResponse addBook(@RequestBody BookRequest bookRequest) {
-        Book book = bookElasticsearchMapper.bookElasticRequestToBookElastic(bookRequest);
+        ElasticBook book = bookElasticsearchMapper.bookElasticRequestToBookElastic(bookRequest);
         return bookElasticsearchMapper.bookElasticToBookElasticResponse(bookElasticsearchService.addBook(book));
     }
 

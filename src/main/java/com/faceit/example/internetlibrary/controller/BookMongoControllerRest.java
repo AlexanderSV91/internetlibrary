@@ -2,11 +2,9 @@ package com.faceit.example.internetlibrary.controller;
 
 import com.faceit.example.internetlibrary.dto.request.mongodb.BookRequest;
 import com.faceit.example.internetlibrary.dto.response.mongodb.BookResponse;
-import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.mongo.BookMongoMapper;
-import com.faceit.example.internetlibrary.model.mongodb.Book;
+import com.faceit.example.internetlibrary.model.mongodb.MongoBook;
 import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
-import com.faceit.example.internetlibrary.util.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -43,12 +41,7 @@ public class BookMongoControllerRest {
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookResponse.class)))),
             @ApiResponse(responseCode = "404", description = "books not found")})
     public Page<BookResponse> getAllBook(final Pageable pageable) {
-        Page<Book> books = bookMongoService.getAllBook(pageable);
-        if (books.getContent().isEmpty()) {
-            throw new ResourceNotFoundException("exception.notFound");
-        }
-        List<BookResponse> bookResponseList = bookMongoMapper.booksToBooksResponse(books.getContent());
-        return Utils.pageEntityToPageResponse(books, bookResponseList);
+        return bookMongoService.getAllBookResponse(pageable);
     }
 
     @GetMapping("/mongo-book/{id}")
@@ -87,7 +80,7 @@ public class BookMongoControllerRest {
             content = @Content(schema = @Schema(implementation = BookResponse.class))),
             @ApiResponse(responseCode = "400", description = "book not add")})
     public BookResponse addBook(@RequestBody BookRequest bookRequest) {
-        Book book = bookMongoMapper.bookMongoRequestToBookMongo(bookRequest);
+        MongoBook book = bookMongoMapper.bookMongoRequestToBookMongo(bookRequest);
         return bookMongoMapper.bookMongoToBookMongoResponse(bookMongoService.addBook(book));
     }
 

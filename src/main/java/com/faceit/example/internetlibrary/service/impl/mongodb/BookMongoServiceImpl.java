@@ -1,13 +1,16 @@
 package com.faceit.example.internetlibrary.service.impl.mongodb;
 
 import com.faceit.example.internetlibrary.dto.request.mongodb.BookRequest;
+import com.faceit.example.internetlibrary.dto.response.mongodb.BookResponse;
+import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.mongo.BookMongoMapper;
-import com.faceit.example.internetlibrary.model.mongodb.Book;
+import com.faceit.example.internetlibrary.model.mongodb.MongoBook;
 import com.faceit.example.internetlibrary.repository.mongodb.BookMongoRepository;
 import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
 import com.faceit.example.internetlibrary.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -28,23 +31,33 @@ public class BookMongoServiceImpl implements BookMongoService {
     }
 
     @Override
-    public Page<Book> getAllBook(Pageable pageable) {
+    public Page<BookResponse> getAllBookResponse(Pageable pageable) {
+        Page<MongoBook> books = bookMongoRepository.findAll(pageable);
+        if (books.getContent().isEmpty()) {
+            throw new ResourceNotFoundException("exception.notFound");
+        }
+        List<BookResponse> bookResponseList = bookMongoMapper.booksToBooksResponse(books.getContent());
+        return pageEntityToPageResponse(books, bookResponseList);
+    }
+
+    @Override
+    public Page<MongoBook> getAllMongoBook(Pageable pageable) {
         return bookMongoRepository.findAll(pageable);
     }
 
     @Override
-    public Book getBookById(String id) {
-        Optional<Book> optionalBookMongo = bookMongoRepository.findById(id);
+    public MongoBook getBookById(String id) {
+        Optional<MongoBook> optionalBookMongo = bookMongoRepository.findById(id);
         return Utils.getDataFromTypeOptional(optionalBookMongo);
     }
 
     @Override
-    public Book addBook(Book newBook) {
+    public MongoBook addBook(MongoBook newBook) {
         return bookMongoRepository.save(newBook);
     }
 
     @Override
-    public void addBookBulk(List<Book> books) {
+    public void addBookBulk(List<MongoBook> books) {
         bookMongoRepository.saveAll(books);
     }
 
@@ -54,23 +67,28 @@ public class BookMongoServiceImpl implements BookMongoService {
     }
 
     @Override
-    public Book updateBookById(BookRequest bookRequest, String id) {
-        Book updateBook = bookMongoMapper.updateBookFromBookRequest(bookRequest, getBookById(id));
+    public MongoBook updateBookById(BookRequest bookRequest, String id) {
+        MongoBook updateBook = bookMongoMapper.updateBookFromBookRequest(bookRequest, getBookById(id));
         return bookMongoRepository.save(updateBook);
     }
 
     @Override
-    public Book findByName(String name) {
+    public MongoBook findByName(String name) {
         return bookMongoRepository.findByName(name);
     }
 
     @Override
-    public List<Book> findByAuthors(String author) {
+    public List<MongoBook> findByAuthors(String author) {
         return bookMongoRepository.findByAuthors(author);
     }
 
     @Override
     public boolean existsByName(String name) {
         return bookMongoRepository.existsByName(name);
+    }
+
+    private PageImpl<BookResponse> pageEntityToPageResponse(Page<MongoBook> page,
+                                                            List<BookResponse> list) {
+        return new PageImpl<>(list, page.getPageable(), page.getTotalElements());
     }
 }

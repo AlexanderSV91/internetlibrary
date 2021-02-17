@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Book {
+public class MongoBook {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

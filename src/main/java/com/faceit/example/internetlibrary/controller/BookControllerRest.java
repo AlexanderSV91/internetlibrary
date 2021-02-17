@@ -48,12 +48,7 @@ public class BookControllerRest {
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = BookResponse.class)))),
             @ApiResponse(responseCode = "404", description = "books not found")})
     public Page<BookResponse> getAllBook(final Pageable pageable) {
-        Page<Book> books = bookService.getPagingBook(pageable);
-        if (books.getContent().isEmpty()) {
-            throw new ResourceNotFoundException("exception.notFound");
-        }
-        List<BookResponse> bookResponseList = bookMapper.booksToBooksResponse(books.getContent());
-        return Utils.pageEntityToPageResponse(books, bookResponseList);
+        return bookService.getPagingBook(pageable);
     }
 
     @GetMapping("/book/{id}")

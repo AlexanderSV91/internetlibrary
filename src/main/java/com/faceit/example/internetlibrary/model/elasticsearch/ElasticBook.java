@@ -24,7 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Book {
+public class ElasticBook {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

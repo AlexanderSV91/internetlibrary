@@ -50,14 +50,7 @@ public class OrderBookControllerRest {
             @ApiResponse(responseCode = "404", description = "order books not found")})
     public Page<OrderBookResponse> getOrderBooksByUserUserName(final Pageable pageable,
                                                                @AuthenticationPrincipal MyUserDetails userDetails) {
-        Page<OrderBook> orderBooks = orderBookService
-                .findOrderBooksByUserUserName(pageable, userDetails.getUser());
-        if (orderBooks.getContent().isEmpty()) {
-            throw new ResourceNotFoundException("exception.notFound");
-        }
-        List<OrderBookResponse> orderBookResponses =
-                orderBookMapper.orderBooksToOrderBookResponse(orderBooks.getContent());
-        return Utils.pageEntityToPageResponse(orderBooks, orderBookResponses);
+        return orderBookService.findOrderBooksByUserUserName(pageable, userDetails.getUser());
     }
 
     @GetMapping("/orderbook/status")

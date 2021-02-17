@@ -2,23 +2,26 @@ package com.faceit.example.internetlibrary.mapper.elasticsearch;
 
 import com.faceit.example.internetlibrary.dto.request.elasticsearch.BookRequest;
 import com.faceit.example.internetlibrary.dto.response.elasticsearch.BookResponse;
-import com.faceit.example.internetlibrary.model.elasticsearch.Book;
-import org.mapstruct.*;
+import com.faceit.example.internetlibrary.model.elasticsearch.ElasticBook;
+import com.faceit.example.internetlibrary.model.mongodb.MongoBook;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BookElasticsearchMapper {
 
-    BookResponse bookElasticToBookElasticResponse(Book book);
+    BookResponse bookElasticToBookElasticResponse(ElasticBook book);
 
     @Mapping(target = "id", ignore = true)
-    Book bookElasticRequestToBookElastic(BookRequest bookRequest);
+    ElasticBook bookElasticRequestToBookElastic(BookRequest bookRequest);
 
-    List<BookResponse> booksToBooksResponse(List<Book> books);
+    List<BookResponse> booksToBooksResponse(List<ElasticBook> books);
 
     @Mapping(target = "id", ignore = true)
-    Book updateBookFromBookRequest(BookRequest bookRequest, @MappingTarget Book book);
+    ElasticBook updateBookFromBookRequest(BookRequest bookRequest, @MappingTarget ElasticBook book);
 
-    List<Book> mongoBooksToElasticBooks(List<com.faceit.example.internetlibrary.model.mongodb.Book> mongoBook);
+    List<ElasticBook> mongoBooksToElasticBooks(List<MongoBook> mongoBook);
 }

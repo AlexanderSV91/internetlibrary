@@ -1,6 +1,7 @@
 package com.faceit.example.internetlibrary.service.impl.mysql;
 
 import com.faceit.example.internetlibrary.dto.request.mysql.BookRequest;
+import com.faceit.example.internetlibrary.dto.response.mysql.BookResponse;
 import com.faceit.example.internetlibrary.exception.ApiRequestException;
 import com.faceit.example.internetlibrary.exception.ResourceNotFoundException;
 import com.faceit.example.internetlibrary.mapper.mysql.BookMapper;
@@ -14,7 +15,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<Book> getPagingBook(Pageable pageable) {
-        return bookRepository.findAll(pageable);
+    public Page<BookResponse> getPagingBook(Pageable pageable) {
+        Page<Book> books = bookRepository.findAll(pageable);
+        if (books.getContent().isEmpty()) {
+            throw new ResourceNotFoundException("exception.notFound");
+        }
+        List<BookResponse> bookResponseList = bookMapper.booksToBooksResponse(books.getContent());
+        return pageEntityToPageResponse(books, bookResponseList);
     }
 
     @Override
@@ -83,5 +89,9 @@ public class BookServiceImpl implements BookService {
         } else {
             throw new ApiRequestException("exception.bookNotDelete");
         }
+    }
+
+    private PageImpl<BookResponse> pageEntityToPageResponse(Page<Book> page, List<BookResponse> list) {
+        return new PageImpl<>(list, page.getPageable(), page.getTotalElements());
     }
 }

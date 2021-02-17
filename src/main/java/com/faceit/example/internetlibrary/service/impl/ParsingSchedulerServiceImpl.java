@@ -1,7 +1,9 @@
 package com.faceit.example.internetlibrary.service.impl;
 
 import com.faceit.example.internetlibrary.mapper.elasticsearch.BookElasticsearchMapper;
+import com.faceit.example.internetlibrary.model.elasticsearch.ElasticBook;
 import com.faceit.example.internetlibrary.model.enumeration.BookCondition;
+import com.faceit.example.internetlibrary.model.mongodb.MongoBook;
 import com.faceit.example.internetlibrary.service.ParsingSchedulerService;
 import com.faceit.example.internetlibrary.service.elasticsearch.BookElasticsearchService;
 import com.faceit.example.internetlibrary.service.mongodb.BookMongoService;
@@ -65,8 +67,8 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
 
         if (bookElements != null) {
             int size = bookElements.size();
-            List<com.faceit.example.internetlibrary.model.mongodb.Book> mongoBooks = new ArrayList<>(size);
-            List<com.faceit.example.internetlibrary.model.elasticsearch.Book> elasticBooks;
+            List<MongoBook> mongoBooks = new ArrayList<>(size);
+            List<ElasticBook> elasticBooks;
 
             for (int i = 0; i < size; ) {
                 Elements span3AppendBottom = bookElements.get(i).getAllElements();
@@ -106,8 +108,7 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
                 LocalDateTime addTime = LocalDateTime.now();
 
                 if (!bookMongoService.existsByName(name)) {
-                    com.faceit.example.internetlibrary.model.mongodb.Book mongoBook =
-                            new com.faceit.example.internetlibrary.model.mongodb.Book();
+                    MongoBook mongoBook = new MongoBook();
                     mongoBook.setUrl(url);
                     mongoBook.setImageUrl(imageUrl);
                     mongoBook.setName(name);
@@ -131,11 +132,7 @@ public class ParsingSchedulerServiceImpl implements ParsingSchedulerService {
 
             bookMongoService.addBookBulk(mongoBooks);
 
-            elasticBooks = bookElasticsearchMapper
-                    .mongoBooksToElasticBooks(mongoBooks)
-                    .stream()
-                    .filter(book -> !bookElasticsearchService.existsByName(book.getName()))
-                    .collect(Collectors.toList());
+            elasticBooks = new ArrayList<>(bookElasticsearchMapper.mongoBooksToElasticBooks(mongoBooks));
             if (!elasticBooks.isEmpty()) {
                 bookElasticsearchService.addBookBulk(elasticBooks);
             }
