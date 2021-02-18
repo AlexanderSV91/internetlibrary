@@ -143,7 +143,7 @@ app.controller("orderBookCtrl", function ($scope, $http) {
             url: 'http://localhost:8080/api/book',
             method: 'GET'
         }).then(function (response) {
-            $scope.books = response.data;
+            $scope.books = response.data.content;
         })
     }
     $scope.getAllBook();
