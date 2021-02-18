@@ -220,6 +220,7 @@ databaseChangeLog:
             onDelete: CASCADE
             referencedColumnNames: id
             referencedTableName: users
+
   - changeSet:
       id: 4
       author: AlexanderSV91
@@ -255,3 +256,13 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: number_authorizations
+
+  - changeSet:
+      id: 5
+      author: AlexanderSV91
+      changes:
+        - sqlFile:
+            dbms: 'mysql'
+            splitStatements: true
+            path: db/changelog/insert-number-authorization.sql
+            stripComments: true

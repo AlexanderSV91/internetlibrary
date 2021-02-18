@@ -1,17 +1,17 @@
 package com.faceit.example.internetlibrary.repository.mongodb;
 
-import com.faceit.example.internetlibrary.model.mongodb.Book;
+import com.faceit.example.internetlibrary.model.mongodb.MongoBook;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface BookMongoRepository extends MongoRepository<Book, String> {
+public interface BookMongoRepository extends MongoRepository<MongoBook, String> {
 
-    Book findByName(String name);
+    MongoBook findByName(String name);
 
-    List<Book> findByAuthors(String author);
+    List<MongoBook> findByAuthors(String author);
 
     boolean existsByName(String name);
 }

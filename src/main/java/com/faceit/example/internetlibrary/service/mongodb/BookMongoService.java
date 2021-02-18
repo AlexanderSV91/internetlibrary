@@ -1,25 +1,32 @@
 package com.faceit.example.internetlibrary.service.mongodb;
 
 import com.faceit.example.internetlibrary.dto.request.mongodb.BookRequest;
-import com.faceit.example.internetlibrary.model.mongodb.Book;
+import com.faceit.example.internetlibrary.dto.response.mongodb.BookResponse;
+import com.faceit.example.internetlibrary.model.mongodb.MongoBook;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface BookMongoService {
 
-    List<Book> getAllBook();
+    Page<BookResponse> getAllBookResponse(Pageable pageable);
 
-    Book getBookById(String id);
+    Page<MongoBook> getAllMongoBook(Pageable pageable);
 
-    Book addBook(Book newBook);
+    MongoBook getBookById(String id);
+
+    MongoBook addBook(MongoBook newBook);
+
+    void addBookBulk(List<MongoBook> books);
 
     void deleteBookById(String id);
 
-    Book updateBookById(BookRequest bookRequest, String id);
+    MongoBook updateBookById(BookRequest bookRequest, String id);
 
-    Book findByName(String name);
+    MongoBook findByName(String name);
 
-    List<Book> findByAuthors(String author);
+    List<MongoBook> findByAuthors(String author);
 
     boolean existsByName(String name);
 }
